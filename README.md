@@ -37,4 +37,4 @@ camel-raisim-projects
   - if, project main branch : [Project name]
     - Ex) canine
   - if, something roll of the project : [Project name]_[roll]
-    - Ex) canin_mpc
+    - Ex) canine_mpc

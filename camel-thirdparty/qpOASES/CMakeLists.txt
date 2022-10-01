@@ -33,7 +33,7 @@ cmake_minimum_required(VERSION 2.6)
 
 PROJECT(qpOASES CXX)
 SET(PACKAGE_NAME "qpOASES")
-SET(PACKAGE_VERSION "3.2.0")
+SET(PACKAGE_VERSION "3.2.2")
 SET(PACKAGE_SO_VERSION "3.2")
 SET(PACKAGE_DESCRIPTION "An implementation of the online active set strategy")
 SET(PACKAGE_AUTHOR "Hans Joachim Ferreau, Andreas Potschka, Christian Kirches et al.")
@@ -132,6 +132,32 @@ INSTALL(DIRECTORY include/qpOASES
   FILES_MATCHING PATTERN "*.hpp"
   PATTERN "*.ipp"
   PATTERN ".svn" EXCLUDE)
+
+############################################################
+######################### examples #########################
+############################################################
+
+if (QPOASES_BUILD_EXAMPLES)
+    # compile qpOASES examples
+    SET(EXAMPLE_NAMES
+        example1
+        example1a
+        example1b
+        example2
+        example3
+        example3b
+        example4
+        example5
+        exampleLP
+        qrecipe
+        qrecipeSchur
+    )
+
+    FOREACH(ELEMENT ${EXAMPLE_NAMES})
+        ADD_EXECUTABLE(${ELEMENT} examples/${ELEMENT}.cpp)
+        TARGET_LINK_LIBRARIES(${ELEMENT} qpOASES)
+    ENDFOREACH(ELEMENT ${EXAMPLE_NAMES})
+endif(QPOASES_BUILD_EXAMPLES)
 
 ##
 ##   end of file

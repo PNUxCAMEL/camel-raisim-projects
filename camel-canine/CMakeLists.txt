@@ -1,26 +1,20 @@
 cmake_minimum_required(VERSION 3.5)
 project(camel-canine LANGUAGES CXX)
 
-#==
-# QT5 Dependencies
-#==
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-find_package(Qt5 CONFIG COMPONENTS Widgets REQUIRED)
+add_subdirectory(canine_controller/convexMPC)
+add_subdirectory(canine_visualizer)
 
 include_directories(
-        includes
-
+        include
+        ${convexMPC_SOURCE_DIR}/include
+        ${canine_visualizer_SOURCE_DIR}/include
 )
 
-set(THIRD_PARTY_LIBS
-        Qt5::Widgets
-        qpOASES
+add_executable(camel-canine src/CanineMain.cpp )
+target_link_libraries(camel-canine
+        PRIVATE
+        canine_controller::convexMPC
+        canine_visualizer
 )
-
-
-
-add_executable(camel-canine src/CanineMain.cpp ${GUI_FILES})
-target_link_libraries(camel-canine ${THIRD_PARTY_LIBS})

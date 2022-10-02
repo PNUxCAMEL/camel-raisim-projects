@@ -8,5 +8,4 @@
 #include <iostream>
 #include <QApplication>
 
-
 #endif //RAISIM_CANINEMAIN_HPP

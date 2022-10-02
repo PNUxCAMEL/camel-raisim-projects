@@ -1,2 +1,0 @@
-/usr/bin/ar qc libQcustomPlot.a CMakeFiles/QcustomPlot.dir/QcustomPlot_autogen/mocs_compilation.cpp.o CMakeFiles/QcustomPlot.dir/src/qcustomplot.cpp.o
-/usr/bin/ranlib libQcustomPlot.a

@@ -1,7 +1,23 @@
 # camel-raisim-projects
 ## How to use?
-### Folder structures
+### How to add third party libraries to your project CMakeList.txt?
+- Example below
+```cmake
+include_directories(
+        "../camel-thirdparty/qpOASES/include"
+)
+link_directories(
+        "../camel-thirdparty/qpOASES/bin"
+)
+```
+```c++
+#include <iostream>
+#include <QApplication>
 
+#include <qpOASES.hpp>
+
+```
+### Folder structures
 ```c++
 camel-raisim-projects
 |---camel-[project name]

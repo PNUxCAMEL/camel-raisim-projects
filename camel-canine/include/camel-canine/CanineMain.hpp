@@ -8,4 +8,6 @@
 #include <iostream>
 #include <QApplication>
 
+#include <canine_gui/mainwindow.h>
+
 #endif //RAISIM_CANINEMAIN_HPP

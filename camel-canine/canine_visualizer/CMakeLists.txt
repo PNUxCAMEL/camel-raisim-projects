@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(canine_visualizer LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(raisim CONFIG REQUIRED)
@@ -16,8 +14,8 @@ include_directories(
 
 add_library(canine_visualizer STATIC
         src/CanineRobot.cpp
-        GUI/mainwindow.cpp
-        GUI/qcustomplot.cpp
+        include/canine_gui/mainwindow.cpp
+        include/canine_gui/qcustomplot.cpp
 )
 target_link_libraries(canine_visualizer
         raisim::raisim

@@ -15,6 +15,7 @@
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+
 #include "qcustomplot.hpp"
 
 QT_BEGIN_NAMESPACE

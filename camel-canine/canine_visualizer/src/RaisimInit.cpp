@@ -2,11 +2,21 @@
 // Created by hs on 22. 8. 8.
 //
 
-#include <canine_visualizer/CanineRobot.hpp>
+#include <canine_visualizer/RaisimInit.hpp>
 
-void CanineRobot::initialize() {
-    Eigen::VectorXd initialJointPosition(robot->getGeneralizedCoordinateDim());
-    Eigen::VectorXd initialJointVelocity(robot->getGeneralizedVelocityDim());
+RaisimInit::RaisimInit(raisim::World *world, std::string urdfPath, std::string name, double dT)
+    : mWorld(world)
+    , mRobot(mWorld->addArticulatedSystem(urdfPath))
+    , mGround(mWorld->addGround(0,"gnd"))
+    , mDt(dT)
+{
+    mWorld->setTimeStep(mDt);
+    mRobot->setName(name);
+}
+
+void RaisimInit::RobotIntialize() {
+    Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
+    Eigen::VectorXd initialJointVelocity(mRobot->getGeneralizedVelocityDim());
     initialJointPosition.setZero();
     initialJointVelocity.setZero();
 
@@ -41,7 +51,7 @@ void CanineRobot::initialize() {
     initialJointPosition[17] = 0.7;
     initialJointPosition[18] = -1.4;
 
-    robot->setGeneralizedCoordinate(initialJointPosition);
-    robot->setGeneralizedForce(Eigen::VectorXd::Zero(robot->getDOF()));
-    robot->setGeneralizedVelocity(initialJointVelocity);
+    mRobot->setGeneralizedCoordinate(initialJointPosition);
+    mRobot->setGeneralizedForce(Eigen::VectorXd::Zero(mRobot->getDOF()));
+    mRobot->setGeneralizedVelocity(initialJointVelocity);
 }

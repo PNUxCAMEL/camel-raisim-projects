@@ -6,23 +6,21 @@
 #define RAISIM_CANINEROBOT_H
 
 #include "raisim/World.hpp"
-#include <Eigen/Eigen>
 
-class CanineRobot{
+class RaisimInit{
 public:
-    CanineRobot(raisim::World *world, std::string urdfPath, std::string name){
-        robotWorld = world;
-        robot = world->addArticulatedSystem(urdfPath);
-        robot->setName(name);
-    }
+    RaisimInit(raisim::World* world,
+               std::string urdfPath,
+               std::string name,
+               double dT);
 
-    void initialize();
+    void RobotIntialize();
 
 private:
-    raisim::ArticulatedSystem *robot;
-    raisim::World *robotWorld;
-
-
+    raisim::World* mWorld;
+    raisim::ArticulatedSystem *mRobot;
+    raisim::Ground* mGround;
+    double mDt;
 };
 
 

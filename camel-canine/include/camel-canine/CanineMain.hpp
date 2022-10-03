@@ -6,15 +6,39 @@
 #define RAISIM_CANINEMAIN_HPP
 
 #include <QApplication>
+
+#include <PDcontroller/JointPDController.hpp>
+#include <canine_util/MotorCAN.hpp>
+#include <canine_util/Command.hpp>
+#include <canine_util/ThreadRT.hpp>
+#include <canine_util/ThreadNRT.hpp>
+#include <canine_util/ThreadFunction.hpp>
 #include <canine_gui/mainwindow.h>
-#include <canine_util/RealTimeThread.hpp>
-#include <convexMPC/qpsolver.hpp>
-#include <canine_visualizer/RaisimInit.hpp>
+#include <canine_visualizer/RobotVisualization.hpp>
+
+pthread_t RTThreadController;
+pthread_t NRTThreadCommand;
+pthread_t NRTThreadVisual;
+
+ThreadRT threadrt;
+ThreadNRT threadnrt;
+ThreadFunction threadfunc;
+
+pUI_COMMAND sharedCommand;
+pSHM sharedMemory;
+
+MotorCAN can("can9");
+Command userCommand(&can);
+JointPDController userController(&can);
 
 raisim::World world;
-std::string urdfPath = "\\home\\hs\\raisimLib\\camel-raisim-projects\\camel-urdf\\canine\\urdf\\canineV1.urdf";
-std::string name = "CANINE";
+std::string urdfPath = "\\home\\hs\\raisimLib\\camel-raisim-projects\\camel-urdf\\camel_single_leg_left\\camel_single_leg.urdf";
+raisim::RaisimServer server(&world);
+RobotVisualization userVisual(&world, urdfPath, &server);
 
-double dT = 0.005;
+void *RTControllerThread(void *arg);
+void *NRTCommandThread(void *arg);
+void *NRTVisualThread(void *arg);
+void clearSharedMemory();
 
 #endif //RAISIM_CANINEMAIN_HPP

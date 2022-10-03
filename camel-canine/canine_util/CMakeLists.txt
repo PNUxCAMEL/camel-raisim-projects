@@ -7,7 +7,12 @@ include_directories(
 
 add_library(canine_util
         SHARED
-        src/RealTimeThread.cpp
+        src/Command.cpp
+        src/MotorCAN.cpp
+        src/ThreadFunction.cpp
+        src/ThreadNRT.cpp
+        src/ThreadRT.cpp
+
 )
 target_link_libraries(canine_util
         PRIVATE

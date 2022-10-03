@@ -11,11 +11,16 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QGroupBox>
+#include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTabWidget>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QWidget>
-
 #include "qcustomplot.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -24,7 +29,40 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
-    QCustomPlot *widget;
+    QGroupBox *groupBox_Init;
+    QPushButton *BT_CAN_ON;
+    QPushButton *BT_VISUAL_ON;
+    QPushButton *BT_MOTOR_ON;
+    QPushButton *BT_MOTOR_OFF;
+    QLineEdit *LE_CAN_STATUS;
+    QLineEdit *LE_VISUAL_STATUS;
+    QLineEdit *LE_MOTOR_ON_STATUS;
+    QLineEdit *LE_MOTOR_OFF_STATUS;
+    QTableWidget *TW_MOTOR;
+    QTabWidget *tabWidget;
+    QWidget *TAB_ROBOT;
+    QCustomPlot *PLOT_TORQUE_HIP;
+    QCustomPlot *PLOT_TORQUE_KNEE;
+    QCustomPlot *PLOT_VEL_HIP;
+    QCustomPlot *PLOT_VEL_KNEE;
+    QCustomPlot *PLOT_POS_KNEE;
+    QCustomPlot *PLOT_POS_HIP;
+    QWidget *TAB_CUSTOM;
+    QCustomPlot *PLOT_CUSTOM_1;
+    QCustomPlot *PLOT_CUSTOM_2;
+    QCustomPlot *PLOT_CUSTOM_3;
+    QCustomPlot *PLOT_CUSTOM_4;
+    QCustomPlot *PLOT_CUSTOM_5;
+    QCustomPlot *PLOT_CUSTOM_6;
+    QGroupBox *groupBox_control;
+    QPushButton *BT_CUSTOM2;
+    QLineEdit *LE_HOME;
+    QLineEdit *LE_CUSTOM1;
+    QPushButton *BT_CUSTOM1;
+    QPushButton *BT_HOME;
+    QLineEdit *LE_PD_CONTROL;
+    QPushButton *BT_PD_CONTROL;
+    QLineEdit *LE_CUSTOM2;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -32,16 +70,151 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QString::fromUtf8("MainWindow"));
-        MainWindow->resize(800, 600);
+        MainWindow->resize(1308, 820);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        widget = new QCustomPlot(centralwidget);
-        widget->setObjectName(QString::fromUtf8("widget"));
-        widget->setGeometry(QRect(70, 20, 431, 331));
+        groupBox_Init = new QGroupBox(centralwidget);
+        groupBox_Init->setObjectName(QString::fromUtf8("groupBox_Init"));
+        groupBox_Init->setGeometry(QRect(10, -6, 431, 96));
+        QFont font;
+        font.setPointSize(1);
+        groupBox_Init->setFont(font);
+        BT_CAN_ON = new QPushButton(groupBox_Init);
+        BT_CAN_ON->setObjectName(QString::fromUtf8("BT_CAN_ON"));
+        BT_CAN_ON->setGeometry(QRect(13, 35, 91, 51));
+        QFont font1;
+        font1.setPointSize(11);
+        BT_CAN_ON->setFont(font1);
+        BT_VISUAL_ON = new QPushButton(groupBox_Init);
+        BT_VISUAL_ON->setObjectName(QString::fromUtf8("BT_VISUAL_ON"));
+        BT_VISUAL_ON->setGeometry(QRect(118, 35, 91, 51));
+        BT_VISUAL_ON->setFont(font1);
+        BT_MOTOR_ON = new QPushButton(groupBox_Init);
+        BT_MOTOR_ON->setObjectName(QString::fromUtf8("BT_MOTOR_ON"));
+        BT_MOTOR_ON->setGeometry(QRect(223, 35, 91, 51));
+        BT_MOTOR_ON->setFont(font1);
+        BT_MOTOR_OFF = new QPushButton(groupBox_Init);
+        BT_MOTOR_OFF->setObjectName(QString::fromUtf8("BT_MOTOR_OFF"));
+        BT_MOTOR_OFF->setGeometry(QRect(328, 35, 91, 51));
+        BT_MOTOR_OFF->setFont(font1);
+        BT_MOTOR_OFF->setAutoFillBackground(false);
+        LE_CAN_STATUS = new QLineEdit(groupBox_Init);
+        LE_CAN_STATUS->setObjectName(QString::fromUtf8("LE_CAN_STATUS"));
+        LE_CAN_STATUS->setEnabled(false);
+        LE_CAN_STATUS->setGeometry(QRect(37, 23, 43, 8));
+        LE_CAN_STATUS->setMouseTracking(false);
+        LE_VISUAL_STATUS = new QLineEdit(groupBox_Init);
+        LE_VISUAL_STATUS->setObjectName(QString::fromUtf8("LE_VISUAL_STATUS"));
+        LE_VISUAL_STATUS->setEnabled(false);
+        LE_VISUAL_STATUS->setGeometry(QRect(142, 23, 43, 8));
+        LE_VISUAL_STATUS->setMouseTracking(false);
+        LE_MOTOR_ON_STATUS = new QLineEdit(groupBox_Init);
+        LE_MOTOR_ON_STATUS->setObjectName(QString::fromUtf8("LE_MOTOR_ON_STATUS"));
+        LE_MOTOR_ON_STATUS->setEnabled(false);
+        LE_MOTOR_ON_STATUS->setGeometry(QRect(247, 23, 43, 8));
+        LE_MOTOR_ON_STATUS->setMouseTracking(false);
+        LE_MOTOR_OFF_STATUS = new QLineEdit(groupBox_Init);
+        LE_MOTOR_OFF_STATUS->setObjectName(QString::fromUtf8("LE_MOTOR_OFF_STATUS"));
+        LE_MOTOR_OFF_STATUS->setEnabled(false);
+        LE_MOTOR_OFF_STATUS->setGeometry(QRect(352, 23, 43, 8));
+        LE_MOTOR_OFF_STATUS->setMouseTracking(false);
+        TW_MOTOR = new QTableWidget(centralwidget);
+        TW_MOTOR->setObjectName(QString::fromUtf8("TW_MOTOR"));
+        TW_MOTOR->setGeometry(QRect(10, 100, 431, 101));
+        tabWidget = new QTabWidget(centralwidget);
+        tabWidget->setObjectName(QString::fromUtf8("tabWidget"));
+        tabWidget->setGeometry(QRect(450, 10, 851, 761));
+        TAB_ROBOT = new QWidget();
+        TAB_ROBOT->setObjectName(QString::fromUtf8("TAB_ROBOT"));
+        PLOT_TORQUE_HIP = new QCustomPlot(TAB_ROBOT);
+        PLOT_TORQUE_HIP->setObjectName(QString::fromUtf8("PLOT_TORQUE_HIP"));
+        PLOT_TORQUE_HIP->setGeometry(QRect(10, 490, 411, 230));
+        PLOT_TORQUE_KNEE = new QCustomPlot(TAB_ROBOT);
+        PLOT_TORQUE_KNEE->setObjectName(QString::fromUtf8("PLOT_TORQUE_KNEE"));
+        PLOT_TORQUE_KNEE->setGeometry(QRect(430, 490, 411, 230));
+        PLOT_VEL_HIP = new QCustomPlot(TAB_ROBOT);
+        PLOT_VEL_HIP->setObjectName(QString::fromUtf8("PLOT_VEL_HIP"));
+        PLOT_VEL_HIP->setGeometry(QRect(10, 250, 411, 230));
+        PLOT_VEL_KNEE = new QCustomPlot(TAB_ROBOT);
+        PLOT_VEL_KNEE->setObjectName(QString::fromUtf8("PLOT_VEL_KNEE"));
+        PLOT_VEL_KNEE->setGeometry(QRect(430, 250, 411, 230));
+        PLOT_POS_KNEE = new QCustomPlot(TAB_ROBOT);
+        PLOT_POS_KNEE->setObjectName(QString::fromUtf8("PLOT_POS_KNEE"));
+        PLOT_POS_KNEE->setGeometry(QRect(430, 10, 411, 230));
+        PLOT_POS_HIP = new QCustomPlot(TAB_ROBOT);
+        PLOT_POS_HIP->setObjectName(QString::fromUtf8("PLOT_POS_HIP"));
+        PLOT_POS_HIP->setGeometry(QRect(10, 10, 411, 230));
+        tabWidget->addTab(TAB_ROBOT, QString());
+        TAB_CUSTOM = new QWidget();
+        TAB_CUSTOM->setObjectName(QString::fromUtf8("TAB_CUSTOM"));
+        QFont font2;
+        font2.setFamily(QString::fromUtf8("Ubuntu"));
+        font2.setBold(false);
+        font2.setWeight(50);
+        TAB_CUSTOM->setFont(font2);
+        PLOT_CUSTOM_1 = new QCustomPlot(TAB_CUSTOM);
+        PLOT_CUSTOM_1->setObjectName(QString::fromUtf8("PLOT_CUSTOM_1"));
+        PLOT_CUSTOM_1->setGeometry(QRect(10, 10, 411, 230));
+        PLOT_CUSTOM_2 = new QCustomPlot(TAB_CUSTOM);
+        PLOT_CUSTOM_2->setObjectName(QString::fromUtf8("PLOT_CUSTOM_2"));
+        PLOT_CUSTOM_2->setGeometry(QRect(430, 10, 411, 230));
+        PLOT_CUSTOM_3 = new QCustomPlot(TAB_CUSTOM);
+        PLOT_CUSTOM_3->setObjectName(QString::fromUtf8("PLOT_CUSTOM_3"));
+        PLOT_CUSTOM_3->setGeometry(QRect(10, 250, 411, 230));
+        PLOT_CUSTOM_4 = new QCustomPlot(TAB_CUSTOM);
+        PLOT_CUSTOM_4->setObjectName(QString::fromUtf8("PLOT_CUSTOM_4"));
+        PLOT_CUSTOM_4->setGeometry(QRect(430, 250, 411, 230));
+        PLOT_CUSTOM_5 = new QCustomPlot(TAB_CUSTOM);
+        PLOT_CUSTOM_5->setObjectName(QString::fromUtf8("PLOT_CUSTOM_5"));
+        PLOT_CUSTOM_5->setGeometry(QRect(10, 490, 411, 230));
+        PLOT_CUSTOM_6 = new QCustomPlot(TAB_CUSTOM);
+        PLOT_CUSTOM_6->setObjectName(QString::fromUtf8("PLOT_CUSTOM_6"));
+        PLOT_CUSTOM_6->setGeometry(QRect(430, 490, 411, 230));
+        tabWidget->addTab(TAB_CUSTOM, QString());
+        groupBox_control = new QGroupBox(centralwidget);
+        groupBox_control->setObjectName(QString::fromUtf8("groupBox_control"));
+        groupBox_control->setGeometry(QRect(10, 210, 431, 101));
+        BT_CUSTOM2 = new QPushButton(groupBox_control);
+        BT_CUSTOM2->setObjectName(QString::fromUtf8("BT_CUSTOM2"));
+        BT_CUSTOM2->setGeometry(QRect(328, 39, 91, 51));
+        BT_CUSTOM2->setFont(font1);
+        BT_CUSTOM2->setAutoFillBackground(false);
+        LE_HOME = new QLineEdit(groupBox_control);
+        LE_HOME->setObjectName(QString::fromUtf8("LE_HOME"));
+        LE_HOME->setEnabled(false);
+        LE_HOME->setGeometry(QRect(37, 27, 43, 8));
+        LE_HOME->setMouseTracking(false);
+        LE_CUSTOM1 = new QLineEdit(groupBox_control);
+        LE_CUSTOM1->setObjectName(QString::fromUtf8("LE_CUSTOM1"));
+        LE_CUSTOM1->setEnabled(false);
+        LE_CUSTOM1->setGeometry(QRect(247, 27, 43, 8));
+        LE_CUSTOM1->setMouseTracking(false);
+        BT_CUSTOM1 = new QPushButton(groupBox_control);
+        BT_CUSTOM1->setObjectName(QString::fromUtf8("BT_CUSTOM1"));
+        BT_CUSTOM1->setGeometry(QRect(223, 39, 91, 51));
+        BT_CUSTOM1->setFont(font1);
+        BT_HOME = new QPushButton(groupBox_control);
+        BT_HOME->setObjectName(QString::fromUtf8("BT_HOME"));
+        BT_HOME->setGeometry(QRect(13, 39, 91, 51));
+        BT_HOME->setFont(font1);
+        LE_PD_CONTROL = new QLineEdit(groupBox_control);
+        LE_PD_CONTROL->setObjectName(QString::fromUtf8("LE_PD_CONTROL"));
+        LE_PD_CONTROL->setEnabled(false);
+        LE_PD_CONTROL->setGeometry(QRect(142, 27, 43, 8));
+        LE_PD_CONTROL->setMouseTracking(false);
+        BT_PD_CONTROL = new QPushButton(groupBox_control);
+        BT_PD_CONTROL->setObjectName(QString::fromUtf8("BT_PD_CONTROL"));
+        BT_PD_CONTROL->setGeometry(QRect(118, 39, 91, 51));
+        BT_PD_CONTROL->setFont(font1);
+        LE_CUSTOM2 = new QLineEdit(groupBox_control);
+        LE_CUSTOM2->setObjectName(QString::fromUtf8("LE_CUSTOM2"));
+        LE_CUSTOM2->setEnabled(false);
+        LE_CUSTOM2->setGeometry(QRect(352, 27, 43, 8));
+        LE_CUSTOM2->setMouseTracking(false);
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
-        menubar->setGeometry(QRect(0, 0, 800, 22));
+        menubar->setGeometry(QRect(0, 0, 1308, 22));
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName(QString::fromUtf8("statusbar"));
@@ -49,12 +222,32 @@ public:
 
         retranslateUi(MainWindow);
 
+        tabWidget->setCurrentIndex(0);
+
+
         QMetaObject::connectSlotsByName(MainWindow);
     } // setupUi
 
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", nullptr));
+        groupBox_Init->setTitle(QString());
+        BT_CAN_ON->setText(QApplication::translate("MainWindow", "CAN\n"
+                                                                 "ON", nullptr));
+        BT_VISUAL_ON->setText(QApplication::translate("MainWindow", "Visual\n"
+                                                                    "ON", nullptr));
+        BT_MOTOR_ON->setText(QApplication::translate("MainWindow", "Motor\n"
+                                                                   "ON", nullptr));
+        BT_MOTOR_OFF->setText(QApplication::translate("MainWindow", "Motor\n"
+                                                                    "OFF", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(TAB_ROBOT), QApplication::translate("MainWindow", "Robot", nullptr));
+        tabWidget->setTabText(tabWidget->indexOf(TAB_CUSTOM), QApplication::translate("MainWindow", "Custom", nullptr));
+        groupBox_control->setTitle(QApplication::translate("MainWindow", "CONTROL", nullptr));
+        BT_CUSTOM2->setText(QApplication::translate("MainWindow", "Custom2", nullptr));
+        BT_CUSTOM1->setText(QApplication::translate("MainWindow", "Custom1", nullptr));
+        BT_HOME->setText(QApplication::translate("MainWindow", "Home", nullptr));
+        BT_PD_CONTROL->setText(QApplication::translate("MainWindow", "PD\n"
+                                                                     "Control", nullptr));
     } // retranslateUi
 
 };

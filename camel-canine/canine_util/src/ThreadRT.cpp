@@ -2,9 +2,9 @@
 // Created by hs on 22. 10. 3.
 //
 
-#include <canine_util/RealTimeThread.hpp>
+#include <canine_util/ThreadRT.hpp>
 
-int RealTimeThread::generate_rt_thread(pthread_t &thread_rt, void* (*thread_func)(void *), const char* name, int cpu_no, int priority, void *arg){
+int ThreadRT::generate_rt_thread(pthread_t &thread_rt, void* (*thread_func)(void *), const char* name, int cpu_no, int priority, void *arg){
     struct sched_param param;
     pthread_attr_t attr;
     cpu_set_t cpuset;

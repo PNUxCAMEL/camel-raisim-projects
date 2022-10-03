@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(camel-canine-single_leg-simulation LANGUAGES CXX)
+project(camel-canine-single_leg-left-simulation LANGUAGES CXX)
 
 #==
 # Dependencies
@@ -54,9 +54,9 @@ set(CANINE_SINGLE_LEG_SRC
         src/SingleLeggedRobot.cpp
         )
 
-add_executable(camel-canine-single_leg-simulation
+add_executable(camel-canine-single_leg-left-simulation
         SingleLeggedSimulation.cpp
         ${GUI_FILES}
         ${CANINE_SINGLE_LEG_SRC})
 
-target_link_libraries(camel-canine-single_leg-simulation ${THIRD_PARTY_LIBS} ${CAMEL_LIBS})
+target_link_libraries(camel-canine-single_leg-left-simulation ${THIRD_PARTY_LIBS} ${CAMEL_LIBS})

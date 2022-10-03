@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 project(convexMPC LANGUAGES CXX)
 
-find_package(Eigen3 REQUIRED HINTS ${Eigen3_HINT})
-find_package(raisim CONFIG REQUIRED)
 
 include_directories(
         include
@@ -13,12 +11,12 @@ link_directories(
         ${qpOASES_SOURCE_DIR}/bin
 )
 
-add_library(convexMPC STATIC
+add_library(${PROJECT_NAME} STATIC
         src/Trajectory.cpp
         src/Gait.cpp
         src/qpsolver.cpp
         src/MPCController.cpp
 )
 
-add_library(canine_controller::convexMPC ALIAS convexMPC)
-target_link_libraries(convexMPC raisim::raisim)
+add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_link_libraries(${PROJECT_NAME} raisim::raisim)

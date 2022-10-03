@@ -1,0 +1,179 @@
+<?xml version="1.0" ?>
+<robot name="jinee-single-leg">
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="light_gray">
+     <color rgba="0.75 0.75 0.75 1.0"/>
+  </material>
+
+  <material name="black1">
+      <color rgba="0.25 0.25 0.25 0.90"/>
+  </material>
+
+  <material name="black2">
+      <color rgba="0.35 0.35 0.35 0.90"/>
+  </material>
+  <link name="world"/>
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <box size="0.025 0.025 1.0"/>
+      </geometry>
+      <material name="light_gray"/>
+    </visual>
+
+    <collision>
+        <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <box size="0.025 0.025 1.0"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="linear_guide" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 -0.03525 0.0"/>
+    <parent link="base"/>
+    <child link="hip_1"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="hip_1">
+    <visual>
+      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.034" radius="0.049"/>
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.034" radius="0.049"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.7835"/>
+      <inertia ixx="0.000199716" ixy="0.0" ixz="0.0" iyy="0.000317828" iyz="0.0" izz="0.000199716"/>
+    </inertial>
+  </link>
+
+  <joint name="hip_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 -0.080 0.0"/>
+    <parent link="hip_1"/>
+    <child link="hip_2"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="hip_2">
+      <visual>
+        <origin rpy="1.570796 3.141592 0" xyz="0.0 0.050 0.0"/>
+        <geometry>
+          <mesh filename="base_link.STL" />
+        </geometry>
+        <material name="black1"/>
+      </visual>
+
+      <collision>
+        <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
+        <geometry>
+          <cylinder length="0.034" radius="0.049"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="0.7835"/>
+        <inertia ixx="0.000199716" ixy="0.0" ixz="0.0" iyy="0.000317828" iyz="0.0" izz="0.000199716"/>
+      </inertial>
+  </link>
+
+  <joint name="hip_upper" type="fixed">
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <parent link="hip_2"/>
+        <child link="upper_leg"/>
+  </joint>
+
+  <link name="upper_leg">
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.075"/>
+      <geometry>
+        <box size="0.03 0.02 0.15"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.221"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="knee_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.15"/>
+    <parent link="upper_leg"/>
+    <child link="lower_leg"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="lower_leg">
+    <visual>
+      <origin rpy="0 -1.221730222 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="calf.STL" />
+      </geometry>
+      <material name="black2"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.1375"/>
+      <geometry>
+        <box size="0.03 0.02 0.275"/>
+      </geometry>
+      </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="ankle_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.275"/>
+    <parent link="lower_leg"/>
+    <child link="foot"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="foot">
+    <visual>
+      <origin rpy="0 0.986110822 0" xyz="0 0.011 0"/>
+      <geometry>
+        <mesh filename="foot.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.026 0 -0.01738"/>
+      <geometry>
+        <box size="0.052 0.02 0.16"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+</robot>

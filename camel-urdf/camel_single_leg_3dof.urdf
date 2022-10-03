@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<robot name="camel_single_leg_bot_3dof">
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+  <material name="Aquamarine">
+    <color rgba="0.364 0.733 0.608 1.0"/>
+  </material>
+  <material name="Aqua">
+    <color rgba="0.0 0.733 0.733 1.0"/>
+  </material>
+
+  <link name="world"/>
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <box size="0.025 0.025 1.0"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="linear_guide" type="prismatic">
+    <origin rpy="0 0 0" xyz="0 -0.025 0"/>
+    <parent link="base"/>
+    <child link="hip"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="hip">
+    <visual>
+      <origin rpy="-1.570796 0 0" xyz="0.0 0 0.0"/>
+      <geometry>
+        <cylinder length="0.025" radius="0.05"/>
+      </geometry>
+      <material name="Aquamarine"/>
+    </visual>
+
+    <inertial>
+      <mass value="3.0"/>
+      <inertia ixx="0.00203125" ixy="0.0" ixz="0.0" iyy="0.00375000" iyz="0.0" izz="0.00203125"/>
+    </inertial>
+  </link>
+
+  <joint name="hip_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0.0 0.0"/>
+    <parent link="hip"/>
+    <child link="upper_leg"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="upper_leg">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.15"/>
+      <geometry>
+        <box size="0.03 0.02 0.3"/>
+      </geometry>
+      <material name="Aqua"/>
+    </visual>
+
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="knee_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.3"/>
+    <parent link="upper_leg"/>
+    <child link="lower_leg"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="lower_leg">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.15"/>
+      <geometry>
+        <box size="0.03 0.02 0.3"/>
+      </geometry>
+      <material name="Aqua"/>      
+    </visual>
+
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="ankle_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 -0.3"/>
+    <parent link="lower_leg"/>
+    <child link="foot"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+  
+  <link name="foot">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+      <geometry>
+        <box size="0.03 0.02 0.1"/>
+      </geometry>
+      <material name="Aqua"/>      
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 -0.05"/>
+      <geometry>
+        <box size="0.03 0.02 0.1"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+</robot>

@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<robot name = "camel_momentum_inverted_pendulum">
+
+  <material name="red">
+    <color rgba="0.914 0.263 0.212 0.9"/>
+  </material>
+
+  <material name="stylish">
+    <color rgba="0.243 0.271 0.318 0.9"/>
+  </material>
+
+  <material name="lime">
+    <color rgba="0.804 0.863 0.223 0.9"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0.329 0.463 0.890 0.9 "/>
+  </material>
+
+  <link name="world"/>
+  <joint name="fixed_world" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 1.570796 0 " xyz="0 0 0.01275"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.005"/>
+      </geometry>
+      <material name="stylish"/>
+    </visual>
+  </link>
+
+  <joint name="base-roll" type="continuous">
+    <origin rpy="0 0 0" xyz="0 0 0.01275"/>
+    <parent link="base"/>
+    <child link="rod"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="rod">
+    <visual>
+      <origin rpy="0.0 0 0" xyz="0 0 0.04"/>
+      <geometry>
+        <box size="0.015 0.030 0.08"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+
+    <inertial>
+      <mass value="0.0425"/>
+      <inertia ixx="2.59e-5" ixy="0.0" ixz="0.0" iyy="2.35e-5" iyz="0.0" izz="3.98e-6"/>
+    </inertial>
+
+    <collision>
+      <origin rpy="0.0 0 0" xyz="0 0 0.04"/>
+      <geometry>
+        <box size="0.015 0.03 0.08"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="motor-revolute" type="revolute">
+    <origin rpy="0 0 0" xyz="0.02675 0.0 0.065"/>
+    <parent link="rod"/>
+    <child link="motor"/>
+    <axis xyz = "1 0 0"/>
+    <limit velocity= "17"/>
+  </joint>
+
+  <link name="motor">
+    <visual>
+      <origin rpy="0 1.570796 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.0385" radius="0.0372"/>
+      </geometry>
+      <material name="red"/>
+    </visual>
+
+    <inertial>
+      <mass value="0.335"/>
+      <inertia ixx="2.42e-4" ixy="0.0" ixz="0.0" iyy="1.53e-4" iyz="0.0" izz="1.53e-4"/>
+    </inertial>
+  </link>
+
+
+
+
+</robot>

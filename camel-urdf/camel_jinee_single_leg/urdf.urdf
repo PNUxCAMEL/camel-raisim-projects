@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="urdf">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0010303 0.021871 0.037302"
+        rpy="0 0 0" />
+      <mass
+        value="0.94608" />
+      <inertia
+        ixx="0.0010776"
+        ixy="7.6525E-05"
+        ixz="-1.6602E-06"
+        iyy="0.00063237"
+        iyz="-1.301E-05"
+        izz="0.0014594" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+
+  </link>
+  <link
+    name="calf">
+    <inertial>
+      <origin
+        xyz="-0.108495522164718 0.028403258153293 -0.0565826807027903"
+        rpy="0 0 0" />
+      <mass
+        value="0.310305934577043" />
+      <inertia
+        ixx="0.000347125815290355"
+        ixy="2.91336674259501E-07"
+        ixz="-0.000467009929482214"
+        iyy="0.00181301427640697"
+        iyz="1.63249929000488E-07"
+        izz="0.00152623179563921" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf/meshes/calf.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+
+  </link>
+  <joint
+    name="knee"
+    type="revolute">
+    <origin
+      xyz="0.00206580451599731 0.149243394606946 0"
+      rpy="1.5707963267949 0 -0.874200361120707" />
+    <parent
+      link="base_link" />
+    <child
+      link="calf" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="foot">
+    <inertial>
+      <origin
+        xyz="-0.00771322891264989 0.0170039595470722 -0.0311999072261345"
+        rpy="0 0 0" />
+      <mass
+        value="0.0953417129338783" />
+      <inertia
+        ixx="4.90631720929901E-05"
+        ixy="-2.15164162051583E-08"
+        ixz="6.42064496031329E-05"
+        iyy="0.000150702576187579"
+        iyz="1.0341506473177E-08"
+        izz="0.000103960609395437" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://urdf/meshes/foot.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+
+  </link>
+  <joint
+    name="ankle"
+    type="revolute">
+    <origin
+      xyz="-0.257397490227307 0.0114999999999133 -0.0956375032332182"
+      rpy="0 0.564938784899037 0" />
+    <parent
+      link="calf" />
+    <child
+      link="foot" />
+    <axis
+      xyz="0 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

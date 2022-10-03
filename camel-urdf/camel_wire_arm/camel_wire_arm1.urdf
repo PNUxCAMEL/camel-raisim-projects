@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+<robot name="camel_wire_arm">
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="light_gray">
+     <color rgba="0.75 0.75 0.75 1.0"/>
+  </material>
+
+  <material name="black1">
+      <color rgba="0.25 0.25 0.75 0.70"/>
+  </material>
+
+  <material name="black2">
+      <color rgba="0.25 0.25 0.25 0.90"/>
+  </material>
+
+  <link name="world"/>
+
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="lower_arm"/>
+  </joint>
+
+  <link name="lower_arm">
+    <visual>
+      <origin rpy="0 1.570796 0" xyz="0 0 0.3345"/>
+      <geometry>
+        <mesh filename="upper_arm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black2"/>
+    </visual>
+
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="elbow_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0.0 0.3345"/>
+    <parent link="lower_arm"/>
+    <child link="upper_arm"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <link name="upper_arm">
+    <visual>
+      <origin rpy="0 -1.570796 0" xyz="0 -0.003 0.0"/>
+      <geometry>
+        <mesh filename="fore_arm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black1"/>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.11375"/>
+      <geometry>
+        <box size="0.090 0.07775 0.3345"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.7835"/>
+      <inertia ixx="0.000545773" ixy="0.0" ixz="0.0" iyy="0.000940592" iyz="0.0" izz="0.000545773"/>
+    </inertial>
+  </link>
+  
+</robot>

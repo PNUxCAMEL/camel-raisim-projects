@@ -1,0 +1,111 @@
+<?xml version="1.0" ?>
+<robot name="camel_simple_pendulum">
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="gray">
+    <color rgba="0.5 0.5 0.5 1.0"/>
+  </material>
+
+  <material name="Aquamarine">
+    <color rgba="0.364 0.733 0.608 1.0"/>
+  </material>
+
+  <material name="Aqua">
+    <color rgba="0.0 0.733 0.733 1.0"/>
+  </material>
+
+  <link name="world"/>
+  <joint name="fixed_world" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0.2 0 0.1"/>
+      <geometry>
+        <box size="0.2 0.2 0.2"/>
+      </geometry>
+      <material name="gray"/>
+    </visual>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.2 0 0.1"/>
+      <geometry>
+        <box size="0.2 0.2 0.2"/>
+      </geometry>
+      <material name="gray"/>
+    </visual>
+    <visual>
+      <origin rpy="0 1.570796 0 " xyz="0 0 0.1"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.05"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+  
+  <joint name="base-roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0.1"/>
+    <parent link="base"/>
+    <child link="board"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="board">
+    <visual>
+      <origin rpy="0.785398 0 0" xyz="0 0 0.8485"/>
+      <geometry>
+        <box size="0.2 1.2 1.2"/>
+      </geometry>
+      <material name="Aquamarine"/>
+    </visual>
+    
+    <inertial>
+      <mass value="1"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.00102" iyz="0.0" izz="1.0"/>
+    </inertial>
+
+    <collision>
+      <origin rpy="0.785398 0 0" xyz="0 0 0.8485"/>
+      <geometry>
+        <box size="0.2 1.2 1.2"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="motor-roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0.2 0 0.8485"/>
+    <parent link="board"/>
+    <child link="motor"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="motor">
+    <visual>
+      <origin rpy="0 1.570796 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.5"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    
+    <visual>
+      <origin rpy="0 0 0" xyz="0.1 0 0.4"/>
+      <geometry>
+        <cylinder length="0.02" radius="0.05"/>
+      </geometry>
+      <material name="Aquamarine"/>
+    </visual>
+
+     <inertial>
+      <mass value="0.335"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="0.00005" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  
+  
+</robot>

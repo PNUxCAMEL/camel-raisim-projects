@@ -1,0 +1,138 @@
+<?xml version="1.0" ?>
+<robot name="camel_double_pendulum">
+
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="gray">
+    <color rgba="0.5 0.5 0.5 1.0"/>
+  </material>
+
+  <material name="Aquamarine">
+    <color rgba="0.364 0.733 0.608 1.0"/>
+  </material>
+
+  <material name="Aqua">
+    <color rgba="0.0 0.733 0.733 1.0"/>
+  </material>
+
+  <link name="world"/>
+  <joint name="fixed_world" type="fixed">
+    <parent link="world"/>
+    <child link="base"/>
+  </joint>
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.5"/>
+      <geometry>
+        <box size="0.025 0.025 1.0"/>
+      </geometry>
+      <material name="gray"/>
+    </visual>
+    <visual>
+      <origin rpy="0 0 0" xyz="0.125 0 0.9875"/>
+      <geometry>
+        <box size="0.25 0.025 0.025"/>
+      </geometry>
+      <material name="gray"/>
+    </visual>
+
+    <inertial>
+      <mass value="10"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="top_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0.2 0 1.0"/>
+    <parent link="base"/>
+    <child link="wire1"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="wire1">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.0075 0.0075 0.25"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="fixed_ball1" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 -0.265"/>
+    <parent link="wire1"/>
+    <child link="ball1"/>
+  </joint>
+
+  <link name="ball1">
+    <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+      <material name="Aquamarine"/>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+
+  <joint name="bottom_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="ball1"/>
+    <child link="wire2"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+
+  <link name="wire2">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.0075 0.0075 0.25"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="fixed_ball2" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 -0.265"/>
+    <parent link="wire2"/>
+    <child link="ball2"/>
+  </joint>
+
+  <link name="ball2">
+    <visual>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+      <material name="Aquamarine"/>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <sphere radius="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+    </inertial>
+  </link>
+  
+</robot>

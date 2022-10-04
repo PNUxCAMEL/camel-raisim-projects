@@ -12,7 +12,6 @@ public:
     void SetGroundProperty(std::string groundProperty);
 
 protected:
-    raisim::World* mWorld;
     raisim::Ground* mGround;
 };
 

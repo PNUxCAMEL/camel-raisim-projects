@@ -42,3 +42,19 @@ add_subdirectory(thread)
 add_subdirectory(trajectory)
 add_subdirectory(examples)
 ```
+
+## How to Use
+- Write commands in your CMakeList.txt like below
+```cmake
+find_package(camel-tools-filter REQUIRED)
+find_package(camel-tools-optimizer REQUIRED)
+find_package(camel-tools-sensor REQUIRED)
+find_package(camel-tools-thread REQUIRED)
+find_package(camel-tools-trajectory REQUIRED)
+
+target_link_libraries(<PROJECT_NAME> camel-tools-filter)
+target_link_libraries(<PROJECT_NAME> camel-tools-optimizer)
+target_link_libraries(<PROJECT_NAME> camel-tools-sensor)
+target_link_libraries(<PROJECT_NAME> camel-tools-thread)
+target_link_libraries(<PROJECT_NAME> camel-tools-trajectory)
+```

@@ -11,7 +11,7 @@ SingleLeggedMPCController::SingleLeggedMPCController(Robot* robot, double DT, in
     mPosition.setZero();
     mVelocity.setZero();
     updateState();
-    mTrajectoryGenerator.updateTrajectory(mPosition[0], GetRobot()->GetWorldTime(), 0.1, 0.2);
+    mTrajectoryGenerator.updateTrajectory(mPosition[0], mRobot->GetWorldTime(), 0.1, 0.2);
     mCalculatedForce = 0.0;
     mdz_dth1 = 0.0;
     mdz_dth2 = 0.0;
@@ -46,7 +46,7 @@ void SingleLeggedMPCController::DoControl()
 
 void SingleLeggedMPCController::setTrajectory()
 {
-    double currentTime = GetRobot()->GetWorldTime();
+    double currentTime = mRobot->GetWorldTime();
     for (int i = 0; i < mMPCHorizon; i++)
     {
         mTrajectorySequence(0, i) = mTrajectoryGenerator.getPositionTrajectory(currentTime + mDT * i);
@@ -56,8 +56,8 @@ void SingleLeggedMPCController::setTrajectory()
 
 void SingleLeggedMPCController::updateState()
 {
-    mPosition = GetRobot()->GetQ();
-    mVelocity = GetRobot()->GetQD();
+    mPosition = mRobot->GetQ();
+    mVelocity = mRobot->GetQD();
     mInitialPosition = mPosition[0];
     mInitialVelocity = mVelocity[0];
 }
@@ -84,12 +84,12 @@ void SingleLeggedMPCController::setControlInput()
             mTorque[i] = -mTorqueLimit;
         }
     }
-    GetRobot()->GetRobot()->setGeneralizedForce(mTorque);
+    mRobot->GetRobot()->setGeneralizedForce(mTorque);
 }
 
 void SingleLeggedMPCController::updateSHM()
 {
-    sharedMemory->localTime = GetRobot()->GetWorldTime();
+    sharedMemory->localTime = mRobot->GetWorldTime();
     sharedMemory->positionZ = mPosition[0];
     sharedMemory->desiredPositionZ = mTrajectorySequence(0, 0);
     sharedMemory->velocityZ = mVelocity[0];

@@ -5,8 +5,3 @@ Controller::Controller(Robot* robot)
 {
 
 }
-
-Robot* Controller::GetRobot() const
-{
-    return mRobot;
-}

@@ -7,22 +7,17 @@
 
 #include <QApplication>
 
+#include <camel-tools/ThreadGenerator.hpp>
+
 #include <PDcontroller/JointPDController.hpp>
 #include <canine_util/MotorCAN.hpp>
 #include <canine_util/Command.hpp>
-#include <canine_util/ThreadRT.hpp>
-#include <canine_util/ThreadNRT.hpp>
-#include <canine_util/ThreadFunction.hpp>
 #include <canine_gui/mainwindow.h>
 #include <canine_raisim//RobotVisualization.hpp>
 
 pthread_t RTThreadController;
 pthread_t NRTThreadCommand;
 pthread_t NRTThreadVisual;
-
-ThreadRT threadrt;
-ThreadNRT threadnrt;
-ThreadFunction threadfunc;
 
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;

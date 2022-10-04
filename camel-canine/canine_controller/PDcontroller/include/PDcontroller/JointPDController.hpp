@@ -9,8 +9,9 @@
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
 
+#include <camel-tools/CubicTrajectoryGenerator.hpp>
+
 #include "BezierTrajectoryGenerator.hpp"
-#include "CubicTrajectoryGenerator.hpp"
 
 class JointPDController
 {

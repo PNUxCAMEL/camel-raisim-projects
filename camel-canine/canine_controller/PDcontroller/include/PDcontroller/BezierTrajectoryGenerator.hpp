@@ -1,9 +1,9 @@
 //
-// Created by hs on 22. 7. 14.
+// Created by hs on 22. 10. 5.
 //
 
-#ifndef RAISIM_BEZIERTRAJECTORYGENERATOR_H
-#define RAISIM_BEZIERTRAJECTORYGENERATOR_H
+#ifndef RAISIM_BEZIERTRAJECTORYGENERATOR_HPP
+#define RAISIM_BEZIERTRAJECTORYGENERATOR_HPP
 
 #define PNUM 12
 #include <Eigen/Eigen>
@@ -32,4 +32,5 @@ private:
                        0.15, 0.125};
 };
 
-#endif //RAISIM_BEZIERTRAJECTORYGENERATOR_H
+
+#endif //RAISIM_BEZIERTRAJECTORYGENERATOR_HPP

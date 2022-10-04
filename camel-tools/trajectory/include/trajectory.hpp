@@ -3,7 +3,6 @@
 #define RAISIM_TRAJECTORY_HPP
 
 #include "CubicTrajectoryGenerator.hpp"
-#include "LegTrajectory.hpp"
 #include "QuinticTrajectoryGenerator.hpp"
 #include "SineTrajectoryGenerator.hpp"
 

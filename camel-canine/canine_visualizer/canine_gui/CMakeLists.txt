@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(canine_visualizer LANGUAGES CXX)
+project(canine_gui LANGUAGES CXX)
 
 set(CMAKE_AUTOMOC ON)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
@@ -11,14 +11,13 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} STATIC
-        src/RobotVisualization.cpp
         include/canine_gui/mainwindow.cpp
         include/canine_gui/qcustomplot.cpp
 )
+add_library(canine_visualizer::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
 target_link_libraries(${PROJECT_NAME}
-        raisim::raisim
         Qt5::Widgets
-        pthread
         canine_util
 )
 

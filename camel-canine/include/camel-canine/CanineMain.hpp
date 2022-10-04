@@ -14,7 +14,7 @@
 #include <canine_util/ThreadNRT.hpp>
 #include <canine_util/ThreadFunction.hpp>
 #include <canine_gui/mainwindow.h>
-#include <canine_visualizer/RobotVisualization.hpp>
+#include <canine_raisim//RobotVisualization.hpp>
 
 pthread_t RTThreadController;
 pthread_t NRTThreadCommand;

@@ -5,8 +5,8 @@
 #include <QTableWidget>
 #include <QTimer>
 #include <QPen>
-#include <canine_util/SharedMemory.hpp>
-#include <canine_util/RobotDescription.hpp>
+#include "canine_util/SharedMemory.hpp"
+#include "canine_util/RobotDescription.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

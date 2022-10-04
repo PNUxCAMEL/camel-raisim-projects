@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1308</width>
-    <height>820</height>
+    <width>1313</width>
+    <height>814</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -47,7 +47,7 @@
      </property>
      <property name="text">
       <string>CAN
-ON</string>
+       ON</string>
      </property>
     </widget>
     <widget class="QPushButton" name="BT_VISUAL_ON">
@@ -66,7 +66,7 @@ ON</string>
      </property>
      <property name="text">
       <string>Visual
-ON</string>
+       ON</string>
      </property>
     </widget>
     <widget class="QPushButton" name="BT_MOTOR_ON">
@@ -85,7 +85,7 @@ ON</string>
      </property>
      <property name="text">
       <string>Motor
-ON</string>
+       ON</string>
      </property>
     </widget>
     <widget class="QPushButton" name="BT_MOTOR_OFF">
@@ -107,7 +107,7 @@ ON</string>
      </property>
      <property name="text">
       <string>Motor
-OFF</string>
+       OFF</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="LE_CAN_STATUS">
@@ -179,9 +179,9 @@ OFF</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>200</y>
       <width>431</width>
-      <height>171</height>
+      <height>101</height>
      </rect>
     </property>
    </widget>
@@ -195,13 +195,13 @@ OFF</string>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
-    <widget class="QWidget" name="TAB_ROBOT">
+    <widget class="QWidget" name="TAB_LINEAR">
      <attribute name="title">
-      <string>Robot</string>
+      <string>Linear</string>
      </attribute>
-     <widget class="QCustomPlot" name="PLOT_TORQUE_HIP" native="true">
+     <widget class="QCustomPlot" name="PLOT_POS_BASE_Z" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -211,7 +211,7 @@ OFF</string>
        </rect>
       </property>
      </widget>
-     <widget class="QCustomPlot" name="PLOT_TORQUE_KNEE" native="true">
+     <widget class="QCustomPlot" name="PLOT_VEL_BASE_Z" native="true">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -221,7 +221,7 @@ OFF</string>
        </rect>
       </property>
      </widget>
-     <widget class="QCustomPlot" name="PLOT_VEL_HIP" native="true">
+     <widget class="QCustomPlot" name="PLOT_POS_BASE_Y" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -231,7 +231,7 @@ OFF</string>
        </rect>
       </property>
      </widget>
-     <widget class="QCustomPlot" name="PLOT_VEL_KNEE" native="true">
+     <widget class="QCustomPlot" name="PLOT_VEL_BASE_Y" native="true">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -241,7 +241,7 @@ OFF</string>
        </rect>
       </property>
      </widget>
-     <widget class="QCustomPlot" name="PLOT_POS_KNEE" native="true">
+     <widget class="QCustomPlot" name="PLOT_VEL_BASE_X" native="true">
       <property name="geometry">
        <rect>
         <x>430</x>
@@ -251,11 +251,206 @@ OFF</string>
        </rect>
       </property>
      </widget>
-     <widget class="QCustomPlot" name="PLOT_POS_HIP" native="true">
+     <widget class="QCustomPlot" name="PLOT_POS_BASE_X" native="true">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="TAB_ANGULAR">
+     <attribute name="title">
+      <string>Angular</string>
+     </attribute>
+     <widget class="QCustomPlot" name="PLOT_POS_BASE_YAW" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>490</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_BASE_YAW" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>490</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_POS_BASE_ROLL" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_BASE_ROLL" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_POS_BASE_PITCH" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>250</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_BASE_PITCH" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>250</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="TAB_FORWARD">
+     <attribute name="title">
+      <string>Forward</string>
+     </attribute>
+     <widget class="QCustomPlot" name="PLOT_VEL_LFKP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>490</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_RFKP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>490</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_LFHR" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_RFHR" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_LFHP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>250</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_RFHP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>250</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="TAB_BACKWARD">
+     <attribute name="title">
+      <string>Backward</string>
+     </attribute>
+     <widget class="QCustomPlot" name="PLOT_VEL_LBHR" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_LBHP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>250</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_RBHR" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>10</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_LBKP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>490</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_RBHP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>250</y>
+        <width>411</width>
+        <height>230</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QCustomPlot" name="PLOT_VEL_RBKP" native="true">
+      <property name="geometry">
+       <rect>
+        <x>430</x>
+        <y>490</y>
         <width>411</width>
         <height>230</height>
        </rect>
@@ -335,13 +530,166 @@ OFF</string>
      </widget>
     </widget>
    </widget>
+   <widget class="QGroupBox" name="groupBox_control">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>431</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>CONTROL</string>
+    </property>
+    <widget class="QPushButton" name="BT_CUSTOM2">
+     <property name="geometry">
+      <rect>
+       <x>328</x>
+       <y>39</y>
+       <width>91</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string>Custom2</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="LE_HOME">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>37</x>
+       <y>27</y>
+       <width>43</width>
+       <height>8</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="LE_CUSTOM1">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>247</x>
+       <y>27</y>
+       <width>43</width>
+       <height>8</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="BT_CUSTOM1">
+     <property name="geometry">
+      <rect>
+       <x>223</x>
+       <y>39</y>
+       <width>91</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Custom1</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="BT_HOME">
+     <property name="geometry">
+      <rect>
+       <x>13</x>
+       <y>39</y>
+       <width>91</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Home</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="LE_PD_CONTROL">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>142</x>
+       <y>27</y>
+       <width>43</width>
+       <height>8</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="BT_PD_CONTROL">
+     <property name="geometry">
+      <rect>
+       <x>118</x>
+       <y>39</y>
+       <width>91</width>
+       <height>51</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>11</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>PD
+       Control</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="LE_CUSTOM2">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>352</x>
+       <y>27</y>
+       <width>43</width>
+       <height>8</height>
+      </rect>
+     </property>
+     <property name="mouseTracking">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1308</width>
+     <width>1313</width>
      <height>22</height>
     </rect>
    </property>

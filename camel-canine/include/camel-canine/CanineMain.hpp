@@ -36,9 +36,9 @@ std::string urdfPath = "\\home\\hs\\raisimLib\\camel-raisim-projects\\camel-urdf
 raisim::RaisimServer server(&world);
 RobotVisualization userVisual(&world, urdfPath, &server);
 
-void *RTControllerThread(void *arg);
-void *NRTCommandThread(void *arg);
-void *NRTVisualThread(void *arg);
+void *RTControllerThread(void* arg);
+void *NRTCommandThread(void* arg);
+void *NRTVisualThread(void* arg);
 void clearSharedMemory();
 
 #endif //RAISIM_CANINEMAIN_HPP

@@ -7,10 +7,7 @@
 
 class Command {
 public:
-    Command(MotorCAN *can)
-    {
-        mCan = can;
-    }
+    Command(MotorCAN *can);
     void commandFunction();
 
 private:

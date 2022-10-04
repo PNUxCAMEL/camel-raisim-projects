@@ -11,8 +11,6 @@ add_library(${PROJECT_NAME} STATIC
         src/JointPDController.cpp
         src/BezierTrajectoryGenerator.cpp
         src/CubicTrajectoryGenerator.cpp
-        src/QuinticTrajectoryGenerator.cpp
-        src/SincurveTrajectoryGenerator.cpp
 )
 
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

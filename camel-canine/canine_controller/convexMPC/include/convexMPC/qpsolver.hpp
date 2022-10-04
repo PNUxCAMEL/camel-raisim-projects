@@ -20,43 +20,37 @@ class ConvexMPCSolver{
 public:
     ~ConvexMPCSolver();
 
-    void matrixinitialize(raisim::Mat<3,3> bdyInertia);
-    void setParameters(int Horizon, double Dt);
-    void setWeights(Vec13<double> weight, double alpha);
-    void resizeMatrix();
-    void getMetrices(int *_mpcTable, raisim::VecDyn pos, raisim::VecDyn vel, raisim::Vec<3> footPosition[4]);
+    void InitMatrix(raisim::Mat<3,3> bdyInertia);
+    void SetParameters(int Horizon, double Dt);
+    void SetWeights(Vec13<double> weight, double alpha);
+
+    void ResizeMatrix();
+    void GetMetrices(int *_mpcTable, raisim::VecDyn pos, raisim::VecDyn vel, raisim::Vec<3> footPosition[4]);
     void qpSolver();
-    void setTrajectory(double currentTime, GaitType currentGait);
+    void SetTrajectory(double currentTime, GaitType currentGait);
+    void GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side);
+    void GetGRF(Vec3<double> f[4]);
 
-    void quat_to_euler(Vec4<double>& quat, Vec3<double>& q);
-    void ss_mats(Eigen::Matrix<double,13,13>& Ac, Eigen::Matrix<double,13,12>& Bc, raisim::Vec<3> footPosition[4]);
-    void c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,13,12> B);
-    void matrix_to_real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
-    void getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side);
-    void getGRF(Vec3<double> f[4]);
-
-    // For real-time plotting
     Vec4<double> quat;
     Vec3<double> p,v,w,q;
-    double desiredPositionX;
-    double desiredPositionY;
-    double desiredPositionZ;
-
-    double desiredRotationX;
-    double desiredRotationY;
-    double desiredRotationZ;
 
     double stopPosX = 0.0;
 
 private:
-    int _Horizon;
-    double _Dt;
-    double _alpha;
+    void transformQuat2Euler(const Vec4<double>& quat, Vec3<double>& q);
+    void getStateSpaceMatrix(Eigen::Matrix<double,13,13>& Ac, Eigen::Matrix<double,13,12>& Bc, raisim::Vec<3> footPosition[4]);
+    void transformC2QP(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,13,12> B);
+    void transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
+
+private:
+    uint8_t mHorizon;
+    double mDt;
+    double mAlpha;
 
     Eigen::Matrix<double,3,3> I_world;
     Eigen::Matrix<double,3,3> I_inv;
 
-    Vec13<double> _weightMat;
+    Vec13<double> mWeightMat;
 
     Eigen::Matrix<double,13,13> Ac;
     Eigen::Matrix<double,13,12> Bc;

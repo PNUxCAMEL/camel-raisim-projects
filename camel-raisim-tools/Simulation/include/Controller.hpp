@@ -11,13 +11,12 @@ public:
     Robot* GetRobot() const;
     virtual void DoControl() = 0;
 
-private:
+protected:
     virtual void updateState() = 0;
     virtual void computeControlInput() = 0;
     virtual void setTrajectory() = 0;
     virtual void setControlInput() = 0;
     Robot* mRobot;
-
 };
 
 

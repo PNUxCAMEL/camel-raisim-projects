@@ -14,7 +14,7 @@ public:
     raisim::VecDyn GetQD() const;
     raisim::ArticulatedSystem* GetRobot() const;
 
-private:
+protected:
     raisim::World* mRobotWorld;
     raisim::ArticulatedSystem* mRobot;
 

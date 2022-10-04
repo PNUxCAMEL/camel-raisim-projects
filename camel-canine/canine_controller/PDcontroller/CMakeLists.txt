@@ -16,4 +16,7 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} raisim::raisim canine_util)
+target_link_libraries(${PROJECT_NAME}
+        raisim::raisim
+        canine_util
+)

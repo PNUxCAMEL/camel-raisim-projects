@@ -2,7 +2,7 @@
 // Created by camel on 22. 9. 21.
 //
 
-#include <canine_visualizer/RobotVisualization.hpp>
+#include <canine_raisim/RobotVisualization.hpp>
 
 extern pSHM sharedMemory;
 

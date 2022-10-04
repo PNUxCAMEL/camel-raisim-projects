@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(camel-canine-single_leg-left-simulation LANGUAGES CXX)
+project(camel-canine-leg-left-simulation LANGUAGES CXX)
 
 #==
 # Dependencies
@@ -42,7 +42,7 @@ set(GUI_FILES
         GUI/simulationMainwindow.cpp
         GUI/qcustomplot.cpp)
 
-set(CANINE_SINGLE_LEG_SRC
+set(CANINE_LEG_LEFT_SRC
         ../../camel-raisim-tools/Simulation/src/Controller.cpp
         ../../camel-raisim-tools/Simulation/src/Robot.cpp
         ../../camel-raisim-tools/Simulation/src/Simulation.cpp
@@ -54,9 +54,9 @@ set(CANINE_SINGLE_LEG_SRC
         src/SingleLeggedRobot.cpp
         )
 
-add_executable(camel-canine-single_leg-left-simulation
+add_executable(camel-canine-leg-left-simulation
         SingleLeggedSimulation.cpp
         ${GUI_FILES}
-        ${CANINE_SINGLE_LEG_SRC})
+        ${CANINE_LEG_LEFT_SRC})
 
-target_link_libraries(camel-canine-single_leg-left-simulation ${THIRD_PARTY_LIBS} ${CAMEL_LIBS})
+target_link_libraries(camel-canine-leg-left-simulation ${THIRD_PARTY_LIBS} ${CAMEL_LIBS})

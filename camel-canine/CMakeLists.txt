@@ -13,7 +13,6 @@ add_subdirectory(canine_util)
 include_directories(
         include
         ${EIGEN3_INCLUDE_DIRS}
-        ${qpOASES_SOURCE_DIR}/include
         ${convexMPC_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${canine_gui_SOURCE_DIR}/include

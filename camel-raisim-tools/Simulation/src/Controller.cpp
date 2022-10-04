@@ -5,3 +5,8 @@ Controller::Controller(Robot* robot)
 {
 
 }
+
+raisim::ArticulatedSystem* Controller::GetRaisimRobot() const
+{
+    return mRobot->GetRobot();
+}

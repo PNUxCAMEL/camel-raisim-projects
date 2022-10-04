@@ -15,6 +15,7 @@ protected:
     virtual void computeControlInput() = 0;
     virtual void setTrajectory() = 0;
     virtual void setControlInput() = 0;
+    raisim::ArticulatedSystem* GetRaisimRobot() const;
 
     Robot* mRobot;
 };

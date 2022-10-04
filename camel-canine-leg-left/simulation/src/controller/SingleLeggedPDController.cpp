@@ -67,7 +67,7 @@ void SingleLeggedPDController::setControlInput()
             mTorque[i] = -mTorqueLimit;
         }
     }
-    mRobot->GetRobot()->setGeneralizedForce(mTorque);
+    mRobot->SetTau(mTorque);
 }
 
 void SingleLeggedPDController::updateSHM()

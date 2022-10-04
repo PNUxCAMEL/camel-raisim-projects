@@ -72,7 +72,7 @@ void SingleLeggedIDController::setControlInput()
             mTorque[i] = -mTorqueLimit;
         }
     }
-    mRobot->GetRobot()->setGeneralizedForce(mTorque);
+    mRobot->SetTau(mTorque);
 }
 
 void SingleLeggedIDController::updateSHM()

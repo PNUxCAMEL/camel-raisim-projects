@@ -9,9 +9,16 @@ public:
     Robot(raisim::World* world, std::string urdfPath, std::string name);
 
     virtual void initialize() = 0;
+
+    void SetQ(Eigen::VectorXd Q) const;
+    void SetTau(Eigen::VectorXd tau) const;
+    int GetQDim() const;
+    int GetQDDim() const;
     double GetWorldTime() const;
-    raisim::VecDyn GetQ() const;
-    raisim::VecDyn GetQD() const;
+    Eigen::VectorXd GetQ() const;
+    Eigen::VectorXd GetQD() const;
+    Eigen::VectorXd GetCOM() const;
+    Eigen::MatrixXd GetMassMatrix() const;
     raisim::ArticulatedSystem* GetRobot() const;
 
 protected:

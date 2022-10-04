@@ -84,7 +84,7 @@ void SingleLeggedMPCController::setControlInput()
             mTorque[i] = -mTorqueLimit;
         }
     }
-    mRobot->GetRobot()->setGeneralizedForce(mTorque);
+    mRobot->SetTau(mTorque);
 }
 
 void SingleLeggedMPCController::updateSHM()

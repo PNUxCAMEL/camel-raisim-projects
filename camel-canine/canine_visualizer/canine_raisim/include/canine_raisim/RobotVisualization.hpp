@@ -14,8 +14,12 @@
 class RobotVisualization {
 public:
     RobotVisualization(raisim::World *world, raisim::RaisimServer *server);
-    void visualFunction();
+    void VisualFunction();
+
+private:
     void openRaisimServer();
+    void updateVisualReal();
+    void updateVisualSimul();
 
 private:
     raisim::RaisimServer *mServer;
@@ -23,7 +27,7 @@ private:
     raisim::World *mWorld;
     std::string mUrdfPath;
 
-    void updateVisual();
+
 };
 
 

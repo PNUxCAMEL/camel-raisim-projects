@@ -18,13 +18,45 @@ RobotVisualization::RobotVisualization(raisim::World *world, raisim::RaisimServe
     mRobot->setName("Canine");
 }
 
+void RobotVisualization::VisualFunction()
+{
+    switch(sharedMemory->visualState)
+    {
+        case STATE_VISUAL_STOP:
+        {
+            break;
+        }
+        case STATE_OPEN_RAISIM:
+        {
+            openRaisimServer();
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            break;
+        }
+        case STATE_UPDATE_VISUAL:
+        {
+            if(sharedMemory->simulState)
+            {
+                updateVisualReal();
+            }
+            else
+            {
+                updateVisualReal();
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+
 void RobotVisualization::openRaisimServer()
 {
     mServer->launchServer(8080);
     sleep(1);
 }
 
-void RobotVisualization::updateVisual()
+void RobotVisualization::updateVisualReal()
 {
     Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
@@ -66,26 +98,7 @@ void RobotVisualization::updateVisual()
     mRobot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-void RobotVisualization::visualFunction()
+void updateVisualSimul()
 {
-    switch(sharedMemory->visualState)
-    {
-        case STATE_VISUAL_STOP:
-        {
-            break;
-        }
-        case STATE_OPEN_RAISIM:
-        {
-            openRaisimServer();
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_UPDATE_VISUAL:
-        {
-            updateVisual();
-            break;
-        }
-        default:
-            break;
-    }
+
 }

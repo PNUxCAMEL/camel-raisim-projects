@@ -35,7 +35,7 @@ void* NRTVisualThread(void *arg)
     std::cout << "entered #nrt_command_thread" << std::endl;
     while(true)
     {
-        userVisual.visualFunction();
+        userVisual.VisualFunction();
         usleep(VISUAL_dT*1e6);
     }
 }
@@ -67,6 +67,7 @@ void clearSharedMemory()
     sharedMemory->newCommand = false;
     sharedMemory->canStatus = false;
     sharedMemory->motorStatus = false;
+    sharedMemory->simulState = true;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->localTime = 0;

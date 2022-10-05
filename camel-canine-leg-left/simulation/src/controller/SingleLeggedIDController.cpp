@@ -15,7 +15,7 @@ SingleLeggedIDController::SingleLeggedIDController(Robot* robot, double DT)
     mPosition.setZero();
     mVelocity.setZero();
     updateState();
-    mTrajectoryGenerator.updateTrajectory(mPosition[0], 0.35, GetRobot()->GetWorldTime(), 1.0);
+    mTrajectoryGenerator.updateTrajectory(mPosition[0], 0.35, mRobot->GetWorldTime(), 1.0);
     mDesiredPosition = 0.0;
     mDesiredVelocity = 0.0;
     mDesiredAcceleration = 0.0;
@@ -46,8 +46,8 @@ void SingleLeggedIDController::setTrajectory()
 
 void SingleLeggedIDController::updateState()
 {
-    mPosition = GetRobot()->GetQ();
-    mVelocity = GetRobot()->GetQD();
+    mPosition = mRobot->GetQ();
+    mVelocity = mRobot->GetQD();
 }
 
 void SingleLeggedIDController::computeControlInput()
@@ -72,12 +72,12 @@ void SingleLeggedIDController::setControlInput()
             mTorque[i] = -mTorqueLimit;
         }
     }
-    GetRobot()->GetRobot()->setGeneralizedForce(mTorque);
+    mRobot->SetTau(mTorque);
 }
 
 void SingleLeggedIDController::updateSHM()
 {
-    sharedMemory->localTime = GetRobot()->GetWorldTime();
+    sharedMemory->localTime = mRobot->GetWorldTime();
     sharedMemory->positionZ = mPosition[0];
     sharedMemory->desiredPositionZ = mDesiredPosition;
     sharedMemory->velocityZ = mVelocity[0];

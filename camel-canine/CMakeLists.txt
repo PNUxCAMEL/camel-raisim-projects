@@ -23,7 +23,7 @@ include_directories(
         ${canine_fsm_SOURCE_DIR}/include
 )
 
-add_executable(camel-canine src/CanineMain.cpp )
+add_executable(camel-canine canine_demo/CanineMain.cpp)
 target_link_libraries(camel-canine
         PUBLIC
         Qt5::Widgets

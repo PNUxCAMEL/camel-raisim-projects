@@ -6,7 +6,7 @@ Controller::Controller(Robot* robot)
 
 }
 
-Robot* Controller::GetRobot() const
+raisim::ArticulatedSystem* Controller::GetRaisimRobot() const
 {
-    return mRobot;
+    return mRobot->GetRobot();
 }

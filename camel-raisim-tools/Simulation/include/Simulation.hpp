@@ -11,8 +11,7 @@ public:
 
     void SetGroundProperty(std::string groundProperty);
 
-private:
-    raisim::World* mWorld;
+protected:
     raisim::Ground* mGround;
 };
 

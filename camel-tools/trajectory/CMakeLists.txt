@@ -7,7 +7,6 @@ include_directories(${EIGEN3_INCLUDE_DIRS})
 
 set(trajectory_src
         src/CubicTrajectoryGenerator.cpp
-        src/LegTrajectory.cpp
         src/QuinticTrajectoryGenerator.cpp
         src/SineTrajectoryGenerator.cpp
 )
@@ -16,7 +15,6 @@ set(trajectory_hdr
         include/trajectory.hpp
         include/SineTrajectoryGenerator.hpp
         include/QuinticTrajectoryGenerator.hpp
-        include/LegTrajectory.hpp
         include/CubicTrajectoryGenerator.hpp
 )
 

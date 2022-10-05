@@ -14,7 +14,6 @@
 #define F_MAX 240
 #define MU 0.6
 
-
 char var_elim[2000];
 char con_elim[2000];
 
@@ -39,13 +38,13 @@ ConvexMPCSolver::~ConvexMPCSolver() {
  * @param Horizon : MPC Horizon -> init : 5
  * @param Dt      : MPC Contoller time step -> init : 0.005s = 5ms
  */
-void ConvexMPCSolver::setParameters(int Horizon, double Dt){
-    if(_Horizon != Horizon)
+void ConvexMPCSolver::SetParameters(int Horizon, double Dt){
+    if(mHorizon != Horizon)
     {
-        _Horizon = Horizon;
-        resizeMatrix();
+        mHorizon = Horizon;
+        ResizeMatrix();
     }
-    _Dt = Dt;
+    mDt = Dt;
 }
 
 /*!
@@ -53,21 +52,21 @@ void ConvexMPCSolver::setParameters(int Horizon, double Dt){
  * @param weightMat : Weights for robot states 12[Q,P,dQ,dP] + gravity
  * @param alpha     : Weights for desired force U
  */
-void ConvexMPCSolver::setWeights(Vec13<double> weightMat, double alpha){
-    _weightMat = weightMat;
-    _alpha = alpha;
+void ConvexMPCSolver::SetWeights(Vec13<double> weightMat, double alpha){
+    mWeightMat = weightMat;
+    mAlpha = alpha;
 }
 
-void ConvexMPCSolver::resizeMatrix(){
-    Aqp.resize(13*_Horizon, Eigen::NoChange);
-    Bqp.resize(13*_Horizon, 12*_Horizon);
-    L.resize(13*_Horizon, 13*_Horizon);
-    xd.resize(13*_Horizon, Eigen::NoChange);
-    U_b.resize(20*_Horizon, Eigen::NoChange);
-    fmat.resize(20*_Horizon, 12*_Horizon);
-    H.resize(12*_Horizon, 12*_Horizon);
-    g.resize(12*_Horizon, Eigen::NoChange);
-    K.resize(12*_Horizon, 12*_Horizon);
+void ConvexMPCSolver::ResizeMatrix(){
+    Aqp.resize(13*mHorizon, Eigen::NoChange);
+    Bqp.resize(13*mHorizon, 12*mHorizon);
+    L.resize(13*mHorizon, 13*mHorizon);
+    xd.resize(13*mHorizon, Eigen::NoChange);
+    U_b.resize(20*mHorizon, Eigen::NoChange);
+    fmat.resize(20*mHorizon, 12*mHorizon);
+    H.resize(12*mHorizon, 12*mHorizon);
+    g.resize(12*mHorizon, Eigen::NoChange);
+    K.resize(12*mHorizon, 12*mHorizon);
 
     Aqp.setZero();
     Bqp.setZero();
@@ -95,23 +94,23 @@ void ConvexMPCSolver::resizeMatrix(){
         free(q_red);
     }
 
-    H_qpoases = (qpOASES::real_t*)malloc(12*_Horizon*12*_Horizon*sizeof(qpOASES::real_t));
-    g_qpoases = (qpOASES::real_t*)malloc(12*_Horizon*sizeof(qpOASES::real_t));
-    A_qpoases = (qpOASES::real_t*)malloc(12*_Horizon*20*_Horizon*sizeof(qpOASES::real_t));
-    ub_qpoases = (qpOASES::real_t*)malloc(20*_Horizon*sizeof(qpOASES::real_t));
-    lb_qpoases = (qpOASES::real_t*)malloc(20*_Horizon*sizeof(qpOASES::real_t));
-    q_soln = (qpOASES::real_t*)malloc(12*_Horizon*sizeof(qpOASES::real_t));
+    H_qpoases = (qpOASES::real_t*)malloc(12*mHorizon*12*mHorizon*sizeof(qpOASES::real_t));
+    g_qpoases = (qpOASES::real_t*)malloc(12*mHorizon*sizeof(qpOASES::real_t));
+    A_qpoases = (qpOASES::real_t*)malloc(12*mHorizon*20*mHorizon*sizeof(qpOASES::real_t));
+    ub_qpoases = (qpOASES::real_t*)malloc(20*mHorizon*sizeof(qpOASES::real_t));
+    lb_qpoases = (qpOASES::real_t*)malloc(20*mHorizon*sizeof(qpOASES::real_t));
+    q_soln = (qpOASES::real_t*)malloc(12*mHorizon*sizeof(qpOASES::real_t));
 
-    H_red = (qpOASES::real_t*)malloc(12*12*_Horizon*_Horizon*sizeof(qpOASES::real_t));
-    g_red = (qpOASES::real_t*)malloc(12*1*_Horizon*sizeof(qpOASES::real_t));
-    A_red = (qpOASES::real_t*)malloc(12*20*_Horizon*_Horizon*sizeof(qpOASES::real_t));
-    lb_red = (qpOASES::real_t*)malloc(20*1*_Horizon*sizeof(qpOASES::real_t));
-    ub_red = (qpOASES::real_t*)malloc(20*1*_Horizon*sizeof(qpOASES::real_t));
-    q_red = (qpOASES::real_t*)malloc(12*_Horizon*sizeof(qpOASES::real_t));
+    H_red = (qpOASES::real_t*)malloc(12*12*mHorizon*mHorizon*sizeof(qpOASES::real_t));
+    g_red = (qpOASES::real_t*)malloc(12*1*mHorizon*sizeof(qpOASES::real_t));
+    A_red = (qpOASES::real_t*)malloc(12*20*mHorizon*mHorizon*sizeof(qpOASES::real_t));
+    lb_red = (qpOASES::real_t*)malloc(20*1*mHorizon*sizeof(qpOASES::real_t));
+    ub_red = (qpOASES::real_t*)malloc(20*1*mHorizon*sizeof(qpOASES::real_t));
+    q_red = (qpOASES::real_t*)malloc(12*mHorizon*sizeof(qpOASES::real_t));
     real_allocated = 1;
 }
 
-void ConvexMPCSolver::matrixinitialize(raisim::Mat<3,3> bdyInertia){
+void ConvexMPCSolver::InitMatrix(raisim::Mat<3,3> bdyInertia){
     x0.setZero();
     xd.setZero();
     K.setIdentity();
@@ -125,22 +124,9 @@ void ConvexMPCSolver::matrixinitialize(raisim::Mat<3,3> bdyInertia){
     I_world = bdyInertia.e();
 }
 
-void ConvexMPCSolver::setTrajectory(double currentTime,GaitType currentGait) {
-    for(int i = 0; i < _Horizon ; i++)
+void ConvexMPCSolver::SetTrajectory(double currentTime,GaitType currentGait) {
+    for(int i = 0; i < mHorizon ; i++)
     {
-/*        xd(i*13,0) = 0.f;
-        xd(i*13+1,0) = 0.f;
-        xd(i*13+2,0) = 0.f;
-
-        xd(i*13+4,0) = 0.0;
-
-        xd(i*13+6,0) = 0.f;
-        xd(i*13+7,0) = 0.f;
-        xd(i*13+8,0) = 0.f;
-
-        xd(i*13+10,0) = 0.f;
-        xd(i*13+11,0) = 0.f;*/
-
         xd(i*13+5,0) = 0.37;
 
         if(currentGait == GaitType::STAND){
@@ -148,38 +134,31 @@ void ConvexMPCSolver::setTrajectory(double currentTime,GaitType currentGait) {
             xd(i*13+9,0) = 0.0;
         }
         else{
-            xd(i*13+3,0) = p[0]+0.7*(_Dt*i);
+            xd(i*13+3,0) = p[0]+0.7*(mDt*i);
             xd(i*13+9,0) = 0.7;
         }
     }
 
-    desiredPositionX = xd(3,0);
-    desiredPositionY = xd(4,0);
-    desiredPositionZ = xd(5,0);
-
-    desiredRotationX = xd(0,0);
-    desiredRotationY = xd(1,0);
-    desiredRotationZ = xd(2,0);
 }
 
-void ConvexMPCSolver::getMetrices(int *_mpcTable, raisim::VecDyn pos, raisim::VecDyn vel, raisim::Vec<3> footPosition[4]){
+void ConvexMPCSolver::GetMetrices(int *_mpcTable, raisim::VecDyn pos, raisim::VecDyn vel, raisim::Vec<3> footPosition[4]){
     p << pos[0], pos[1], pos[2];
     quat << pos[3], pos[4], pos[5], pos[6];
     v << vel[0], vel[1], vel[2];
     w << vel[3], vel[4], vel[5];
 
-    quat_to_euler(quat, q);
+    transformQuat2Euler(quat, q);
     x0 << q[0], q[1], q[2], p[0], p[1], p[2], w[0], w[1], w[2], v[0], v[1], v[2], GRAVITY;
 
-    ss_mats(Ac, Bc, footPosition);
-    c2qp(Ac,Bc);
-    L.diagonal() = _weightMat.replicate(_Horizon,1);
+    getStateSpaceMatrix(Ac, Bc, footPosition);
+    transformC2QP(Ac,Bc);
+    L.diagonal() = mWeightMat.replicate(mHorizon,1);
 
-    H = 2*(Bqp.transpose()*L*Bqp + _alpha*K);
+    H = 2*(Bqp.transpose()*L*Bqp + mAlpha*K);
     g = 2*Bqp.transpose()*L*(Aqp*x0 - xd);
 
     int k = 0;
-    for(int i = 0; i < _Horizon; i++){
+    for(int i = 0; i < mHorizon; i++){
         for(int16_t j = 0; j < 4; j++){
             U_b(5*k + 0) = BIG_NUMBER;
             U_b(5*k + 1) = BIG_NUMBER;
@@ -199,7 +178,7 @@ void ConvexMPCSolver::getMetrices(int *_mpcTable, raisim::VecDyn pos, raisim::Ve
             0, -mu, 1.f,
             0,   0, 1.f;
 
-    for(int i = 0; i < _Horizon*4; i++) //12
+    for(int i = 0; i < mHorizon*4; i++) //12
     {
         fmat.block(i*5,i*3,5,3) = f_block; //Such like diagonal matrix
     }
@@ -215,7 +194,7 @@ int8_t near_one(float a)
     return near_zero(a-1);
 }
 
-void ConvexMPCSolver::matrix_to_real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols){
+void ConvexMPCSolver::transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols){
     int32_t a = 0;
     for(int16_t r = 0; r < rows; r++){
         for(int16_t c = 0; c < cols; c++){
@@ -226,17 +205,17 @@ void ConvexMPCSolver::matrix_to_real(qpOASES::real_t* dst, Eigen::Matrix<double,
 }
 
 void ConvexMPCSolver::qpSolver(){
-    matrix_to_real(H_qpoases, H, 12*_Horizon, 12*_Horizon);
-    matrix_to_real(g_qpoases, g, 12*_Horizon, 1);
-    matrix_to_real(A_qpoases, fmat, 20*_Horizon, 12*_Horizon);
-    matrix_to_real(ub_qpoases,U_b, 20*_Horizon, 1);
+    transformMat2Real(H_qpoases, H, 12*mHorizon, 12*mHorizon);
+    transformMat2Real(g_qpoases, g, 12*mHorizon, 1);
+    transformMat2Real(A_qpoases, fmat, 20*mHorizon, 12*mHorizon);
+    transformMat2Real(ub_qpoases,U_b, 20*mHorizon, 1);
 
-    for(int i =0; i<20*_Horizon; i++)
+    for(int i =0; i<20*mHorizon; i++)
         lb_qpoases[i] = 0.f;
 
     // Set red matrices
-    int16_t num_constraints = 20*_Horizon;
-    int16_t num_variables = 12*_Horizon;
+    int16_t num_constraints = 20*mHorizon;
+    int16_t num_variables = 12*mHorizon;
 
     int new_cons = num_constraints;
     int new_vars = num_variables;
@@ -389,7 +368,7 @@ inline Eigen::Matrix<double,3,3> getSkew(Vec3<double> r)
     return cm;
 }
 
-void ConvexMPCSolver::quat_to_euler(Vec4<double>& quat, Vec3<double>& q)
+void ConvexMPCSolver::transformQuat2Euler(const Vec4<double>& quat, Vec3<double>& q)
 {
     //edge case!
     float as = t_min(-2.*(quat[1]*quat[3]-quat[0]*quat[2]),.99999);
@@ -398,7 +377,7 @@ void ConvexMPCSolver::quat_to_euler(Vec4<double>& quat, Vec3<double>& q)
     q(2) = atan2(2.f*(quat[1]*quat[2]+quat[0]*quat[3]),sq(quat[0]) + sq(quat[1]) - sq(quat[2]) - sq(quat[3]));
 }
 
-void ConvexMPCSolver::ss_mats(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<double,13,12>& B, raisim::Vec<3> footPosition[4]){
+void ConvexMPCSolver::getStateSpaceMatrix(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<double,13,12>& B, raisim::Vec<3> footPosition[4]){
     double yc = cos(q[2]);
     double ys = sin(q[2]);
 
@@ -437,11 +416,11 @@ void ConvexMPCSolver::ss_mats(Eigen::Matrix<double,13,13>& A, Eigen::Matrix<doub
     }
 }
 
-void ConvexMPCSolver::c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,13,12> B){
+void ConvexMPCSolver::transformC2QP(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,13,12> B){
     ABc.setZero();
     ABc.block(0,0,13,13) = A;
     ABc.block(0,13,13,12) = B;
-    ABc = _Dt*ABc;
+    ABc = mDt*ABc;
     expmm = ABc.exp();
 
     Adt = expmm.block(0,0,13,13);
@@ -449,15 +428,15 @@ void ConvexMPCSolver::c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,1
 
     Eigen::Matrix<double,13,13> D[20];
     D[0].setIdentity();
-    for(int i=1; i<=_Horizon; i++)
+    for(int i=1; i<=mHorizon; i++)
     {
         D[i] = Adt * D[i-1];
     }
 
-    for(int r=0; r<_Horizon; r++)
+    for(int r=0; r<mHorizon; r++)
     {
         Aqp.block(13*r,0,13,13) = D[r+1];
-        for(int c=0; c<_Horizon; c++)
+        for(int c=0; c<mHorizon; c++)
         {
             if(r>=c)
             {
@@ -468,7 +447,7 @@ void ConvexMPCSolver::c2qp(Eigen::Matrix<double,13,13> A, Eigen::Matrix<double,1
     }
 }
 
-void ConvexMPCSolver::getJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side){
+void ConvexMPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side){
     double s1 = std::sin(hip);
     double s2 = std::sin(thigh);
 
@@ -492,7 +471,7 @@ void ConvexMPCSolver::getJacobian(Eigen::Matrix<double,3,3>& J, double hip, doub
         -LCAL*c1*s32;
 }
 
-void ConvexMPCSolver::getGRF(Vec3<double> _f[4]){
+void ConvexMPCSolver::GetGRF(Vec3<double> _f[4]){
     // [Fx,Fy,Fz]
     for(int leg = 0; leg < 4; leg++)
     {

@@ -33,13 +33,13 @@ void *RTControllerThread(void *arg) {
     std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 <<"Hz"<< std::endl;
     while (true) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
-        threadfunc.timespec_add_us(&TIME_NEXT, PERIOD_US);
+        timespec_add_us(&TIME_NEXT, PERIOD_US);
 
         userController.controllerFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (threadfunc.timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-            std::cout << "RT Deadline Miss, controller thread : " << threadfunc.timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
+            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
                       << " ms" << std::endl;
         }
     }
@@ -68,7 +68,6 @@ void clearSharedMemory()
 
 int main(int argc, char *argv[])
 {
-
     QApplication a(argc, argv);
     MainWindow w;
 
@@ -76,9 +75,9 @@ int main(int argc, char *argv[])
     sharedMemory = (pSHM) malloc(sizeof(SHM));
     clearSharedMemory();
 
-    int thread_id_rt1 = threadrt.generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99,NULL);
-    int thread_id_nrt1 = threadnrt.generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
-    int thread_id_nrt2 = threadnrt.generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99,NULL);
+    int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
+    int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
 
     w.show();
     return a.exec();

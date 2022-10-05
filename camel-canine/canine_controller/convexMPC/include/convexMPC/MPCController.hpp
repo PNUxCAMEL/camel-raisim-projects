@@ -15,14 +15,9 @@ public:
     //Constructor
     MPCController(raisim::World *world, raisim::ArticulatedSystem *robot, double dT);
 
-    void initialize();
     void doControl();
     void setTrajectory();
-    void updateState();
-    void computeControlInput();
-    void setControlInput();
 
-    void setLegcontrol();
     void setGait(int index);
     void resetParam(int, double);
     void resetWeight(Vec13<double>, double);
@@ -30,6 +25,13 @@ public:
     // For real-time plotting
     ConvexMPCSolver cmpcSolver;
     raisim::VecDyn position = raisim::VecDyn(19);
+
+private:
+    void initialize();
+    void updateState();
+    void setLegcontrol();
+    void computeControlInput();
+    void setControlInput();
 
 private:
     raisim::World* mWorld;
@@ -51,7 +53,6 @@ private:
     double alpha = 1e-10;
     double torqueLimit = 50.0;
     double legDpos = 0.0;
-
 
     raisim::VecDyn velocity = raisim::VecDyn(18);
     raisim::VecDyn torque = raisim::VecDyn(18);

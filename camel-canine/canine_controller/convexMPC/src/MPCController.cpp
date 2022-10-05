@@ -18,12 +18,12 @@ MPCController::MPCController(raisim::World *world, raisim::ArticulatedSystem *ro
     currentGaitName = GaitType::STAND;
 
     bdyInertia = robot->getInertia()[0];
-    cmpcSolver.matrixinitialize(bdyInertia);
+    cmpcSolver.InitMatrix(bdyInertia);
 
     weightMat << 0.5, 0.5, 50, 20, 20, 80, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
-    cmpcSolver.setParameters(mMPCHorizon, mDT);
-    cmpcSolver.setWeights(weightMat, alpha);
-    cmpcSolver.resizeMatrix();
+    cmpcSolver.SetParameters(mMPCHorizon, mDT);
+    cmpcSolver.SetWeights(weightMat, alpha);
+    cmpcSolver.ResizeMatrix();
 
     legGenerator.updateTrajectory(mWorld->getWorldTime(), 1);
 
@@ -48,10 +48,10 @@ void MPCController::doControl() {
     mpcTable = currentGait->getGaitTable();
 
     updateState();
-    cmpcSolver.setTrajectory(mWorld->getWorldTime(),currentGaitName);
-    cmpcSolver.getMetrices(mpcTable, position, velocity, footPosition);
+    cmpcSolver.SetTrajectory(mWorld->getWorldTime(),currentGaitName);
+    cmpcSolver.GetMetrices(mpcTable, position, velocity, footPosition);
     cmpcSolver.qpSolver();
-    cmpcSolver.getGRF(f);
+    cmpcSolver.GetGRF(f);
     setLegcontrol();
     computeControlInput();
     setControlInput();
@@ -59,7 +59,6 @@ void MPCController::doControl() {
 }
 
 void MPCController::updateState(){
-    position = mRobot->getGeneralizedCoordinate();
     position = mRobot->getGeneralizedCoordinate();
     velocity = mRobot->getGeneralizedVelocity();
 
@@ -121,10 +120,10 @@ void MPCController::setLegcontrol() {
 }
 
 void MPCController::computeControlInput() {
-    cmpcSolver.getJacobian(robotJacobian[0], position[ 7],position[ 8],position[ 9],1);
-    cmpcSolver.getJacobian(robotJacobian[1], position[10],position[11],position[12],-1);
-    cmpcSolver.getJacobian(robotJacobian[2], position[13],position[14],position[15],1);
-    cmpcSolver.getJacobian(robotJacobian[3], position[16],position[17],position[18],-1);
+    cmpcSolver.GetJacobian(robotJacobian[0], position[ 7],position[ 8],position[ 9],1);
+    cmpcSolver.GetJacobian(robotJacobian[1], position[10],position[11],position[12],-1);
+    cmpcSolver.GetJacobian(robotJacobian[2], position[13],position[14],position[15],1);
+    cmpcSolver.GetJacobian(robotJacobian[3], position[16],position[17],position[18],-1);
 
     for(int i=0; i<4; i++)
     {
@@ -175,11 +174,11 @@ void MPCController::setGait(int index) {
 void MPCController::resetParam(int hor, double dt) {
     mMPCHorizon = hor;
     mDT = dt;
-    cmpcSolver.setParameters(mMPCHorizon, mDT);
+    cmpcSolver.SetParameters(mMPCHorizon, mDT);
 }
 
 void MPCController::resetWeight(Vec13<double> w, double a) {
     weightMat = w;
     alpha = a;
-    cmpcSolver.setWeights(weightMat, alpha);
+    cmpcSolver.SetWeights(weightMat, alpha);
 }

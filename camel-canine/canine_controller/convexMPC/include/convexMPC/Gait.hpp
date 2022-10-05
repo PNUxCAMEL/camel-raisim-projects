@@ -8,9 +8,6 @@
 #include <iostream>
 #include "EigenTypes.hpp"
 
-using Eigen::Array4f;
-using Eigen::Array4i;
-
 enum class GaitType {
     STAND,
     TROT,
@@ -30,13 +27,14 @@ public:
     ~OffsetGait();
     int* getGaitTable() override;
     void setIterations(int iteration) override;
+
 private:
-    int* _gaitTable;
-    int _iteration;
-    int _nHorizon;
-    int _cyclePeriod;
-    Array4i _offsets;
-    Array4i _durations;
+    int* mGaitTable;
+    int mIteration;
+    int mHorizon;
+    int mCyclePeriod;
+    Eigen::Array4i mOffsets;
+    Eigen::Array4i mDurations;
 };
 
 

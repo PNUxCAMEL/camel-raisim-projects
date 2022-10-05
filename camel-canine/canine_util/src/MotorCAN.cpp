@@ -2,6 +2,33 @@
 
 extern pSHM sharedMemory;
 
+MotorCAN::MotorCAN(std::string canName)
+    : enc2rad(2.0 * 3.141592 / 65535)
+    , torque2int(24.0385)
+    , mCanName(canName)
+    , mSock(0)
+    , mGearRatio(9)
+    , mSendedCommand(0)
+    , mMotorId{MOTOR_HIP_ID, MOTOR_KNEE_ID}
+    , mAngularPositionOffset{HIP_POS_OFFSET, KNEE_POS_OFFSET}
+{
+    for(int index = 0; index < MOTOR_NUM; index++)
+    {
+        mEncoder[index] = 0;
+        mEncoderMultiturnNum[index] = 0;
+        mEncoderTemp[index] = 35000;
+        mEncoderPast[index] = 35000;
+        mEncoderRaw[index] = 0;
+        mEncoderOffset[index] = 0;
+        mMotorTemperature[index] = 0;
+        mMotorErrorCode[index] = 0;
+        mAngularPosition[index] = 0;
+        mAngularVelocity[index] = 0;
+        mCurrentTorque[index] = 0;
+        mMotorVoltage[index] = 0;
+    }
+}
+
 void MotorCAN::canInit()
 {
     std::string command3 =

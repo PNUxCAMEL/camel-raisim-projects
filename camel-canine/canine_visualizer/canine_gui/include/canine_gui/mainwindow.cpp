@@ -46,7 +46,7 @@ void MainWindow::InitTable(QTableWidget *table){
     tableFont.setPointSize(7);
 
     const int col_num = 7;
-    const int row_num = 2;
+    const int row_num = 12;
     const int col_width = 45;
     const int item_height = 25;
     const int item_width = 30;
@@ -62,7 +62,7 @@ void MainWindow::InitTable(QTableWidget *table){
         table->setColumnWidth(i, col_width);
     }
 
-    table->horizontalHeaderItem(0)->setText("Status");
+    table->horizontalHeaderItem(0)->setText("Motor ID");
     table->horizontalHeaderItem(1)->setText("Error");
     table->horizontalHeaderItem(2)->setText("Temp");
     table->horizontalHeaderItem(3)->setText("Voltage");
@@ -80,8 +80,18 @@ void MainWindow::InitTable(QTableWidget *table){
         table->verticalHeaderItem(i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter|Qt::AlignCenter);
         table->verticalHeaderItem(i)->setFont(tableFont);
     }
-    table->verticalHeaderItem(0)->setText("MT H");
-    table->verticalHeaderItem(1)->setText("MT K");
+    table->verticalHeaderItem(0)->setText("LFHR");
+    table->verticalHeaderItem(1)->setText("LFHP");
+    table->verticalHeaderItem(2)->setText("LFKP");
+    table->verticalHeaderItem(3)->setText("RFHR");
+    table->verticalHeaderItem(4)->setText("RFHP");
+    table->verticalHeaderItem(5)->setText("RFKP");
+    table->verticalHeaderItem(6)->setText("LBHR");
+    table->verticalHeaderItem(7)->setText("LBHP");
+    table->verticalHeaderItem(8)->setText("LBKP");
+    table->verticalHeaderItem(9)->setText("RBHR");
+    table->verticalHeaderItem(10)->setText("RBHP");
+    table->verticalHeaderItem(11)->setText("RBKP");
 
 
     for(int i=0; i<row_num; i++){
@@ -119,12 +129,34 @@ void MainWindow::GraphInitialize(){
     QSharedPointer<QCPAxisTickerTime> timeTicker(new QCPAxisTickerTime);
     timeTicker->setTimeFormat("%m:%s");
 
-    ui->PLOT_POS_HIP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-    ui->PLOT_POS_KNEE->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-    ui->PLOT_VEL_HIP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-    ui->PLOT_VEL_KNEE->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-    ui->PLOT_TORQUE_HIP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
-    ui->PLOT_TORQUE_KNEE->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_POS_BASE_X->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_POS_BASE_Y->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_POS_BASE_Z->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_BASE_X->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_BASE_Y->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_BASE_Z->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+
+    ui->PLOT_POS_BASE_ROLL->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_POS_BASE_PITCH->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_POS_BASE_YAW->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_BASE_ROLL->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_BASE_PITCH->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_BASE_YAW->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+
+    ui->PLOT_VEL_LFHR->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_LFHP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_LFKP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_RFHR->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_RFHP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_RFKP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+
+    ui->PLOT_VEL_LBHR->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_LBHP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_LBKP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_RBHR->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_RBHP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+    ui->PLOT_VEL_RBKP->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
+
 
     ui->PLOT_CUSTOM_1->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
     ui->PLOT_CUSTOM_2->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
@@ -133,55 +165,152 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_5->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
     ui->PLOT_CUSTOM_6->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom | QCP :: iSelectAxes | QCP::iSelectLegend | QCP::iSelectPlottables);
 
-    // Custom Plot : Robot
     myPen.setWidthF(1.5);
     myPen.setColor(Qt::blue);
-    ui->PLOT_POS_HIP->legend->setVisible(true);
-    ui->PLOT_POS_HIP->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_POS_HIP->addGraph();
-    ui->PLOT_POS_HIP->graph(0)->setPen(myPen);
-    ui->PLOT_POS_HIP->graph(0)->setName("position hip");
+    ui->PLOT_POS_BASE_X->legend->setVisible(true);
+    ui->PLOT_POS_BASE_X->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_POS_BASE_X->addGraph();
+    ui->PLOT_POS_BASE_X->graph(0)->setPen(myPen);
+    ui->PLOT_POS_BASE_X->graph(0)->setName("position x");
 
-    ui->PLOT_POS_KNEE->legend->setVisible(true);
-    ui->PLOT_POS_KNEE->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_POS_KNEE->addGraph();
-    ui->PLOT_POS_KNEE->graph(0)->setPen(myPen);
-    ui->PLOT_POS_KNEE->graph(0)->setName("position knee");
+    ui->PLOT_POS_BASE_Y->legend->setVisible(true);
+    ui->PLOT_POS_BASE_Y->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_POS_BASE_Y->addGraph();
+    ui->PLOT_POS_BASE_Y->graph(0)->setPen(myPen);
+    ui->PLOT_POS_BASE_Y->graph(0)->setName("position y");
 
-    ui->PLOT_VEL_HIP->legend->setVisible(true);
-    ui->PLOT_VEL_HIP->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_VEL_HIP->addGraph();
-    ui->PLOT_VEL_HIP->graph(0)->setPen(myPen);
-    ui->PLOT_VEL_HIP->graph(0)->setName("velocity hip");
+    ui->PLOT_POS_BASE_Z->legend->setVisible(true);
+    ui->PLOT_POS_BASE_Z->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_POS_BASE_Z->addGraph();
+    ui->PLOT_POS_BASE_Z->graph(0)->setPen(myPen);
+    ui->PLOT_POS_BASE_Z->graph(0)->setName("position z");
 
-    ui->PLOT_VEL_KNEE->legend->setVisible(true);
-    ui->PLOT_VEL_KNEE->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_VEL_KNEE->addGraph();
-    ui->PLOT_VEL_KNEE->graph(0)->setPen(myPen);
-    ui->PLOT_VEL_KNEE->graph(0)->setName("velocity knee");
+    ui->PLOT_VEL_BASE_X->legend->setVisible(true);
+    ui->PLOT_VEL_BASE_X->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_BASE_X->addGraph();
+    ui->PLOT_VEL_BASE_X->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_BASE_X->graph(0)->setName("velocity x");
 
-    ui->PLOT_TORQUE_HIP->legend->setVisible(true);
-    ui->PLOT_TORQUE_HIP->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_TORQUE_HIP->addGraph();
-    ui->PLOT_TORQUE_HIP->graph(0)->setPen(myPen);
-    ui->PLOT_TORQUE_HIP->graph(0)->setName("torque hip desired");
-    ui->PLOT_TORQUE_HIP->addGraph();
-    myPen.setColor(Qt::red);
-    ui->PLOT_TORQUE_HIP->graph(1)->setPen(myPen);
-    ui->PLOT_TORQUE_HIP->graph(1)->setName("torque hip current");
+    ui->PLOT_VEL_BASE_Y->legend->setVisible(true);
+    ui->PLOT_VEL_BASE_Y->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_BASE_Y->addGraph();
+    ui->PLOT_VEL_BASE_Y->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_BASE_Y->graph(0)->setName("velocity y");
 
-    myPen.setColor(Qt::blue);
-    ui->PLOT_TORQUE_KNEE->legend->setVisible(true);
-    ui->PLOT_TORQUE_KNEE->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_TORQUE_KNEE->addGraph();
-    ui->PLOT_TORQUE_KNEE->graph(0)->setPen(myPen);
-    ui->PLOT_TORQUE_KNEE->graph(0)->setName("torque knee desired");
-    ui->PLOT_TORQUE_KNEE->addGraph();
-    myPen.setColor(Qt::red);
-    ui->PLOT_TORQUE_KNEE->graph(1)->setPen(myPen);
-    ui->PLOT_TORQUE_KNEE->graph(1)->setName("torque knee current");
+    ui->PLOT_VEL_BASE_Z->legend->setVisible(true);
+    ui->PLOT_VEL_BASE_Z->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_BASE_Z->addGraph();
+    ui->PLOT_VEL_BASE_Z->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_BASE_Z->graph(0)->setName("velocity z");
 
-    // Custom Plot : Custom
+    ui->PLOT_POS_BASE_ROLL->legend->setVisible(true);
+    ui->PLOT_POS_BASE_ROLL->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_POS_BASE_ROLL->addGraph();
+    ui->PLOT_POS_BASE_ROLL->graph(0)->setPen(myPen);
+    ui->PLOT_POS_BASE_ROLL->graph(0)->setName("position roll");
+
+    ui->PLOT_POS_BASE_PITCH->legend->setVisible(true);
+    ui->PLOT_POS_BASE_PITCH->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_POS_BASE_PITCH->addGraph();
+    ui->PLOT_POS_BASE_PITCH->graph(0)->setPen(myPen);
+    ui->PLOT_POS_BASE_PITCH->graph(0)->setName("position pitch");
+
+    ui->PLOT_POS_BASE_YAW->legend->setVisible(true);
+    ui->PLOT_POS_BASE_YAW->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_POS_BASE_YAW->addGraph();
+    ui->PLOT_POS_BASE_YAW->graph(0)->setPen(myPen);
+    ui->PLOT_POS_BASE_YAW->graph(0)->setName("position yaw");
+
+    ui->PLOT_VEL_BASE_ROLL->legend->setVisible(true);
+    ui->PLOT_VEL_BASE_ROLL->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_BASE_ROLL->addGraph();
+    ui->PLOT_VEL_BASE_ROLL->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_BASE_ROLL->graph(0)->setName("velocity roll");
+
+    ui->PLOT_VEL_BASE_PITCH->legend->setVisible(true);
+    ui->PLOT_VEL_BASE_PITCH->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_BASE_PITCH->addGraph();
+    ui->PLOT_VEL_BASE_PITCH->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_BASE_PITCH->graph(0)->setName("velocity pitch");
+
+    ui->PLOT_VEL_BASE_YAW->legend->setVisible(true);
+    ui->PLOT_VEL_BASE_YAW->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_BASE_YAW->addGraph();
+    ui->PLOT_VEL_BASE_YAW->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_BASE_YAW->graph(0)->setName("velocity yaw");
+
+    ui->PLOT_VEL_LFHR->legend->setVisible(true);
+    ui->PLOT_VEL_LFHR->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_LFHR->addGraph();
+    ui->PLOT_VEL_LFHR->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_LFHR->graph(0)->setName("velocity LFHR");
+
+    ui->PLOT_VEL_LFHP->legend->setVisible(true);
+    ui->PLOT_VEL_LFHP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_LFHP->addGraph();
+    ui->PLOT_VEL_LFHP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_LFHP->graph(0)->setName("velocity LFHP");
+
+    ui->PLOT_VEL_LFKP->legend->setVisible(true);
+    ui->PLOT_VEL_LFKP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_LFKP->addGraph();
+    ui->PLOT_VEL_LFKP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_LFKP->graph(0)->setName("velocity LFKP");
+
+    ui->PLOT_VEL_RFHR->legend->setVisible(true);
+    ui->PLOT_VEL_RFHR->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_RFHR->addGraph();
+    ui->PLOT_VEL_RFHR->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_RFHR->graph(0)->setName("velocity RFHR");
+
+    ui->PLOT_VEL_RFHP->legend->setVisible(true);
+    ui->PLOT_VEL_RFHP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_RFHP->addGraph();
+    ui->PLOT_VEL_RFHP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_RFHP->graph(0)->setName("velocity RFHP");
+
+    ui->PLOT_VEL_RFKP->legend->setVisible(true);
+    ui->PLOT_VEL_RFKP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_RFKP->addGraph();
+    ui->PLOT_VEL_RFKP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_RFKP->graph(0)->setName("velocity RFKP");
+
+    ui->PLOT_VEL_LBHR->legend->setVisible(true);
+    ui->PLOT_VEL_LBHR->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_LBHR->addGraph();
+    ui->PLOT_VEL_LBHR->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_LBHR->graph(0)->setName("velocity LBHR");
+
+    ui->PLOT_VEL_LBHP->legend->setVisible(true);
+    ui->PLOT_VEL_LBHP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_LBHP->addGraph();
+    ui->PLOT_VEL_LBHP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_LBHP->graph(0)->setName("velocity LBHP");
+
+    ui->PLOT_VEL_LBKP->legend->setVisible(true);
+    ui->PLOT_VEL_LBKP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_LBKP->addGraph();
+    ui->PLOT_VEL_LBKP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_LBKP->graph(0)->setName("velocity LBKP");
+
+    ui->PLOT_VEL_RBHR->legend->setVisible(true);
+    ui->PLOT_VEL_RBHR->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_RBHR->addGraph();
+    ui->PLOT_VEL_RBHR->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_RBHR->graph(0)->setName("velocity RBHR");
+
+    ui->PLOT_VEL_RBHP->legend->setVisible(true);
+    ui->PLOT_VEL_RBHP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_RBHP->addGraph();
+    ui->PLOT_VEL_RBHP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_RBHP->graph(0)->setName("velocity RBHP");
+
+    ui->PLOT_VEL_RBKP->legend->setVisible(true);
+    ui->PLOT_VEL_RBKP->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_VEL_RBKP->addGraph();
+    ui->PLOT_VEL_RBKP->graph(0)->setPen(myPen);
+    ui->PLOT_VEL_RBKP->graph(0)->setName("velocity RBKP");
+
     myPen.setColor(Qt::blue);
     ui->PLOT_CUSTOM_1->addGraph();
     ui->PLOT_CUSTOM_1->graph(0)->setPen(myPen);
@@ -224,19 +353,46 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_6->addGraph();
     ui->PLOT_CUSTOM_6->graph(1)->setPen(myPen);
 
-    ui->PLOT_POS_HIP->xAxis->setTicker(timeTicker);
-    ui->PLOT_POS_KNEE->xAxis->setTicker(timeTicker);
-    ui->PLOT_VEL_HIP->xAxis->setTicker(timeTicker);
-    ui->PLOT_VEL_KNEE->xAxis->setTicker(timeTicker);
-    ui->PLOT_TORQUE_HIP->xAxis->setTicker(timeTicker);
-    ui->PLOT_TORQUE_KNEE->xAxis->setTicker(timeTicker);
+    ui->PLOT_CUSTOM_1->legend->setVisible(true);
+    ui->PLOT_CUSTOM_1->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_CUSTOM_1->graph(0)->setName("tau LBHR");
+    ui->PLOT_CUSTOM_1->graph(1)->setName("des_tau LBHR");
+    ui->PLOT_CUSTOM_3->legend->setVisible(true);
+    ui->PLOT_CUSTOM_3->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_CUSTOM_3->graph(0)->setName("tau LBHP");
+    ui->PLOT_CUSTOM_3->graph(1)->setName("des_tau LBHP");
+    ui->PLOT_CUSTOM_5->legend->setVisible(true);
+    ui->PLOT_CUSTOM_5->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_CUSTOM_5->graph(0)->setName("tau LBKP");
+    ui->PLOT_CUSTOM_5->graph(1)->setName("des_tau LBKP");
 
-    ui->PLOT_POS_HIP->yAxis->setRange(-1, 1);
-    ui->PLOT_POS_KNEE->yAxis->setRange(-1, 1);
-    ui->PLOT_VEL_HIP->yAxis->setRange(-1, 1);
-    ui->PLOT_VEL_KNEE->yAxis->setRange(-1, 1);
-    ui->PLOT_TORQUE_HIP->yAxis->setRange(-1, 1);
-    ui->PLOT_TORQUE_KNEE->yAxis->setRange(-1, 1);
+    ui->PLOT_POS_BASE_X->xAxis->setTicker(timeTicker);
+    ui->PLOT_POS_BASE_Y->xAxis->setTicker(timeTicker);
+    ui->PLOT_POS_BASE_Z->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_BASE_X->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_BASE_Y->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_BASE_Z->xAxis->setTicker(timeTicker);
+
+    ui->PLOT_POS_BASE_ROLL->xAxis->setTicker(timeTicker);
+    ui->PLOT_POS_BASE_PITCH->xAxis->setTicker(timeTicker);
+    ui->PLOT_POS_BASE_YAW->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_BASE_ROLL->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_BASE_PITCH->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_BASE_YAW->xAxis->setTicker(timeTicker);
+
+    ui->PLOT_VEL_LFHR->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_LFHP->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_LFKP->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_RFHR->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_RFHP->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_RFKP->xAxis->setTicker(timeTicker);
+
+    ui->PLOT_VEL_LBHR->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_LBHP->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_LBKP->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_RBHR->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_RBHP->xAxis->setTicker(timeTicker);
+    ui->PLOT_VEL_RBKP->xAxis->setTicker(timeTicker);
 
     ui->PLOT_CUSTOM_1->xAxis->setTicker(timeTicker);
     ui->PLOT_CUSTOM_2->xAxis->setTicker(timeTicker);
@@ -275,28 +431,104 @@ void MainWindow::GraphInitialize(){
 
 void MainWindow::GraphUpdate()
 {
-    ui->PLOT_POS_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[HIP_IDX]);
-    ui->PLOT_POS_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[KNEE_IDX]);
-    ui->PLOT_VEL_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[HIP_IDX]);
-    ui->PLOT_VEL_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[KNEE_IDX]);
-    ui->PLOT_TORQUE_HIP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[HIP_IDX]);
-    ui->PLOT_TORQUE_HIP->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorTorque[HIP_IDX]);
-    ui->PLOT_TORQUE_KNEE->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
-    ui->PLOT_TORQUE_KNEE->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorTorque[KNEE_IDX]);
+    ui->PLOT_POS_BASE_X->graph(0)->addData(sharedMemory->localTime, sharedMemory->basePosition[0]);
+    ui->PLOT_POS_BASE_Y->graph(0)->addData(sharedMemory->localTime, sharedMemory->basePosition[1]);
+    ui->PLOT_POS_BASE_Z->graph(0)->addData(sharedMemory->localTime, sharedMemory->basePosition[2]);
+    ui->PLOT_VEL_BASE_X->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseVelocity[0]);
+    ui->PLOT_VEL_BASE_Y->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseVelocity[1]);
+    ui->PLOT_VEL_BASE_Z->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseVelocity[2]);
 
-    ui->PLOT_POS_HIP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
-    ui->PLOT_POS_KNEE->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
-    ui->PLOT_VEL_HIP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
-    ui->PLOT_VEL_KNEE->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
-    ui->PLOT_TORQUE_HIP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
-    ui->PLOT_TORQUE_KNEE->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_POS_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[0]);
+    ui->PLOT_POS_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[1]);
+    ui->PLOT_POS_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[2]);
+    ui->PLOT_VEL_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[0]);
+    ui->PLOT_VEL_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[1]);
+    ui->PLOT_VEL_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[2]);
 
-    ui->PLOT_POS_HIP->replot();
-    ui->PLOT_POS_KNEE->replot();
-    ui->PLOT_VEL_HIP->replot();
-    ui->PLOT_VEL_KNEE->replot();
-    ui->PLOT_TORQUE_HIP->replot();
-    ui->PLOT_TORQUE_KNEE->replot();
+    ui->PLOT_VEL_LFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LFHR_IDX]);
+    ui->PLOT_VEL_LFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LFHP_IDX]);
+    ui->PLOT_VEL_LFKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LFKP_IDX]);
+    ui->PLOT_VEL_RFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RFHR_IDX]);
+    ui->PLOT_VEL_RFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RFHP_IDX]);
+    ui->PLOT_VEL_RFKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RFKP_IDX]);
+
+    ui->PLOT_VEL_LBHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LBHR_IDX]);
+    ui->PLOT_VEL_LBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LBHP_IDX]);
+    ui->PLOT_VEL_LBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LBKP_IDX]);
+    ui->PLOT_VEL_RBHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RBHR_IDX]);
+    ui->PLOT_VEL_RBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RBHP_IDX]);
+    ui->PLOT_VEL_RBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RBKP_IDX]);
+
+    ui->PLOT_CUSTOM_1->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[LBHR_IDX]);
+    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[LBHP_IDX]);
+    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[LBKP_IDX]);
+    ui->PLOT_CUSTOM_1->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[LBHR_IDX]);
+    ui->PLOT_CUSTOM_3->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[LBHP_IDX]);
+    ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[LBKP_IDX]);
+
+    ui->PLOT_POS_BASE_X->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_POS_BASE_Y->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_POS_BASE_Z->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_BASE_X->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_BASE_Y->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_BASE_Z->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+
+    ui->PLOT_POS_BASE_ROLL->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_POS_BASE_PITCH->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_POS_BASE_YAW->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_BASE_ROLL->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_BASE_PITCH->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_BASE_YAW->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+
+    ui->PLOT_VEL_LFHR->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_LFHP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_LFKP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_RFHR->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_RFHP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_RFKP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+
+    ui->PLOT_VEL_LBHR->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_LBHP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_LBKP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_RBHR->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_RBHP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_VEL_RBKP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+
+    ui->PLOT_CUSTOM_1->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_CUSTOM_3->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_CUSTOM_5->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+
+    ui->PLOT_POS_BASE_X->replot();
+    ui->PLOT_POS_BASE_Y->replot();
+    ui->PLOT_POS_BASE_Z->replot();
+    ui->PLOT_VEL_BASE_X->replot();
+    ui->PLOT_VEL_BASE_Y->replot();
+    ui->PLOT_VEL_BASE_Z->replot();
+
+    ui->PLOT_POS_BASE_ROLL->replot();
+    ui->PLOT_POS_BASE_PITCH->replot();
+    ui->PLOT_POS_BASE_YAW->replot();
+    ui->PLOT_VEL_BASE_ROLL->replot();
+    ui->PLOT_VEL_BASE_PITCH->replot();
+    ui->PLOT_VEL_BASE_YAW->replot();
+
+    ui->PLOT_VEL_LFHR->replot();
+    ui->PLOT_VEL_LFHP->replot();
+    ui->PLOT_VEL_LFKP->replot();
+    ui->PLOT_VEL_RFHR->replot();
+    ui->PLOT_VEL_RFHP->replot();
+    ui->PLOT_VEL_RFKP->replot();
+
+    ui->PLOT_VEL_LBHR->replot();
+    ui->PLOT_VEL_LBHP->replot();
+    ui->PLOT_VEL_LBKP->replot();
+    ui->PLOT_VEL_RBHR->replot();
+    ui->PLOT_VEL_RBHP->replot();
+    ui->PLOT_VEL_RBKP->replot();
+
+    ui->PLOT_CUSTOM_1->replot();
+    ui->PLOT_CUSTOM_3->replot();
+    ui->PLOT_CUSTOM_5->replot();
 }
 
 void MainWindow::DisplayUpdate()
@@ -310,8 +542,18 @@ void MainWindow::DisplayUpdate()
         ui->LE_CAN_STATUS->setStyleSheet("background-color:red");
     }
 
-    ui->TW_MOTOR->item(0, 0)->setText(QString().sprintf("id : 0x%x", MOTOR_HIP_ID));
-    ui->TW_MOTOR->item(1, 0)->setText(QString().sprintf("id : 0x%x", MOTOR_KNEE_ID));
+    ui->TW_MOTOR->item(0, 0)->setText(QString().sprintf("0x%x", MOTOR_LFHR_ID));
+    ui->TW_MOTOR->item(1, 0)->setText(QString().sprintf("0x%x", MOTOR_LFHP_ID));
+    ui->TW_MOTOR->item(2, 0)->setText(QString().sprintf("0x%x", MOTOR_LFKP_ID));
+    ui->TW_MOTOR->item(3, 0)->setText(QString().sprintf("0x%x", MOTOR_RFHR_ID));
+    ui->TW_MOTOR->item(4, 0)->setText(QString().sprintf("0x%x", MOTOR_RFHP_ID));
+    ui->TW_MOTOR->item(5, 0)->setText(QString().sprintf("0x%x", MOTOR_RFKP_ID));
+    ui->TW_MOTOR->item(6, 0)->setText(QString().sprintf("0x%x", MOTOR_LBHR_ID));
+    ui->TW_MOTOR->item(7, 0)->setText(QString().sprintf("0x%x", MOTOR_LBHP_ID));
+    ui->TW_MOTOR->item(8, 0)->setText(QString().sprintf("0x%x", MOTOR_LBKP_ID));
+    ui->TW_MOTOR->item(9, 0)->setText(QString().sprintf("0x%x", MOTOR_RBHR_ID));
+    ui->TW_MOTOR->item(10, 0)->setText(QString().sprintf("0x%x", MOTOR_RBHP_ID));
+    ui->TW_MOTOR->item(11, 0)->setText(QString().sprintf("0x%x", MOTOR_RBKP_ID));
     for(int index = 0; index < MOTOR_NUM; index++)
     {
         if(sharedMemory->motorStatus)

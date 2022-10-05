@@ -2,33 +2,6 @@
 
 extern pSHM sharedMemory;
 
-MotorCAN::MotorCAN(std::string canName)
-    : enc2rad(2.0 * 3.141592 / 65535)
-    , torque2int(24.0385)
-    , mCanName(canName)
-    , mSock(0)
-    , mGearRatio(9)
-    , mSendedCommand(0)
-    , mMotorId{MOTOR_HIP_ID, MOTOR_KNEE_ID}
-    , mAngularPositionOffset{HIP_POS_OFFSET, KNEE_POS_OFFSET}
-{
-    for(int index = 0; index < MOTOR_NUM; index++)
-    {
-        mEncoder[index] = 0;
-        mEncoderMultiturnNum[index] = 0;
-        mEncoderTemp[index] = 35000;
-        mEncoderPast[index] = 35000;
-        mEncoderRaw[index] = 0;
-        mEncoderOffset[index] = 0;
-        mMotorTemperature[index] = 0;
-        mMotorErrorCode[index] = 0;
-        mAngularPosition[index] = 0;
-        mAngularVelocity[index] = 0;
-        mCurrentTorque[index] = 0;
-        mMotorVoltage[index] = 0;
-    }
-}
-
 void MotorCAN::canInit()
 {
     std::string command3 =
@@ -114,7 +87,7 @@ void MotorCAN::readEncoder()
         }
         mEncoder[motorIndex] = mEncoderTemp[motorIndex] + 65535 * mEncoderMultiturnNum[motorIndex];
         mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
-        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAxis[motorIndex]*(mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
     }
 }
 
@@ -171,7 +144,7 @@ void MotorCAN::setTorque(double *desiredTorque)
 {
     for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
     {
-        u_int16_t desiredCurrent = round(torque2int * desiredTorque[motorIndex]);
+        u_int16_t desiredCurrent = round(mAxis[motorIndex]* torque2int * desiredTorque[motorIndex]);
         u_int8_t currentLowerData;
         u_int8_t currentUpperData;
 
@@ -203,9 +176,9 @@ void MotorCAN::setTorque(double *desiredTorque)
 
         sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
         sharedMemory->motorDesiredTorque[motorIndex] = desiredTorque[motorIndex];
-        sharedMemory->motorTorque[motorIndex] = mCurrentTorque[motorIndex];
-        sharedMemory->motorVelocity[motorIndex] = mAngularVelocity[motorIndex];
-        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+        sharedMemory->motorTorque[motorIndex] = mAxis[motorIndex]*mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex] = mAxis[motorIndex]*mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAxis[motorIndex]*(mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
     }
 }
 
@@ -213,7 +186,7 @@ void MotorCAN::setVelocity(double *desiredVelocity)
 {
     for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
     {
-        u_int32_t velocityInput = round(desiredVelocity[motorIndex] * R2D * 100 * mGearRatio);
+        u_int32_t velocityInput = round(mAxis[motorIndex]*desiredVelocity[motorIndex] * R2D * 100 * mGearRatio);
 
         u_int8_t vel0;
         u_int8_t vel1;
@@ -252,9 +225,9 @@ void MotorCAN::setVelocity(double *desiredVelocity)
         mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
 
         sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
-        sharedMemory->motorTorque[motorIndex] = mCurrentTorque[motorIndex];
-        sharedMemory->motorVelocity[motorIndex] = mAngularVelocity[motorIndex];
-        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+        sharedMemory->motorTorque[motorIndex] = mAxis[motorIndex]*mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex] = mAxis[motorIndex]*mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAxis[motorIndex]*(mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
     }
 }
 
@@ -262,7 +235,7 @@ void MotorCAN::setPosition(double *desiredPosition)
 {
     for(int motorIndex = 0; motorIndex < MOTOR_NUM; motorIndex++)
     {
-        u_int32_t position_int = round(desiredPosition[motorIndex] * R2D * 100 * mGearRatio);
+        u_int32_t position_int = round(mAxis[motorIndex]*desiredPosition[motorIndex] * R2D * 100 * mGearRatio);
 
         u_int8_t pos0;
         u_int8_t pos1;
@@ -303,8 +276,8 @@ void MotorCAN::setPosition(double *desiredPosition)
         mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
 
         sharedMemory->motorTemp[motorIndex] = mMotorTemperature[motorIndex];
-        sharedMemory->motorTorque[motorIndex] = mCurrentTorque[motorIndex];
-        sharedMemory->motorVelocity[motorIndex] = mAngularVelocity[motorIndex];
-        sharedMemory->motorPosition[motorIndex] = mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex];
+        sharedMemory->motorTorque[motorIndex] = mAxis[motorIndex]*mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex] = mAxis[motorIndex]*mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex] = mAxis[motorIndex]*(mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
     }
 }

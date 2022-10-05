@@ -20,12 +20,12 @@ public:
     mCan(can)
     {
         mIteration = 0;
-        Kp[HIP_IDX] = 30.0;
-        Kd[HIP_IDX] = 1.5;
-        Kp[KNEE_IDX] = 30.0;
-        Kd[KNEE_IDX] = 1.5;
-        mTorqueLimit[HIP_IDX] = 3.0;
-        mTorqueLimit[KNEE_IDX] = 3.0;
+        for(int motorIdx = 0; motorIdx < MOTOR_NUM ; motorIdx++)
+        {
+            Kp[motorIdx] = 30.0;
+            Kd[motorIdx] = 1.5;
+            mTorqueLimit[motorIdx] = 3.0;
+        }
     }
 
 private:

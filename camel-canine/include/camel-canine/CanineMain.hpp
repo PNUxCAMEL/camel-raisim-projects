@@ -22,12 +22,13 @@ pthread_t NRTThreadVisual;
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
-MotorCAN can("can9");
+//TODO: DIVIDE CAN into 2 for Forward and Backward
+MotorCAN can("can5");
 Command userCommand(&can);
 JointPDController userController(&can);
 
 raisim::World world;
-std::string urdfPath = "\\home\\hs\\raisimLib\\camel-raisim-projects\\camel-urdf\\camel_single_leg_left\\camel_single_leg.urdf";
+std::string urdfPath = "\\home\\hs\\raisimLib\\camel-raisim-projects\\camel-urdf\\canine\\urdf\\canineV1.urdf";
 raisim::RaisimServer server(&world);
 RobotVisualization userVisual(&world, urdfPath, &server);
 

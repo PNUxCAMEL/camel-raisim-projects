@@ -45,6 +45,7 @@ void *RTControllerThread(void *arg) {
     }
 }
 
+//TODO: add other variables
 void clearSharedMemory()
 {
     sharedMemory->newCommand = false;

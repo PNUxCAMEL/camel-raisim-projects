@@ -3,7 +3,9 @@
 Robot::Robot(raisim::World* world, std::string urdfPath, std::string name)
     : mRobotWorld(world)
 {
-    mRobot = world->addArticulatedSystem(urdfPath);
+    mUrdfPath = URDF_RSC_DIR;
+    mUrdfPath = mUrdfPath.append(urdfPath);
+    mRobot = world->addArticulatedSystem(mUrdfPath);
     mRobot->setName(name);
 }
 
@@ -50,6 +52,11 @@ Eigen::VectorXd Robot::GetCOM() const
 Eigen::MatrixXd Robot::GetMassMatrix() const
 {
     return mRobot->getMassMatrix().e();
+}
+
+std::string Robot::GetUrdfPath() const
+{
+    return mUrdfPath;
 }
 
 raisim::ArticulatedSystem* Robot::GetRobot() const

@@ -19,11 +19,13 @@ public:
     Eigen::VectorXd GetQD() const;
     Eigen::VectorXd GetCOM() const;
     Eigen::MatrixXd GetMassMatrix() const;
+    std::string GetUrdfPath() const;
     raisim::ArticulatedSystem* GetRobot() const;
 
 protected:
     raisim::World* mRobotWorld;
     raisim::ArticulatedSystem* mRobot;
+    std::string mUrdfPath;
 
 };
 

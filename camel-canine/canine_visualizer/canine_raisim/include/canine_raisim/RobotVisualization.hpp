@@ -13,17 +13,7 @@
 
 class RobotVisualization {
 public:
-    RobotVisualization(raisim::World *world, std::string urdfPath, raisim::RaisimServer *server)
-    {
-        mWorld = world;
-        mWorld->setTimeStep(0.01);
-        mWorld->addGround();
-        raisim::Vec<3> gravity = {0.0, 0.0, -9.81};
-        mWorld->setGravity(gravity);
-        mRobot = mWorld->addArticulatedSystem(urdfPath);
-        mRobot->setName("Canine-leg");
-        mServer = server;
-    }
+    RobotVisualization(raisim::World *world, raisim::RaisimServer *server);
     void visualFunction();
     void openRaisimServer();
 
@@ -31,9 +21,9 @@ private:
     raisim::RaisimServer *mServer;
     raisim::ArticulatedSystem *mRobot;
     raisim::World *mWorld;
+    std::string mUrdfPath;
+
     void updateVisual();
-
-
 };
 
 

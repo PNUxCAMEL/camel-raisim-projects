@@ -6,6 +6,18 @@
 
 extern pSHM sharedMemory;
 
+RobotVisualization::RobotVisualization(raisim::World *world, raisim::RaisimServer *server)
+    : mWorld(world)
+    , mServer(server)
+    , mUrdfPath(CAMEL_RAISIM_ROOT)
+{
+    mWorld->setGravity({0.0, 0.0, -9.81});
+    mWorld->setTimeStep(0.01);
+    mWorld->addGround();
+    mRobot = mWorld->addArticulatedSystem(mUrdfPath+"/camel-urdf/canine/urdf/canineV1.urdf");
+    mRobot->setName("Canine-leg");
+}
+
 void RobotVisualization::openRaisimServer()
 {
     mServer->launchServer(8080);

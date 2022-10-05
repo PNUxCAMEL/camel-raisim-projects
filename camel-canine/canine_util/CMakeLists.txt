@@ -10,6 +10,3 @@ add_library(canine_util
         src/Command.cpp
         src/MotorCAN.cpp
 )
-target_link_libraries(canine_util
-        PRIVATE
-)

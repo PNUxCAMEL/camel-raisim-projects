@@ -16,6 +16,5 @@ add_library(canine_visualizer::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
         raisim::raisim
         pthread
-        canine_util
 )
 

@@ -4,7 +4,7 @@ extern MainWindow* MainUI;
 pthread_t thread_simulation;
 pSHM sharedMemory;
 
-std::string urdfPath = "\\home\\camel\\raisimLib\\camel-raisim-projects\\camel-urdf\\camel_single_leg_left\\camel_single_leg.urdf";
+std::string urdfPath = "camel_single_leg_left/camel_single_leg.urdf";
 std::string name = "single_leg";
 raisim::World world;
 

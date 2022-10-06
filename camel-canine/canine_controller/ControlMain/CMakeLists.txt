@@ -6,6 +6,7 @@ include_directories(
         ${EIGEN3_INCLUDE_DIRS}
         ${canine_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
+        ${GaitScheduler_SOURCE_DIR}/include
 )
 
 add_library(${PROJECT_NAME} STATIC
@@ -13,7 +14,3 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME}
-        PRIVATE
-        canine_controller::PDcontroller
-)

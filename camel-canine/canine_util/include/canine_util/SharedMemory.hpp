@@ -28,6 +28,7 @@ typedef struct _UI_COMMAND_
 
 typedef struct _SHM_
 {
+    int* gaitTable;
     bool newCommand;
     bool can1Status;
     bool can2Status;

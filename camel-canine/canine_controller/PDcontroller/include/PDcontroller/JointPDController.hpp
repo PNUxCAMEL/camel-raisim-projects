@@ -19,9 +19,9 @@ public:
 
     void DoHomeControl();
     void DoPDControl();
-    void SetPDGain(double Kp[MOTOR_NUM], double Kd[MOTOR_NUM]);
     void InitHomeTrajectory();
     void InitSwingTrajectory();
+
     void setTrajectory();
     void computeControlInput();
     void setControlInput();
@@ -30,7 +30,6 @@ private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
     BezierTrajectoryGenerator mBezierTrajectoryGen;
 
-    int mIteration;
     double mDesiredP[MOTOR_NUM] = {-0.125, -0.37};
     double mDesiredPosition[MOTOR_NUM];
     double mDesiredVelocity[MOTOR_NUM];

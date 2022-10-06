@@ -3,13 +3,13 @@
 //
 
 #include <PDcontroller/JointPDController.hpp>
+#include <iostream>
 
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
 JointPDController::JointPDController()
 {
-    mIteration = 0;
     for(int motorIdx = 0; motorIdx < MOTOR_NUM ; motorIdx++)
     {
         Kp[motorIdx] = 80.0;
@@ -34,15 +34,6 @@ void JointPDController::DoPDControl()
     setTrajectory();
     computeControlInput();
     setControlInput();
-}
-
-void JointPDController::SetPDGain(double* Kp, double* Kd)
-{
-    for (int index = 0; index < MOTOR_NUM; index++)
-    {
-        this->Kp[index] = Kp[index];
-        this->Kd[index] = Kd[index];
-    }
 }
 
 void JointPDController::InitHomeTrajectory()
@@ -71,45 +62,46 @@ void JointPDController::InitSwingTrajectory()
 
 void JointPDController::setTrajectory()
 {
+    double d = 0.0;
+    double phi = 0.0;
+    double psi = 0.0;
+
     mBezierTrajectoryGen.getPositionTrajectory(sharedMemory->localTime);
-    mDesiredP[0] = mBezierTrajectoryGen.sumX; //hip
-    mDesiredP[1] = mBezierTrajectoryGen.sumZ; //knee
-
-    double d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
-    double phi = acos(abs(mDesiredP[0]) / d);
-    double psi = acos(pow(d, 2) / (2 * 0.23 * d));
-
-    if (mDesiredP[0] < 0)
+    for (int idx=0; idx<4; idx++)
     {
-        mDesiredPosition[LFHP_IDX] = 1.57 - phi + psi;
-        mDesiredPosition[RFHP_IDX] = 1.57 - phi + psi;
-        mDesiredPosition[LBHP_IDX] = 1.57 - phi + psi;
-        mDesiredPosition[RBHP_IDX] = 1.57 - phi + psi;
-    }
-    else if (mDesiredP[0] == 0)
-    {
-        mDesiredPosition[LFHP_IDX] = psi;
-        mDesiredPosition[RFHP_IDX] = psi;
-        mDesiredPosition[LBHP_IDX] = psi;
-        mDesiredPosition[RBHP_IDX] = psi;
-    }
-    else
-    {
-        mDesiredPosition[LFHP_IDX] = phi + psi - 1.57;
-        mDesiredPosition[RFHP_IDX] = phi + psi - 1.57;
-        mDesiredPosition[LBHP_IDX] = phi + psi - 1.57;
-        mDesiredPosition[RBHP_IDX] = phi + psi - 1.57;
-    }
+        if (sharedMemory->gaitTable[idx] == 0)
+        {
+            mDesiredP[0] = mBezierTrajectoryGen.swingX; //hip
+            mDesiredP[1] = mBezierTrajectoryGen.swingZ; //knee
+        }
+        else
+        {
+            mDesiredP[0] = mBezierTrajectoryGen.standX; //hip
+            mDesiredP[1] = mBezierTrajectoryGen.standZ; //knee
+        }
 
-    mDesiredPosition[LFKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
-    mDesiredPosition[RFKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
-    mDesiredPosition[LBKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
-    mDesiredPosition[RBKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
+        d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
+        phi = acos(abs(mDesiredP[0]) / d);
+        psi = acos(pow(d, 2) / (2 * 0.23 * d));
 
-    mDesiredPosition[LFHR_IDX] = 0.0;
-    mDesiredPosition[RFHR_IDX] = 0.0;
-    mDesiredPosition[LBHR_IDX] = 0.0;
-    mDesiredPosition[RBHR_IDX] = 0.0;
+        mDesiredPosition[idx*3+0] = 0.0;
+
+        if (mDesiredP[0] < 0)
+        {
+            mDesiredPosition[idx*3+1] = 1.57 - phi + psi;
+        }
+        else if (mDesiredP[0] == 0)
+        {
+            mDesiredPosition[idx*3+1] = psi;
+        }
+        else
+        {
+            mDesiredPosition[idx*3+1] = phi + psi - 1.57;
+        }
+
+        mDesiredPosition[idx*3+2] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
+
+    }
 
     for(int index = 0 ; index < MOTOR_NUM ; index++)
     {

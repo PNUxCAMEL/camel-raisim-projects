@@ -10,6 +10,7 @@ include_directories(
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
+        ${GaitScheduler_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
 )
 
@@ -29,6 +30,7 @@ SET(CANINE_LIBS
         canine_controller::convexMPC
         canine_controller::ControlMain
         canine_controller::PDcontroller
+        canine_controller::GaitScheduler
         canine_visualizer::canine_gui
         canine_visualizer::canine_raisim
         canine_util

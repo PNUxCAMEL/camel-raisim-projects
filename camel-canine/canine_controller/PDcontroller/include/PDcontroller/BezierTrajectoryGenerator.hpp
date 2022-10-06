@@ -14,14 +14,19 @@ public:
     void updateTrajectory(double currentTime,double timeDuration);
     void getPositionTrajectory(double currentTime);
     double factorial(double value);
-    void setPx(double desiredVx);
+    void SwingTrajectory();
+    void StandTrajectory();
 
-    double sumX = 0.0;
-    double sumZ = 0.0;
+    double swingX = 0.0;
+    double swingZ = 0.0;
+
+    double standX = 0.0;
+    double standZ = 0.0;
 
 private:
     double mReferenceTime;
     double mTimeDuration;
+    double mNormalizaedTime;
 
     double pz[PNUM] = {-0.37, -0.37,
                        -0.30, -0.30, -0.30, -0.30, -0.30,

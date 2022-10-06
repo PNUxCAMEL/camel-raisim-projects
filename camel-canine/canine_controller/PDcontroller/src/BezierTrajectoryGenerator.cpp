@@ -17,24 +17,24 @@ double BezierTrajectoryGenerator::factorial(double value){
 
 void BezierTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    int scheduler = floor(normalizedTime);
-    normalizedTime -= scheduler;
-    sumX = 0.0;
-    sumZ = 0.0;
+    mNormalizaedTime -= floor(normalizedTime);
+}
 
-    if(scheduler%2 == 0)
-    {
-        double coeff = 0.0;
-        for(int i=0; i<PNUM; i++){
-            coeff = factorial(PNUM-1) / (factorial(i)* factorial(PNUM-1-i))
-                    * pow(normalizedTime,i) * pow((1-normalizedTime), (PNUM-1-i));
-            sumX +=  coeff * px[i];
-            sumZ +=  coeff * pz[i];
-        }
+void BezierTrajectoryGenerator::SwingTrajectory()
+{
+    double coeff = 0.0;
+    swingX = 0.0;
+    swingZ = 0.0;
+    for(int i=0; i<PNUM; i++){
+        coeff = factorial(PNUM-1) / (factorial(i)* factorial(PNUM-1-i))
+                * pow(mNormalizaedTime,i) * pow((1-mNormalizaedTime), (PNUM-1-i));
+        swingX +=  coeff * px[i];
+        swingZ +=  coeff * pz[i];
     }
-    else
-    {
-        sumX = -0.25*normalizedTime+0.125;
-        sumZ = 1.92*pow(sumX,2)-0.4;
-    }
+}
+
+void BezierTrajectoryGenerator::StandTrajectory()
+{
+    standX = -0.25*mNormalizaedTime+0.125;
+    standZ = 1.92*pow(sumX,2)-0.4
 }

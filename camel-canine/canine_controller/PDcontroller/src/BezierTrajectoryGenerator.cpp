@@ -36,5 +36,5 @@ void BezierTrajectoryGenerator::SwingTrajectory()
 void BezierTrajectoryGenerator::StandTrajectory()
 {
     standX = -0.25*mNormalizaedTime+0.125;
-    standZ = 1.92*pow(sumX,2)-0.4
+    standZ = 1.92*pow(standX,2)-0.4;
 }

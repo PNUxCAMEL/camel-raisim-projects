@@ -71,10 +71,10 @@ void RobotVisualization::updateVisualReal()
 
     //TODO: sharedMemory->baseEulerPosition[0] to quaternion or other methods are needed
     // base_rotation [quaternion]
-    initialJointPosition[3] = 1.0;
-    initialJointPosition[4] = 0.0;
-    initialJointPosition[5] = 0.0;
-    initialJointPosition[6] = 0.0;
+    initialJointPosition[3] = sharedMemory->baseQuartPosition[0];
+    initialJointPosition[4] = sharedMemory->baseQuartPosition[1];
+    initialJointPosition[5] = sharedMemory->baseQuartPosition[2];
+    initialJointPosition[6] = sharedMemory->baseQuartPosition[3];
 
     // RF_hip,thigh,calf
     initialJointPosition[7] = sharedMemory->motorPosition[RFHR_IDX];

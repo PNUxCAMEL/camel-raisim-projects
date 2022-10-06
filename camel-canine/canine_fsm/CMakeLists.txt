@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(canine_fsm LANGUAGES CXX)
 
 find_package(camel-tools-thread REQUIRED)
+find_package(camel-tools-sensor REQUIRED)
 
 include_directories(
         include
@@ -12,6 +13,10 @@ include_directories(
         ${canine_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
 )
+
+include_directories(/usr/share/c++-mscl/source /usr/share/c++-mscl/Boost/include)
+link_directories(/usr/share/c++-mscl)
+link_libraries(mscl stdc++ pthread)
 
 add_library(canine_fsm
         STATIC
@@ -24,6 +29,7 @@ SET(PUBLIC_LIBS
 
 SET(CAMEL_LIBS
         camel-tools-thread
+        camel-tools-sensor
 )
 SET(CANINE_LIBS
         canine_controller::convexMPC

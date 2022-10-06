@@ -11,6 +11,7 @@
 #define CONTROL_dT          0.005
 #define CAN_dT              0.005
 #define VISUAL_dT           0.01
+#define IMU_dT              0.0001
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
 #define PI                  3.141592
@@ -43,6 +44,7 @@ typedef struct _SHM_
     double basePosition[3];
     double baseVelocity[3];
     double baseEulerPosition[3];
+    double baseQuartPosition[4];
     double baseEulerVelocity[3];
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];

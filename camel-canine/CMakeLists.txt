@@ -5,6 +5,8 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS Widgets)
 find_package(Eigen3 REQUIRED HINTS ${Eigen3_HINT})
 find_package(raisim CONFIG REQUIRED)
 find_package(camel-tools-thread REQUIRED)
+find_package(camel-tools-sensor REQUIRED)
+
 
 add_subdirectory(canine_controller/convexMPC)
 add_subdirectory(canine_controller/PDcontroller)
@@ -29,10 +31,15 @@ include_directories(
         ${canine_fsm_SOURCE_DIR}/include
 )
 
+include_directories(/usr/share/c++-mscl/source /usr/share/c++-mscl/Boost/include)
+link_directories(/usr/share/c++-mscl)
+link_libraries(mscl stdc++ pthread)
+
 add_executable(camel-canine canine_demo/CanineMain.cpp)
 target_link_libraries(camel-canine
         PUBLIC
         Qt5::Widgets
         PRIVATE
         canine_fsm
+        mscl
 )

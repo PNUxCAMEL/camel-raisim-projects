@@ -7,11 +7,12 @@
 struct timespec TIME_START;
 struct timespec TIME_END;
 
-int timediff_us(struct timespec *before, struct timespec *after){
-    return (after->tv_sec - before->tv_sec)*1e6 + (after->tv_nsec - before->tv_nsec)/1000;
+int timediff_us(struct timespec* before, struct timespec* after)
+{
+    return (after->tv_sec - before->tv_sec) * 1e6 + (after->tv_nsec - before->tv_nsec) / 1000;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     const std::string mComPort = "/dev/ttyACM0";
     const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
@@ -25,7 +26,7 @@ int main(int argc, char **argv)
     {
         LordImu3DmGx5Ahrs test(&node);
         test.SetConfig(1000);
-        while(true)
+        while (true)
         {
             usleep(100);
             iteration++;
@@ -35,20 +36,20 @@ int main(int argc, char **argv)
             tempQuat = test.GetQuaternion();
             tempEuler = test.GetEulerAngle();
             tempAcc = test.GetAccelVector();
-            std::cout <<"quaternion : " <<tempQuat[0] << " " << tempQuat[1] << " " <<tempQuat[2] << " " <<tempQuat[3];
-            std::cout <<" euler angle : " <<tempEuler[0] << " " << tempEuler[1] << " " <<tempEuler[2] ;
-            std::cout <<" acc : " <<tempAcc[0] << " " << tempAcc[1] << " " <<tempAcc[2] << " " << std::endl;
+            std::cout << "quaternion : " << tempQuat[0] << " " << tempQuat[1] << " " << tempQuat[2] << " " << tempQuat[3];
+            std::cout << " euler angle : " << tempEuler[0] << " " << tempEuler[1] << " " << tempEuler[2];
+            std::cout << " acc : " << tempAcc[0] << " " << tempAcc[1] << " " << tempAcc[2] << " " << std::endl;
             totalTime += timediff_us(&TIME_START, &TIME_END) * 0.001;
-            std::cout << "interval time per one parsing : " << timediff_us(&TIME_START, &TIME_END) * 0.001 << "ms" <<std::endl;
-            if(iteration == 10000)
+            std::cout << "interval time per one parsing : " << timediff_us(&TIME_START, &TIME_END) * 0.001 << "ms" << std::endl;
+            if (iteration == 10000)
             {
-                std::cout << "total time : "<<totalTime<<std::endl;
+                std::cout << "total time : " << totalTime << std::endl;
                 break;
             }
 
         }
     }
-    catch(mscl::Error& e)
+    catch (mscl::Error& e)
     {
         std::cout << "Error: " << e.what() << std::endl;
     }

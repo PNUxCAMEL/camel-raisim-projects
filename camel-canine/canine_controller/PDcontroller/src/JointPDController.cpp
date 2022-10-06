@@ -31,7 +31,6 @@ void JointPDController::DoHomeControl()
 
 void JointPDController::DoPDControl()
 {
-    mBezierTrajectoryGen.setPx(0.0);
     setTrajectory();
     computeControlInput();
     setControlInput();

@@ -8,7 +8,8 @@
 #include "RobotDescription.hpp"
 
 #define CMD_dT              0.001
-#define CONTROL_dT          0.01
+#define CONTROL_dT          0.005
+#define CAN_dT              0.005
 #define VISUAL_dT           0.01
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
@@ -28,11 +29,14 @@ typedef struct _UI_COMMAND_
 typedef struct _SHM_
 {
     bool newCommand;
-    bool canStatus;
+    bool can1Status;
+    bool can2Status;
     bool motorStatus;
     bool simulState;
     int controlState;
     int visualState;
+    int can1State;
+    int can2State;
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;

@@ -3,15 +3,14 @@
 
 #include "RobotDescription.hpp"
 #include "SharedMemory.hpp"
-#include "MotorCAN.hpp"
 
 class Command {
 public:
-    Command(MotorCAN* can);
+    Command();
+
     void commandFunction();
 
 private:
-    MotorCAN* mCan;
     void visualOn();
 };
 

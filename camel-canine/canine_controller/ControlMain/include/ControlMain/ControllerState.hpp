@@ -10,18 +10,15 @@
 #include <canine_util/MotorCAN.hpp>
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
-#include <PDcontroller/JointPDController.hpp>
 
 class ControllerState{
 public:
-    ControllerState(MotorCAN* can);
+    ControllerState();
 
     void ControllerFunction();
 
 private:
     uint16_t mIteration;
-    MotorCAN* mCan;
-    JointPDController PDcontrol;
 };
 
 #endif //RAISIM_CONTROLSTATE_H

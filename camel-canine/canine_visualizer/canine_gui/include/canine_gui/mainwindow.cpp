@@ -445,19 +445,19 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[1]);
     ui->PLOT_VEL_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[2]);
 
-    ui->PLOT_VEL_LFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LFHR_IDX]);
-    ui->PLOT_VEL_LFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LFHP_IDX]);
-    ui->PLOT_VEL_LFKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LFKP_IDX]);
-    ui->PLOT_VEL_RFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RFHR_IDX]);
-    ui->PLOT_VEL_RFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RFHP_IDX]);
-    ui->PLOT_VEL_RFKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RFKP_IDX]);
+    ui->PLOT_VEL_LFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LFHR_IDX]);
+    ui->PLOT_VEL_LFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LFHP_IDX]);
+    ui->PLOT_VEL_LFKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LFKP_IDX]);
+    ui->PLOT_VEL_RFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RFHR_IDX]);
+    ui->PLOT_VEL_RFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RFHP_IDX]);
+    ui->PLOT_VEL_RFKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RFKP_IDX]);
 
-    ui->PLOT_VEL_LBHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LBHR_IDX]);
-    ui->PLOT_VEL_LBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LBHP_IDX]);
-    ui->PLOT_VEL_LBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[LBKP_IDX]);
-    ui->PLOT_VEL_RBHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RBHR_IDX]);
-    ui->PLOT_VEL_RBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RBHP_IDX]);
-    ui->PLOT_VEL_RBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[RBKP_IDX]);
+    ui->PLOT_VEL_LBHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LBHR_IDX]);
+    ui->PLOT_VEL_LBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LBHP_IDX]);
+    ui->PLOT_VEL_LBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LBKP_IDX]);
+    ui->PLOT_VEL_RBHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RBHR_IDX]);
+    ui->PLOT_VEL_RBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RBHP_IDX]);
+    ui->PLOT_VEL_RBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RBKP_IDX]);
 
     ui->PLOT_CUSTOM_1->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[LBHR_IDX]);
     ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[LBHP_IDX]);
@@ -533,7 +533,7 @@ void MainWindow::GraphUpdate()
 
 void MainWindow::DisplayUpdate()
 {
-    if(sharedMemory->canStatus)
+    if((sharedMemory->can1Status) && (sharedMemory->can2Status))
     {
         ui->LE_CAN_STATUS->setStyleSheet("background-color:lightgreen");
     }

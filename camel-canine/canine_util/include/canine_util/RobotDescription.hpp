@@ -6,6 +6,9 @@
 #define RAISIM_ROBOTDESCRIPTION_H
 
 constexpr int MOTOR_NUM = 12;
+constexpr int MOTOR_NUM_PER_CAN = 6;
+
+
 //TODO: change data structure of motor ID to keymap
 constexpr int MOTOR_LFHR_ID = 0x141;
 constexpr int MOTOR_LFHP_ID = 0x142;
@@ -50,24 +53,6 @@ enum MOTOR_INDEX
     RBKP_IDX,
 };
 
-enum CONTROL_STATE
-{
-    STATE_CONTROL_STOP,
-    STATE_MOTOR_OFF,
-    STATE_READY,
-    STATE_HOME_READY,
-    STATE_HOME_CONTROL,
-    STATE_PD_READY,
-    STATE_PD_CONTROL
-};
-
-enum VISUAL_STATE
-{
-    STATE_VISUAL_STOP,
-    STATE_OPEN_RAISIM,
-    STATE_UPDATE_VISUAL
-};
-
 enum COMMAND
 {
     NO_ACT,
@@ -79,6 +64,35 @@ enum COMMAND
     PD_CMD,
     CUSTOM_1,
     CUSTOM_2
+};
+
+enum CONTROL_STATE
+{
+    STATE_CONTROL_STOP,
+    STATE_MOTOR_OFF,
+    STATE_READY,
+    STATE_HOME_READY,
+    STATE_HOME_CONTROL,
+    STATE_PD_READY,
+    STATE_PD_CONTROL
+};
+
+enum CAN_STATE
+{
+    CAN_NO_ACT,
+    CAN_INIT,
+    CAN_MOTOR_ON,
+    CAN_MOTOR_OFF,
+    CAN_SET_TORQUE,
+    CAN_READ_ERROR
+};
+
+
+enum VISUAL_STATE
+{
+    STATE_VISUAL_STOP,
+    STATE_OPEN_RAISIM,
+    STATE_UPDATE_VISUAL
 };
 
 enum SIMULATION_STATE

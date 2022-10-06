@@ -5,7 +5,6 @@
 #ifndef RAISIM_JOINTPDCONTROLLER_H
 #define RAISIM_JOINTPDCONTROLLER_H
 
-#include <canine_util/MotorCAN.hpp>
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
 
@@ -31,7 +30,6 @@ private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
     BezierTrajectoryGenerator mBezierTrajectoryGen;
 
-    MotorCAN *mCan;
     int mIteration;
     double mDesiredP[MOTOR_NUM] = {-0.125, -0.37};
     double mDesiredPosition[MOTOR_NUM];

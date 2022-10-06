@@ -3,6 +3,8 @@ project(PDcontroller LANGUAGES CXX)
 
 find_package(camel-tools-trajectory REQUIRED)
 
+find_package(camel-tools-thread REQUIRED)
+
 include_directories(
         include
         ${EIGEN3_INCLUDE_DIRS}
@@ -20,4 +22,5 @@ target_link_libraries(${PROJECT_NAME}
         camel-tools-trajectory
         raisim::raisim
         canine_util
+        camel-tools-thread
 )

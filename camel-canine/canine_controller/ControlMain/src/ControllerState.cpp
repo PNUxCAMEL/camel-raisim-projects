@@ -7,9 +7,8 @@
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
-ControllerState::ControllerState(MotorCAN* can)
+ControllerState::ControllerState()
     : mIteration(0)
-    , mCan(can)
 {
 }
 

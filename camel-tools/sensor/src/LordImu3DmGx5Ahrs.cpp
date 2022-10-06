@@ -4,9 +4,10 @@
 
 #include "../include/LordImu3DmGx5Ahrs.hpp"
 
-///
-static constexpr uint32_t Hash(const char* c){
-    return *c ? static_cast<uint32_t>(*c) + 33 * Hash(c + 1) :  5381;
+
+static constexpr uint32_t Hash(const char* c)
+{
+    return *c ? static_cast<uint32_t>(*c) + 33 * Hash(c + 1) : 5381;
 };
 
 LordImu3DmGx5Ahrs::LordImu3DmGx5Ahrs(mscl::InertialNode* node)
@@ -29,9 +30,6 @@ void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_AHRS_IMU, ahrsImuChs);
 
     mscl::MipChannels estFilterChs;
-//    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_GYRO_BIAS, mscl::SampleRate::Hertz(samplingHz)));
-//    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ORIENT_EULER, mscl::SampleRate::Hertz(samplingHz)));
-//    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ORIENT_QUATERNION, mscl::SampleRate::Hertz(samplingHz)));
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_ESTFILTER, estFilterChs);
 }
 
@@ -39,16 +37,16 @@ void LordImu3DmGx5Ahrs::PareData()
 {
     int iteration = 0;
     mscl::MipDataPackets packets = mNode->getDataPackets(500);
-    for(mscl::MipDataPacket packet : packets)
+    for (mscl::MipDataPacket packet : packets)
     {
         mscl::MipDataPoints data = packet.data();
         mscl::MipDataPoint dataPoint;
-        for(unsigned int itr = 0; itr < data.size(); itr++)
+        for (unsigned int itr = 0; itr < data.size(); itr++)
         {
             iteration++;
             dataPoint = data[itr];
             uint32_t hash = Hash(dataPoint.channelName().c_str());
-            switch(hash)
+            switch (hash)
             {
             case Hash("roll"):
                 mRoll = dataPoint.as_double();
@@ -112,13 +110,13 @@ void LordImu3DmGx5Ahrs::PareData()
                 std::cout << "default" << std::endl;
                 break;
             }
-            if(!dataPoint.valid())
+            if (!dataPoint.valid())
             {
                 std::cout << "[Invalid] ";
             }
         }
     }
-    std::cout<< "iteration : "<<iteration<<std::endl;
+    std::cout << "iteration : " << iteration << std::endl;
 }
 
 double* LordImu3DmGx5Ahrs::GetEulerAngle()
@@ -133,9 +131,9 @@ double* LordImu3DmGx5Ahrs::GetEulerAngle()
 double* LordImu3DmGx5Ahrs::GetQuaternion()
 {
     std::string temp[4];
-    for(int i=1, j=0; i<mOrientQuaternion.size()-1; i++)
+    for (int i = 1, j = 0; i < mOrientQuaternion.size() - 1; i++)
     {
-        if(mOrientQuaternion[i] != ',')
+        if (mOrientQuaternion[i] != ',')
         {
             temp[j].push_back(mOrientQuaternion[i]);
         }

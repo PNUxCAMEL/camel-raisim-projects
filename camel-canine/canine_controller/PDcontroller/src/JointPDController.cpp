@@ -32,8 +32,8 @@ void JointPDController::DoHomeControl()
 void JointPDController::DoPDControl()
 {
     setTrajectory();
-    computeControlInput();
-    setControlInput();
+/*    computeControlInput();
+    setControlInput();*/
 }
 
 void JointPDController::InitHomeTrajectory()
@@ -57,7 +57,7 @@ void JointPDController::InitHomeTrajectory()
 
 void JointPDController::InitSwingTrajectory()
 {
-    mBezierTrajectoryGen.updateTrajectory(sharedMemory->localTime, 0.7);
+    mBezierTrajectoryGen.updateTrajectory(sharedMemory->localTime, 0.5);
 }
 
 void JointPDController::setTrajectory()
@@ -71,11 +71,13 @@ void JointPDController::setTrajectory()
     {
         if (sharedMemory->gaitTable[idx] == 0)
         {
+            mBezierTrajectoryGen.SwingTrajectory();
             mDesiredP[0] = mBezierTrajectoryGen.swingX; //hip
             mDesiredP[1] = mBezierTrajectoryGen.swingZ; //knee
         }
         else
         {
+            mBezierTrajectoryGen.StandTrajectory();
             mDesiredP[0] = mBezierTrajectoryGen.standX; //hip
             mDesiredP[1] = mBezierTrajectoryGen.standZ; //knee
         }

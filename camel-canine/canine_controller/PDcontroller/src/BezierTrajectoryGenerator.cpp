@@ -2,6 +2,7 @@
 // Created by hs on 22. 10. 5.
 //
 #include <PDcontroller/BezierTrajectoryGenerator.hpp>
+#include <iostream>
 
 void BezierTrajectoryGenerator::updateTrajectory(double currentTime, double timeDuration){
     mReferenceTime = currentTime;
@@ -16,8 +17,9 @@ double BezierTrajectoryGenerator::factorial(double value){
 }
 
 void BezierTrajectoryGenerator::getPositionTrajectory(double currentTime) {
-    double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    mNormalizaedTime -= floor(normalizedTime);
+    mNormalizaedTime = (currentTime - mReferenceTime) / mTimeDuration;
+    int scheduler = floor(mNormalizaedTime);
+    mNormalizaedTime -= scheduler;
 }
 
 void BezierTrajectoryGenerator::SwingTrajectory()

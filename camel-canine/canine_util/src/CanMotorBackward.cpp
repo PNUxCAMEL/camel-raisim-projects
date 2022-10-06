@@ -208,12 +208,12 @@ void CanMotorBackward::setTorque(double* desiredTorque)
         clock_gettime(CLOCK_REALTIME, &TIME_START);
         canSend(motorIndex, data);
         clock_gettime(CLOCK_REALTIME, &TIME_END);
-        std::cout << "can send time " << timediff_us(&TIME_START, &TIME_END) << std::endl;
+//        std::cout << "can send time " << timediff_us(&TIME_START, &TIME_END) << std::endl;
 
         clock_gettime(CLOCK_REALTIME, &TIME_START);
         canRead();
         clock_gettime(CLOCK_REALTIME, &TIME_END);
-        std::cout << "can read time " << timediff_us(&TIME_START, &TIME_END) << std::endl;
+//        std::cout << "can read time " << timediff_us(&TIME_START, &TIME_END) << std::endl;
 
 
         int16_t currentTorque;

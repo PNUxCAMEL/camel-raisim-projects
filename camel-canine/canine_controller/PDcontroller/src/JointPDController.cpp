@@ -113,6 +113,10 @@ void JointPDController::setControlInput()
     {
         if (sharedMemory->controlState == STATE_READY)
         {
+            mTorque[index] = 0;
+        }
+        else
+        {
             if (mTorque[index] > mTorqueLimit[index])
             {
                 mTorque[index] = mTorqueLimit[index];
@@ -122,11 +126,6 @@ void JointPDController::setControlInput()
                 mTorque[index] = -mTorqueLimit[index];
             }
         }
-        else
-        {
-            mTorque[index] = 0;
-        }
-
         sharedMemory->motorDesiredTorque[index] = mTorque[index];
     }
 }

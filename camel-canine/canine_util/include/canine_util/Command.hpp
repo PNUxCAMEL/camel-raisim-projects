@@ -9,9 +9,6 @@ public:
     Command();
 
     void commandFunction();
-
-private:
-    void visualOn();
 };
 
 

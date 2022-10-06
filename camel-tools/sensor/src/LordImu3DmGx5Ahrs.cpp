@@ -26,10 +26,11 @@ void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
     ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_SCALED_ACCEL_VEC, mscl::SampleRate::Hertz(samplingHz)));
     ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_SCALED_MAG_VEC, mscl::SampleRate::Hertz(samplingHz)));
     ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_SCALED_GYRO_VEC, mscl::SampleRate::Hertz(samplingHz)));
-    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_STABILIZED_ACCEL_VEC, mscl::SampleRate::Hertz(100)));
+    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_STABILIZED_ACCEL_VEC, mscl::SampleRate::Hertz(samplingHz)));
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_AHRS_IMU, ahrsImuChs);
 
     mscl::MipChannels estFilterChs;
+    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_LINEAR_ACCEL, mscl::SampleRate::Hertz(samplingHz)));
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_ESTFILTER, estFilterChs);
 }
 
@@ -103,7 +104,15 @@ void LordImu3DmGx5Ahrs::PareData()
             case Hash("scaledGyroZ"):
                 mScaledGyroZ = dataPoint.as_double();
                 break;
-
+            case Hash("estLinearAccelX"):
+                mEstLinearAccel[0] = dataPoint.as_double();
+                break;
+            case Hash("estLinearAccelY"):
+                mEstLinearAccel[1] = dataPoint.as_double();
+                break;
+            case Hash("estLinearAccelZ"):
+                mEstLinearAccel[2] = dataPoint.as_double();
+                break;
             default:
                 std::cout << "default" << std::endl;
                 break;
@@ -181,4 +190,9 @@ double* LordImu3DmGx5Ahrs::GetGyroVector()
     mScaledGyroVector[2] = mScaledGyroZ;
 
     return mScaledGyroVector;
+}
+
+double* LordImu3DmGx5Ahrs::GetLinearAcceleration()
+{
+    return mEstLinearAccel;
 }

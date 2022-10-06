@@ -23,6 +23,7 @@ public:
     double* GetStabilizedAccelVector();
     double* GetMagVector();
     double* GetGyroVector();
+    double* GetLinearAcceleration();
 private:
     mscl::InertialNode* mNode;
     std::string mOrientQuaternion;
@@ -53,6 +54,8 @@ private:
     double mScaledGyroY;
     double mScaledGyroZ;
     double mScaledGyroVector[3];
+    //Linear Accel
+    double mEstLinearAccel[3];
 
 };
 

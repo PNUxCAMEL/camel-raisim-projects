@@ -35,7 +35,6 @@ void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
 
 void LordImu3DmGx5Ahrs::PareData()
 {
-    int iteration = 0;
     mscl::MipDataPackets packets = mNode->getDataPackets(500);
     for (mscl::MipDataPacket packet : packets)
     {
@@ -43,7 +42,6 @@ void LordImu3DmGx5Ahrs::PareData()
         mscl::MipDataPoint dataPoint;
         for (unsigned int itr = 0; itr < data.size(); itr++)
         {
-            iteration++;
             dataPoint = data[itr];
             uint32_t hash = Hash(dataPoint.channelName().c_str());
             switch (hash)
@@ -116,7 +114,6 @@ void LordImu3DmGx5Ahrs::PareData()
             }
         }
     }
-    std::cout << "iteration : " << iteration << std::endl;
 }
 
 double* LordImu3DmGx5Ahrs::GetEulerAngle()

@@ -16,7 +16,7 @@ SingleLeggedPDController::SingleLeggedPDController(Robot* robot, double DT)
     mPosition.setZero();
     mVelocity.setZero();
     updateState();
-    mTrajectoryGenerator.updateTrajectory(mPosition[0], 0.35, GetRobot()->GetWorldTime(), 1.0);
+    mTrajectoryGenerator.updateTrajectory(mPosition[0], 0.35, mRobot->GetWorldTime(), 1.0);
     mDesiredPosition = 0.0;
     mDesiredVelocity = 0.0;
     mTorqueLimit = 10.0;
@@ -40,8 +40,8 @@ void SingleLeggedPDController::setTrajectory()
 
 void SingleLeggedPDController::updateState()
 {
-    mPosition = GetRobot()->GetQ();
-    mVelocity = GetRobot()->GetQD();
+    mPosition = mRobot->GetQ();
+    mVelocity = mRobot->GetQD();
 }
 
 void SingleLeggedPDController::computeControlInput()
@@ -67,12 +67,12 @@ void SingleLeggedPDController::setControlInput()
             mTorque[i] = -mTorqueLimit;
         }
     }
-    GetRobot()->GetRobot()->setGeneralizedForce(mTorque);
+    mRobot->SetTau(mTorque);
 }
 
 void SingleLeggedPDController::updateSHM()
 {
-    sharedMemory->localTime = GetRobot()->GetWorldTime();
+    sharedMemory->localTime = mRobot->GetWorldTime();
     sharedMemory->positionZ = mPosition[0];
     sharedMemory->desiredPositionZ = mDesiredPosition;
     sharedMemory->velocityZ = mVelocity[0];

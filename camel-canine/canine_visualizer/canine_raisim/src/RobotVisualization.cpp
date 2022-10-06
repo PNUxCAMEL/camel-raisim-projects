@@ -9,14 +9,46 @@ extern pSHM sharedMemory;
 RobotVisualization::RobotVisualization(raisim::World *world, raisim::RaisimServer *server)
     : mWorld(world)
     , mServer(server)
-    , mUrdfPath(CAMEL_RAISIM_ROOT)
+    , mUrdfPath(URDF_RSC_DIR)
 {
     mWorld->setGravity({0.0, 0.0, -9.81});
     mWorld->setTimeStep(0.01);
     mWorld->addGround();
-    mRobot = mWorld->addArticulatedSystem(mUrdfPath+"/camel-urdf/canine/urdf/canineV1.urdf");
-    mRobot->setName("Canine-leg");
+    mRobot = mWorld->addArticulatedSystem(mUrdfPath+"/canine/urdf/canineV1.urdf");
+    mRobot->setName("Canine");
 }
+
+void RobotVisualization::VisualFunction()
+{
+    switch(sharedMemory->visualState)
+    {
+        case STATE_VISUAL_STOP:
+        {
+            break;
+        }
+        case STATE_OPEN_RAISIM:
+        {
+            openRaisimServer();
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            break;
+        }
+        case STATE_UPDATE_VISUAL:
+        {
+            if(sharedMemory->simulState)
+            {
+                updateVisualReal();
+            }
+            else
+            {
+                updateVisualReal();
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
 
 void RobotVisualization::openRaisimServer()
 {
@@ -24,7 +56,7 @@ void RobotVisualization::openRaisimServer()
     sleep(1);
 }
 
-void RobotVisualization::updateVisual()
+void RobotVisualization::updateVisualReal()
 {
     Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
@@ -66,26 +98,7 @@ void RobotVisualization::updateVisual()
     mRobot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-void RobotVisualization::visualFunction()
+void updateVisualSimul()
 {
-    switch(sharedMemory->visualState)
-    {
-        case STATE_VISUAL_STOP:
-        {
-            break;
-        }
-        case STATE_OPEN_RAISIM:
-        {
-            openRaisimServer();
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_UPDATE_VISUAL:
-        {
-            updateVisual();
-            break;
-        }
-        default:
-            break;
-    }
+
 }

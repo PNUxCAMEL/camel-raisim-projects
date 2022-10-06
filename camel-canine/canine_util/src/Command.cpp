@@ -57,6 +57,7 @@ void Command::commandFunction()
             }
             case CUSTOM_2:
             {
+                sharedMemory->visualState = ONLY_SIMULATION;
                 break;
             }
             default:

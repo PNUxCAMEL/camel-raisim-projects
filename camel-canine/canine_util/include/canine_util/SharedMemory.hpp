@@ -30,6 +30,7 @@ typedef struct _SHM_
     bool newCommand;
     bool canStatus;
     bool motorStatus;
+    bool simulState;
     int controlState;
     int visualState;
     int motorErrorStatus[MOTOR_NUM];

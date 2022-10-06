@@ -21,6 +21,7 @@ public:
     void DoPDControl();
     void SetPDGain(double Kp[MOTOR_NUM], double Kd[MOTOR_NUM]);
     void InitHomeTrajectory();
+    void InitSwingTrajectory();
     void setTrajectory();
     void computeControlInput();
     void setControlInput();

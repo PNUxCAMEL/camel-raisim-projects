@@ -45,7 +45,17 @@ void ControllerState::ControllerFunction()
         }
         case STATE_PD_CONTROL:
         {
-//        doPDControl();
+            break;
+        }
+        case STATE_TROT_REDAY:
+        {
+            PDcontrol.InitSwingTrajectory();
+            sharedMemory->controlState = STATE_TROT_CONTROL;
+            break;
+        }
+        case STATE_TROT_CONTROL:
+        {
+            PDcontrol.DoPDControl();
             break;
         }
         default:

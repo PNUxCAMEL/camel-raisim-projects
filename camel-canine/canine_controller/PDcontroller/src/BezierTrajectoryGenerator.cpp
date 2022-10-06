@@ -1,8 +1,6 @@
 //
 // Created by hs on 22. 10. 5.
 //
-#include <iostream>
-
 #include <PDcontroller/BezierTrajectoryGenerator.hpp>
 
 void BezierTrajectoryGenerator::updateTrajectory(double currentTime, double timeDuration){
@@ -19,24 +17,27 @@ double BezierTrajectoryGenerator::factorial(double value){
 
 void BezierTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
-    int scheduler = floor(normalizedTime);
-    normalizedTime -= scheduler;
+    normalizedTime -= floor(normalizedTime);
     sumX = 0.0;
     sumZ = 0.0;
 
-    if(scheduler%2 == 0)
+    double coeff = 0.0;
+    for(int i=0; i<PNUM; i++)
     {
-        double coeff = 0.0;
-        for(int i=0; i<PNUM; i++){
-            coeff = factorial(PNUM-1) / (factorial(i)* factorial(PNUM-1-i))
-                    * pow(normalizedTime,i) * pow((1-normalizedTime), (PNUM-1-i));
-            sumX +=  coeff * px[i];
-            sumZ +=  coeff * pz[i];
-        }
+        coeff = factorial(PNUM-1) / (factorial(i)* factorial(PNUM-1-i))
+                * pow(normalizedTime,i) * pow((1-normalizedTime), (PNUM-1-i));
+        sumX +=  coeff * px[i];
+        sumZ +=  coeff * pz[i];
     }
-    else
+}
+
+void BezierTrajectoryGenerator::setPx(double desiredVx) {
+    for(int i=0; i<PNUM; i++)
     {
-        sumX = -0.25*normalizedTime+0.125;
-        sumZ = 1.92*pow(sumX,2)-0.4;
+        px[i] = desiredVx*(0.125/2);
+        if(i<2)
+        {
+            px[i] *= -1;
+        }
     }
 }

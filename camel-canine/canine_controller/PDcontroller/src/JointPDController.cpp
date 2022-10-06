@@ -31,6 +31,7 @@ void JointPDController::DoHomeControl()
 
 void JointPDController::DoPDControl()
 {
+    mBezierTrajectoryGen.setPx(0.0);
     setTrajectory();
     computeControlInput();
     setControlInput();
@@ -62,6 +63,11 @@ void JointPDController::InitHomeTrajectory()
     mCubicTrajectoryGen[9].updateTrajectory(sharedMemory->motorPosition[RBHR_IDX], 0.0, sharedMemory->localTime, timeDuration);
     mCubicTrajectoryGen[10].updateTrajectory(sharedMemory->motorPosition[RBHP_IDX], homeHip * D2R, sharedMemory->localTime, timeDuration);
     mCubicTrajectoryGen[11].updateTrajectory(sharedMemory->motorPosition[RBKP_IDX], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+}
+
+void JointPDController::InitSwingTrajectory()
+{
+    mBezierTrajectoryGen.updateTrajectory(sharedMemory->localTime, 1);
 }
 
 void JointPDController::setTrajectory()

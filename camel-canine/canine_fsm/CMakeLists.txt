@@ -10,6 +10,7 @@ include_directories(
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
+        ${PDcontroller_SOURCE_DIR}/include
 )
 
 add_library(canine_fsm
@@ -27,6 +28,7 @@ SET(CAMEL_LIBS
 SET(CANINE_LIBS
         canine_controller::convexMPC
         canine_controller::ControlMain
+        canine_controller::PDcontroller
         canine_visualizer::canine_gui
         canine_visualizer::canine_raisim
         canine_util

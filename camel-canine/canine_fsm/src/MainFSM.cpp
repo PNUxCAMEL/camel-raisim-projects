@@ -25,7 +25,7 @@ raisim::RaisimServer server(&world);
 RobotVisualization userVisual(&world, &server);
 
 
-void* NRTCommandThread(void *arg)
+void* NRTCommandThread(void* arg)
 {
     std::cout << "entered #nrt_command_thread" << std::endl;
     while(true)
@@ -35,7 +35,7 @@ void* NRTCommandThread(void *arg)
     }
 }
 
-void* NRTVisualThread(void *arg)
+void* NRTVisualThread(void* arg)
 {
     std::cout << "entered #nrt_command_thread" << std::endl;
     while(true)
@@ -45,7 +45,7 @@ void* NRTVisualThread(void *arg)
     }
 }
 
-void* RTControllerThread(void *arg) {
+void* RTControllerThread(void* arg) {
     std::cout << "entered #rt_controller_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
@@ -66,7 +66,7 @@ void* RTControllerThread(void *arg) {
     }
 }
 
-void *RTCANForward(void *arg) {
+void* RTCANForward(void* arg) {
     std::cout << "entered #rt_can_forward_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
@@ -86,7 +86,7 @@ void *RTCANForward(void *arg) {
     }
 }
 
-void *RTCANBackward(void *arg) {
+void* RTCANBackward(void* arg) {
     std::cout << "entered #rt_can_backward_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;

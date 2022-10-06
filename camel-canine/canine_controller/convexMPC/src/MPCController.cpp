@@ -52,7 +52,7 @@ void MPCController::doControl() {
     cmpcSolver.GetMetrices(mpcTable, position, velocity, footPosition);
     cmpcSolver.qpSolver();
     cmpcSolver.GetGRF(f);
-    setLegcontrol();
+    //setLegcontrol();
     computeControlInput();
     setControlInput();
     iteration++;

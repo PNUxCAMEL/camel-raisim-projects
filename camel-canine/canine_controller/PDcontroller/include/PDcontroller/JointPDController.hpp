@@ -20,8 +20,7 @@ public:
     void DoHomeControl();
     void DoPDControl();
     void SetPDGain(double Kp[MOTOR_NUM], double Kd[MOTOR_NUM]);
-
-private:
+    void InitHomeTrajectory();
     void setTrajectory();
     void computeControlInput();
     void setControlInput();

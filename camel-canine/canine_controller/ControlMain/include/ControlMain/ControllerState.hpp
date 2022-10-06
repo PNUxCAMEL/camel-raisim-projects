@@ -7,9 +7,9 @@
 
 #include <stdint.h>
 
-#include <canine_util/MotorCAN.hpp>
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
+#include <PDcontroller/JointPDController.hpp>
 
 class ControllerState{
 public:
@@ -19,6 +19,8 @@ public:
 
 private:
     uint16_t mIteration;
+
+    JointPDController PDcontrol;
 };
 
 #endif //RAISIM_CONTROLSTATE_H

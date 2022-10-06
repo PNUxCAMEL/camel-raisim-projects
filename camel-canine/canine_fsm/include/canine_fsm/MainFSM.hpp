@@ -10,7 +10,8 @@
 
 #include <camel-tools/ThreadGenerator.hpp>
 
-#include <PDcontroller/JointPDController.hpp>
+#include <ControlMain/ControllerState.hpp>
+
 #include <canine_util/MotorCAN.hpp>
 #include <canine_util/Command.hpp>
 #include <canine_util/RobotDescription.hpp>
@@ -22,6 +23,5 @@ void *RTControllerThread(void* arg);
 void *NRTCommandThread(void* arg);
 void *NRTVisualThread(void* arg);
 void clearSharedMemory();
-
 
 #endif //RAISIM_MAINFSM_HPP

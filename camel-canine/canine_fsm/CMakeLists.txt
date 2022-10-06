@@ -6,7 +6,7 @@ find_package(camel-tools-thread REQUIRED)
 include_directories(
         include
         ${EIGEN3_INCLUDE_DIRS}
-        ${PDcontroller_SOURCE_DIR}/include
+        ${ControlMain_SOURCE_DIR}/include
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
@@ -26,7 +26,7 @@ SET(CAMEL_LIBS
 )
 SET(CANINE_LIBS
         canine_controller::convexMPC
-        canine_controller::PDcontroller
+        canine_controller::ControlMain
         canine_visualizer::canine_gui
         canine_visualizer::canine_raisim
         canine_util

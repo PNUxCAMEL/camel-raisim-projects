@@ -7,12 +7,12 @@
 
 #include <iostream>
 
+#include <raisim/World.hpp>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <qpOASES.hpp>
 
-#include "raisim/World.hpp"
-#include "EigenTypes.hpp"
-#include "Gait.hpp"
+#include <canine_util/EigenTypes.hpp>
+#include <GaitScheduler/Gait.hpp>
 
 using Eigen::Dynamic;
 

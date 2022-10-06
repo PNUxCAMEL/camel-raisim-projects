@@ -2,7 +2,7 @@
 // Created by hs on 22. 8. 10.
 //
 
-#include <convexMPC/Gait.hpp>
+#include "../include/GaitScheduler/Gait.hpp"
 
 OffsetGait::OffsetGait(int mpcHorizon, Vec4<int> offsets, Vec4<int> durations, int cyclePeriod)
     : mOffsets(offsets.array())

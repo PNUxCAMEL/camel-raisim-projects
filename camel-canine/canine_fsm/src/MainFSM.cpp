@@ -13,7 +13,8 @@ pSHM sharedMemory;
 
 MotorCAN can("can5");
 Command userCommand(&can);
-JointPDController userController(&can);
+
+ControllerState userController(&can);
 
 raisim::World world;
 raisim::RaisimServer server(&world);
@@ -51,7 +52,7 @@ void* RTControllerThread(void *arg) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
-        userController.controllerFunction();
+        userController.ControllerFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {

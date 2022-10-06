@@ -6,7 +6,7 @@
 #define RAISIM_GAIT_H
 
 #include <iostream>
-#include "EigenTypes.hpp"
+#include <canine_util/EigenTypes.hpp>
 
 enum class GaitType {
     STAND,

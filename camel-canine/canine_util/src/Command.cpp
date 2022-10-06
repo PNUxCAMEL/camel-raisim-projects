@@ -3,7 +3,7 @@
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
-Command::Command(MotorCAN *can)
+Command::Command(MotorCAN* can)
     : mCan(can)
 {
 }

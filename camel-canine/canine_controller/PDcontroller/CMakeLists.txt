@@ -7,6 +7,7 @@ include_directories(
         include
         ${EIGEN3_INCLUDE_DIRS}
         ${canine_util_SOURCE_DIR}/include
+        ${GaitScheduler_SOURCE_DIR}/include
 )
 
 add_library(${PROJECT_NAME} STATIC

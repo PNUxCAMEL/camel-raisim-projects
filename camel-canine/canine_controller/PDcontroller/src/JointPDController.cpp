@@ -73,8 +73,8 @@ void JointPDController::InitSwingTrajectory()
 void JointPDController::setTrajectory()
 {
     mBezierTrajectoryGen.getPositionTrajectory(sharedMemory->localTime);
-    mDesiredP[0] = mBezierTrajectoryGen.sumX;
-    mDesiredP[1] = mBezierTrajectoryGen.sumZ;
+    mDesiredP[0] = mBezierTrajectoryGen.sumX; //hip
+    mDesiredP[1] = mBezierTrajectoryGen.sumZ; //knee
 
     double d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
     double phi = acos(abs(mDesiredP[0]) / d);
@@ -82,20 +82,40 @@ void JointPDController::setTrajectory()
 
     if (mDesiredP[0] < 0)
     {
-        mDesiredPosition[0] = 1.57 - phi + psi;
+        mDesiredPosition[LFHP_IDX] = 1.57 - phi + psi;
+        mDesiredPosition[RFHP_IDX] = 1.57 - phi + psi;
+        mDesiredPosition[LBHP_IDX] = 1.57 - phi + psi;
+        mDesiredPosition[RBHP_IDX] = 1.57 - phi + psi;
     }
     else if (mDesiredP[0] == 0)
     {
-        mDesiredPosition[0] = psi;
+        mDesiredPosition[LFHP_IDX] = psi;
+        mDesiredPosition[RFHP_IDX] = psi;
+        mDesiredPosition[LBHP_IDX] = psi;
+        mDesiredPosition[RBHP_IDX] = psi;
     }
     else
     {
-        mDesiredPosition[0] = phi + psi - 1.57;
+        mDesiredPosition[LFHP_IDX] = phi + psi - 1.57;
+        mDesiredPosition[RFHP_IDX] = phi + psi - 1.57;
+        mDesiredPosition[LBHP_IDX] = phi + psi - 1.57;
+        mDesiredPosition[RBHP_IDX] = phi + psi - 1.57;
     }
-    mDesiredPosition[1] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
 
-    mDesiredVelocity[0] = 0.0;
-    mDesiredVelocity[1] = 0.0;
+    mDesiredPosition[LFKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
+    mDesiredPosition[RFKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
+    mDesiredPosition[LBKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
+    mDesiredPosition[RBKP_IDX] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
+
+    mDesiredPosition[LFHR_IDX] = 0.0;
+    mDesiredPosition[RFHR_IDX] = 0.0;
+    mDesiredPosition[LBHR_IDX] = 0.0;
+    mDesiredPosition[RBHR_IDX] = 0.0;
+
+    for(int index = 0 ; index < MOTOR_NUM ; index++)
+    {
+        mDesiredVelocity[index] = 0.0;
+    }
 }
 
 void JointPDController::computeControlInput()

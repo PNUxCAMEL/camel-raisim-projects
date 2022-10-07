@@ -57,7 +57,7 @@ void JointPDController::InitHomeTrajectory()
 
 void JointPDController::InitSwingTrajectory()
 {
-    mBezierTrajectoryGen.updateTrajectory(sharedMemory->localTime, 0.5);
+    mBezierTrajectoryGen.InitTrajectorySet(sharedMemory->localTime, 0.5);
 }
 
 void JointPDController::setTrajectory()
@@ -66,21 +66,19 @@ void JointPDController::setTrajectory()
     double phi = 0.0;
     double psi = 0.0;
 
-    mBezierTrajectoryGen.getPositionTrajectory(sharedMemory->localTime);
+    mBezierTrajectoryGen.SetCurrentTime(sharedMemory->localTime);
     for (int idx=0; idx<4; idx++)
     {
         if (sharedMemory->gaitTable[idx] == 0)
         {
-            mBezierTrajectoryGen.SwingTrajectory();
-            mDesiredP[0] = mBezierTrajectoryGen.swingX; //hip
-            mDesiredP[1] = mBezierTrajectoryGen.swingZ; //knee
+            mBezierTrajectoryGen.SwingTrajectory(mDesiredP);
         }
         else
         {
-            mBezierTrajectoryGen.StandTrajectory();
-            mDesiredP[0] = mBezierTrajectoryGen.standX; //hip
-            mDesiredP[1] = mBezierTrajectoryGen.standZ; //knee
+            mBezierTrajectoryGen.StandTrajectory(mDesiredP);
         }
+
+        std::cout << idx << "\t" << mDesiredP[0] << "\t" << mDesiredP[1] << std::endl;
 
         d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
         phi = acos(abs(mDesiredP[0]) / d);
@@ -105,7 +103,7 @@ void JointPDController::setTrajectory()
 
     }
 
-    for(int index = 0 ; index < MOTOR_NUM ; index++)
+    for (int index = 0 ; index < MOTOR_NUM ; index++)
     {
         mDesiredVelocity[index] = 0.0;
     }

@@ -11,7 +11,6 @@
 #include <camel-tools/ThreadGenerator.hpp>
 
 #include <ControlMain/ControllerState.hpp>
-
 #include <canine_util/CanMotorForward.hpp>
 #include <canine_util/CanMotorBackward.hpp>
 #include <canine_util/Command.hpp>

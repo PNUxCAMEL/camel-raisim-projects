@@ -11,22 +11,24 @@
 
 class BezierTrajectoryGenerator {
 public:
-    void updateTrajectory(double currentTime,double timeDuration);
-    void getPositionTrajectory(double currentTime);
+    BezierTrajectoryGenerator();
+
+    void InitTrajectorySet(double currentTime,double timeDuration);
+    void SetCurrentTime(double currentTime);
+
+    void SwingTrajectory(double* dPos);
+    void StandTrajectory(double* dPos);
+
+private:
     double factorial(double value);
-    void SwingTrajectory();
-    void StandTrajectory();
-
-    double swingX = 0.0;
-    double swingZ = 0.0;
-
-    double standX = 0.0;
-    double standZ = 0.0;
 
 private:
     double mReferenceTime;
     double mTimeDuration;
     double mNormalizaedTime;
+
+    double mSwingPosition[2];
+    double mStandPosition[2];
 
     double pz[PNUM] = {-0.37, -0.37,
                        -0.30, -0.30, -0.30, -0.30, -0.30,

@@ -51,24 +51,34 @@ void* NRTVisualThread(void* arg)
     }
 }
 
+//TODO: Cha is gonna implemet "GetLinearVelocity" and "GetEulerVelocity"
+//sharedMemory->baseEulerVelocity
+//sharedMemory->baseVelocity
 void* NRTImuThread(void* arg)
 {
     std::cout << "entered #nrt_IMU_thread" << std::endl;
-    IMUBase.SetConfig(1000);
+    IMUBase.SetConfig(500);
     double* baseAngularPositionEuler;
     double* baseLinearVelocity;
+    mscl::EulerAngles tempEuler(3.141592,0,0);
+    node.setSensorToVehicleRotation_eulerAngles(tempEuler);
     while(true)
     {
+
         IMUBase.PareData();
         baseAngularPositionEuler = IMUBase.GetEulerAngle();
-        if(baseAngularPositionEuler[0] > 0)
-        {
-            sharedMemory->baseEulerPosition[0] =  baseAngularPositionEuler[0] - 3.141592;
-        }
-        else
-        {
-            sharedMemory->baseEulerPosition[0] =  baseAngularPositionEuler[0] + 3.141592;
-        }
+//        if(baseAngularPositionEuler[0] > 0)
+//        {
+//            sharedMemory->baseEulerPosition[0] =  baseAngularPositionEuler[0] - 3.141592;
+//        }
+//        else
+//        {
+//            sharedMemory->baseEulerPosition[0] =  baseAngularPositionEuler[0] + 3.141592;
+//        }
+//        sharedMemory->baseEulerPosition[1] = -baseAngularPositionEuler[1];
+//        sharedMemory->baseEulerPosition[2] = -baseAngularPositionEuler[2];
+
+        sharedMemory->baseEulerPosition[0] = baseAngularPositionEuler[0];
         sharedMemory->baseEulerPosition[1] = -baseAngularPositionEuler[1];
         sharedMemory->baseEulerPosition[2] = -baseAngularPositionEuler[2];
 

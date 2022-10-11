@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include "mscl/mscl.h"
+#include "camel-tools/ThreadGenerator.hpp"
 
 
 class LordImu3DmGx5Ahrs
@@ -16,7 +17,7 @@ public:
     LordImu3DmGx5Ahrs(mscl::InertialNode* node);
 
     void SetConfig(int samplingHz);
-    void PareData();
+    void ParseData();
     double* GetQuaternion();
     double* GetEulerAngle();
     double* GetAccelVector();
@@ -25,6 +26,7 @@ public:
     double* GetAngularVelocity();
     double* GetLinearAcceleration();
     double* GetLinearVelocity();
+
 private:
     mscl::InertialNode* mNode;
     std::string mOrientQuaternion;
@@ -44,6 +46,10 @@ private:
     double mEstLinearAccel[3];
     ///linera vel
     double mLinearVelocity[3];
+    double mPrevLinearVelocity[3];
+
+    struct timespec TIME_NOW;
+    struct timespec TIME_PREV;
 };
 
 

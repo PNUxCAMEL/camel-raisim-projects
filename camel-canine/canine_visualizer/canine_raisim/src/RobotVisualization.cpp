@@ -6,15 +6,14 @@
 
 extern pSHM sharedMemory;
 
-RobotVisualization::RobotVisualization(raisim::World *world, raisim::RaisimServer *server)
+RobotVisualization::RobotVisualization(raisim::World* world, raisim::ArticulatedSystem* robot, raisim::RaisimServer* server)
     : mWorld(world)
+    , mRobot(robot)
     , mServer(server)
-    , mUrdfPath(URDF_RSC_DIR)
 {
     mWorld->setGravity({0.0, 0.0, -9.81});
     mWorld->setTimeStep(0.01);
     mWorld->addGround();
-    mRobot = mWorld->addArticulatedSystem(mUrdfPath+"/canine/urdf/canineV1.urdf");
     mRobot->setName("Canine");
     mTorque.setZero();
 }

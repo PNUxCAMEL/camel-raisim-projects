@@ -22,7 +22,8 @@ ControllerState userController;
 
 raisim::World world;
 raisim::RaisimServer server(&world);
-RobotVisualization userVisual(&world, &server);
+raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
+RobotVisualization userVisual(&world, robot, &server);
 
 
 void* NRTCommandThread(void* arg)

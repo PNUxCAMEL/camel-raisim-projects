@@ -22,5 +22,6 @@ target_link_libraries(${PROJECT_NAME}
         camel-tools-trajectory
         raisim::raisim
         canine_util
+        canine_controller::GaitScheduler
         camel-tools-thread
 )

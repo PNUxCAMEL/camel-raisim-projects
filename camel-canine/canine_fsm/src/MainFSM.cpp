@@ -113,7 +113,7 @@ void clearSharedMemory()
     sharedMemory->can1Status = false;
     sharedMemory->can2Status = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->simulState = true;
+    sharedMemory->simulState = ONLY_SIMULATION;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->can1State = CAN_NO_ACT;

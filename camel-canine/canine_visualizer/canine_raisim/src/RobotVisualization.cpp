@@ -16,6 +16,12 @@ RobotVisualization::RobotVisualization(raisim::World *world, raisim::RaisimServe
     mWorld->addGround();
     mRobot = mWorld->addArticulatedSystem(mUrdfPath+"/canine/urdf/canineV1.urdf");
     mRobot->setName("Canine");
+    mTorque.setZero();
+}
+
+RobotVisualization::~RobotVisualization()
+{
+    mServer->killServer();
 }
 
 void RobotVisualization::VisualFunction()
@@ -29,18 +35,20 @@ void RobotVisualization::VisualFunction()
         case STATE_OPEN_RAISIM:
         {
             openRaisimServer();
+            initRobotPose();
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_UPDATE_VISUAL:
         {
-            if(sharedMemory->simulState)
+            if(sharedMemory->simulState == WITH_SIMULATION)
             {
                 updateVisualReal();
             }
             else
             {
-                updateVisualReal();
+
+                updateVisualSimul();
             }
             break;
         }
@@ -49,11 +57,27 @@ void RobotVisualization::VisualFunction()
     }
 }
 
-
 void RobotVisualization::openRaisimServer()
 {
     mServer->launchServer(8080);
     sleep(1);
+}
+
+void RobotVisualization::initRobotPose()
+{
+    Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
+    initialJointPosition.setZero();
+
+    initialJointPosition[2] = 0.0578;
+    initialJointPosition[3] = 1.0;
+
+    for (int idx=0; idx<4; idx++)
+    {
+        initialJointPosition[idx*3+7] = 0.0;
+        initialJointPosition[idx*3+8] = 2.5;
+        initialJointPosition[idx*3+9] = -2.9;
+    }
+    mRobot->setGeneralizedCoordinate(initialJointPosition);
 }
 
 void RobotVisualization::updateVisualReal()
@@ -62,9 +86,6 @@ void RobotVisualization::updateVisualReal()
     initialJointPosition.setZero();
 
     // base_x,y,z
-//    initialJointPosition[0] = sharedMemory->basePosition[0];
-//    initialJointPosition[1] = sharedMemory->basePosition[1];
-//    initialJointPosition[2] = sharedMemory->basePosition[2];
     initialJointPosition[0] = 0.0;
     initialJointPosition[1] = 0.0;
     initialJointPosition[2] = 1.0;
@@ -98,7 +119,12 @@ void RobotVisualization::updateVisualReal()
     mRobot->setGeneralizedCoordinate(initialJointPosition);
 }
 
-void updateVisualSimul()
+void RobotVisualization::updateVisualSimul()
 {
-
+    for (int idx=0; idx<MOTOR_NUM; idx++)
+    {
+        mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
+    }
+    mRobot->setGeneralizedForce(mTorque);
+    mServer->integrateWorldThreadSafe();
 }

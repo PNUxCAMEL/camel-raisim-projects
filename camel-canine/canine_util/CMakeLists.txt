@@ -12,6 +12,7 @@ add_library(canine_util
         src/CanMotorBackward.cpp
         src/CanMotorForward.cpp
         src/Command.cpp
+        src/RobotState.cpp
 )
 target_link_libraries(canine_util
         PRIVATE

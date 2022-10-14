@@ -39,20 +39,15 @@ void JointPDController::DoPDControl()
 void JointPDController::InitHomeTrajectory()
 {
     double timeDuration = 2.0;
-    double homeHip = 50.5172;
-    double homeKnee = -63.7920;
-    mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[LFHR_IDX], 0.0, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[LFHP_IDX], homeHip * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[2].updateTrajectory(sharedMemory->motorPosition[LFKP_IDX], homeKnee * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[3].updateTrajectory(sharedMemory->motorPosition[RFHR_IDX], 0.0, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[4].updateTrajectory(sharedMemory->motorPosition[RFHP_IDX], homeHip * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[5].updateTrajectory(sharedMemory->motorPosition[RFKP_IDX], homeKnee * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[6].updateTrajectory(sharedMemory->motorPosition[LBHR_IDX], 0.0, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[7].updateTrajectory(sharedMemory->motorPosition[LBHP_IDX], homeHip * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[8].updateTrajectory(sharedMemory->motorPosition[LBKP_IDX], homeKnee * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[9].updateTrajectory(sharedMemory->motorPosition[RBHR_IDX], 0.0, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[10].updateTrajectory(sharedMemory->motorPosition[RBHP_IDX], homeHip * D2R, sharedMemory->localTime, timeDuration);
-    mCubicTrajectoryGen[11].updateTrajectory(sharedMemory->motorPosition[RBKP_IDX], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+    double homeHip = 45;
+    double homeKnee = -90;
+
+    for (int idx=0; idx<4; idx++)
+    {
+        mCubicTrajectoryGen[idx*3  ].updateTrajectory(sharedMemory->motorPosition[idx*3  ], 0.0, sharedMemory->localTime, timeDuration);
+        mCubicTrajectoryGen[idx*3+1].updateTrajectory(sharedMemory->motorPosition[idx*3+1], homeHip * D2R, sharedMemory->localTime, timeDuration);
+        mCubicTrajectoryGen[idx*3+2].updateTrajectory(sharedMemory->motorPosition[idx*3+2], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+    }
 }
 
 void JointPDController::InitSwingTrajectory()
@@ -77,8 +72,6 @@ void JointPDController::setTrajectory()
         {
             mBezierTrajectoryGen.StandTrajectory(mDesiredP);
         }
-
-        std::cout << idx << "\t" << mDesiredP[0] << "\t" << mDesiredP[1] << std::endl;
 
         d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
         phi = acos(abs(mDesiredP[0]) / d);

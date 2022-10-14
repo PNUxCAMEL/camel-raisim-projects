@@ -39,18 +39,18 @@ constexpr double RBKP_POS_OFFSET = 2.5906;
 
 enum MOTOR_INDEX
 {
-    LFHR_IDX = 0,
-    LFHP_IDX,
-    LFKP_IDX,
-    RFHR_IDX,
+    RFHR_IDX = 0,
     RFHP_IDX,
     RFKP_IDX,
-    LBHR_IDX,
-    LBHP_IDX,
-    LBKP_IDX,
+    LFHR_IDX,
+    LFHP_IDX,
+    LFKP_IDX,
     RBHR_IDX,
     RBHP_IDX,
     RBKP_IDX,
+    LBHR_IDX,
+    LBHP_IDX,
+    LBKP_IDX,
 };
 
 enum COMMAND
@@ -99,7 +99,7 @@ enum VISUAL_STATE
 
 enum SIMULATION_STATE
 {
-    ONLY_SIMULATION,
+    ONLY_SIMULATION = 0,
     WITH_SIMULATION
 };
 

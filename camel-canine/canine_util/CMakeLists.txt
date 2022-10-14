@@ -5,6 +5,7 @@ find_package(camel-tools-thread)
 
 include_directories(
         include
+        ${EIGEN3_INCLUDE_DIRS}
 )
 
 add_library(canine_util
@@ -12,9 +13,10 @@ add_library(canine_util
         src/CanMotorBackward.cpp
         src/CanMotorForward.cpp
         src/Command.cpp
-        src/RobotState.cpp
-)
+        src/StateEstimator.cpp)
 target_link_libraries(canine_util
+        PUBLIC
+        raisim::raisim
         PRIVATE
         pthread
         camel-tools-thread

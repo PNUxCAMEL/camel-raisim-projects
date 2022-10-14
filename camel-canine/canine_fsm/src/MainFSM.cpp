@@ -5,8 +5,9 @@
 #include <canine_fsm/MainFSM.hpp>
 
 pthread_t RTThreadController;
-pthread_t RTThreadCANForward;
-pthread_t RTThreadCANBackward;
+pthread_t RTThreadStateEstimator;
+//pthread_t RTThreadCANForward;
+//pthread_t RTThreadCANBackward;
 pthread_t NRTThreadCommand;
 pthread_t NRTThreadVisual;
 
@@ -25,6 +26,7 @@ raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
 RobotVisualization userVisual(&world, robot, &server);
 
+StateEstimator robotstate(robot);
 
 void* NRTCommandThread(void* arg)
 {
@@ -67,17 +69,17 @@ void* RTControllerThread(void* arg) {
     }
 }
 
-void* RTCANForward(void* arg) {
+void* RTStateEstimator(void* arg) {
     std::cout << "entered #rt_can_forward_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
-    const long PERIOD_US = long(CAN_dT * 1e6);
+    const long PERIOD_US = long(ESTIMATOR_dT * 1e6);
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
     while (true) {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
-        canForward.CanFunction();
+        robotstate.StateEstimatorFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
@@ -87,25 +89,45 @@ void* RTCANForward(void* arg) {
     }
 }
 
-void* RTCANBackward(void* arg) {
-    std::cout << "entered #rt_can_backward_thread" << std::endl;
-    struct timespec TIME_NEXT;
-    struct timespec TIME_NOW;
-    const long PERIOD_US = long(CAN_dT * 1e6);
-    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
-    while (true) {
-        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
-        timespec_add_us(&TIME_NEXT, PERIOD_US);
-
-        canBackward.CanFunction();
-
-        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-            std::cout << "RT Deadline Miss, can backward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                << " ms" << std::endl;
-        }
-    }
-}
+//void* RTCANForward(void* arg) {
+//    std::cout << "entered #rt_can_forward_thread" << std::endl;
+//    struct timespec TIME_NEXT;
+//    struct timespec TIME_NOW;
+//    const long PERIOD_US = long(CAN_dT * 1e6);
+//    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
+//    while (true) {
+//        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
+//        timespec_add_us(&TIME_NEXT, PERIOD_US);
+//
+//        canForward.CanFunction();
+//
+//        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
+//        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
+//            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+//                << " ms" << std::endl;
+//        }
+//    }
+//}
+//
+//void* RTCANBackward(void* arg) {
+//    std::cout << "entered #rt_can_backward_thread" << std::endl;
+//    struct timespec TIME_NEXT;
+//    struct timespec TIME_NOW;
+//    const long PERIOD_US = long(CAN_dT * 1e6);
+//    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
+//    while (true) {
+//        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
+//        timespec_add_us(&TIME_NEXT, PERIOD_US);
+//
+//        canBackward.CanFunction();
+//
+//        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
+//        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
+//            std::cout << "RT Deadline Miss, can backward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+//                << " ms" << std::endl;
+//        }
+//    }
+//}
 
 //TODO: add other variables
 void clearSharedMemory()
@@ -146,8 +168,9 @@ void StartFSM()
     clearSharedMemory();
 
     int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99,NULL);
-    int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99,NULL);
-    int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99,NULL);
+    int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 6, 99,NULL);
+//    int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99,NULL);
+//    int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99,NULL);
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
 

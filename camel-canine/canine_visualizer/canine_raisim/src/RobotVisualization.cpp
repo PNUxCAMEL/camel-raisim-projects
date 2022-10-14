@@ -10,6 +10,7 @@ RobotVisualization::RobotVisualization(raisim::World* world, raisim::Articulated
     : mWorld(world)
     , mRobot(robot)
     , mServer(server)
+    , mTorque(raisim::VecDyn(18))
 {
     mWorld->setGravity({0.0, 0.0, -9.81});
     mWorld->setTimeStep(0.01);

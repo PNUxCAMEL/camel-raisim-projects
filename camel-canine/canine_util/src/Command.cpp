@@ -30,16 +30,18 @@ void Command::commandFunction()
             }
             case MOTOR_ON:
             {
-                sharedMemory->controlState = STATE_CONTROL_STOP;
+                sharedMemory->simulState = ONLY_SIMULATION;
+/*                sharedMemory->controlState = STATE_CONTROL_STOP;
                 sharedMemory->can1State = CAN_MOTOR_ON;
-                sharedMemory->can2State = CAN_MOTOR_ON;
+                sharedMemory->can2State = CAN_MOTOR_ON;*/
                 break;
             }
             case MOTOR_OFF:
             {
-                sharedMemory->controlState = STATE_CONTROL_STOP;
+                sharedMemory->simulState = WITH_SIMULATION;
+/*                sharedMemory->controlState = STATE_CONTROL_STOP;
                 sharedMemory->can1State = CAN_MOTOR_OFF;
-                sharedMemory->can2State = CAN_MOTOR_OFF;
+                sharedMemory->can2State = CAN_MOTOR_OFF;*/
                 break;
             }
             case HOME:

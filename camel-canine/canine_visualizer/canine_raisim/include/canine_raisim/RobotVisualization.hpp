@@ -31,7 +31,7 @@ private:
     raisim::World* mWorld;
     std::string mUrdfPath;
 
-    raisim::VecDyn mTorque = raisim::VecDyn(18);
+    raisim::VecDyn mTorque;
 };
 
 

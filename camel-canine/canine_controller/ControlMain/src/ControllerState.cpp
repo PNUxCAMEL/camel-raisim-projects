@@ -10,7 +10,8 @@ extern pSHM sharedMemory;
 ControllerState::ControllerState()
     : mIteration(0)
     , mGaitCounter(0)
-    , mGaitLength(5)
+    , mGaitLength(1)
+    , stand(mGaitLength, Vec4<int>(50,50,50,50), Vec4<int>(50,50,50,50), 50)
     , trot(mGaitLength, Vec4<int>(0,100,100,0), Vec4<int>(100,100,100,100), 200)
     , MPCcontrol(mGaitLength)
 {
@@ -63,8 +64,9 @@ void ControllerState::ControllerFunction()
         }
         case STATE_TROT_CONTROL:
         {
-            trot.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = trot.getGaitTable();
+            stand.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = stand.getGaitTable();
+            sharedMemory->gaitState = STAND;
             MPCcontrol.DoControl();
             mGaitCounter++;
             break;

@@ -35,7 +35,7 @@ private:
     void getStateSpaceMatrix();
     void transformC2QP();
 
-    void transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
+    static void transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
 
 private:
     const double mDt;
@@ -69,19 +69,19 @@ private:
     Eigen::Matrix<double, Dynamic, 1> U_b;
     Eigen::Matrix<double, Dynamic, Dynamic> fmat;
 
-    qpOASES::real_t* H_qpoases;
-    qpOASES::real_t* g_qpoases;
-    qpOASES::real_t* A_qpoases;
-    qpOASES::real_t* ub_qpoases;
-    qpOASES::real_t* lb_qpoases;
-    qpOASES::real_t* q_soln;
+    qpOASES::real_t* H_qpoases{};
+    qpOASES::real_t* g_qpoases{};
+    qpOASES::real_t* A_qpoases{};
+    qpOASES::real_t* ub_qpoases{};
+    qpOASES::real_t* lb_qpoases{};
+    qpOASES::real_t* q_soln{};
 
-    qpOASES::real_t* H_red;
-    qpOASES::real_t* g_red;
-    qpOASES::real_t* A_red;
-    qpOASES::real_t* lb_red;
-    qpOASES::real_t* ub_red;
-    qpOASES::real_t* q_red;
+    qpOASES::real_t* H_red{};
+    qpOASES::real_t* g_red{};
+    qpOASES::real_t* A_red{};
+    qpOASES::real_t* lb_red{};
+    qpOASES::real_t* ub_red{};
+    qpOASES::real_t* q_red{};
     int8_t real_allocated = 0;
 
     Eigen::Matrix<double,25,25> ABc, expmm;

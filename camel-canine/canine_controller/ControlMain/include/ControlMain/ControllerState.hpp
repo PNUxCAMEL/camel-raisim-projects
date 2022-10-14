@@ -28,7 +28,7 @@ private:
 
     JointPDController PDcontrol;
     MPCController MPCcontrol;
-    OffsetGait trot;
+    OffsetGait stand, trot;
 };
 
 #endif //RAISIM_CONTROLSTATE_H

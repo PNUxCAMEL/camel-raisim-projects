@@ -42,11 +42,13 @@ void MPCSolver::SetTrajectory()
     {
         xd(i*13+5,0) = 0.37;
 
-        if(sharedMemory->gaitState){
+        if(sharedMemory->gaitState == STAND)
+        {
             xd(i*13+3,0) = stopPosX;
             xd(i*13+9,0) = 0.0;
         }
-        else{
+        else
+        {
             xd(i*13+3,0) = mBaseP[0]+0.7*(mDt*i);
             xd(i*13+9,0) = 0.7;
         }
@@ -259,6 +261,7 @@ void MPCSolver::GetGRF(Vec3<double> _f[4]){
 }
 
 void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side){
+
     double s1 = std::sin(hip);
     double s2 = std::sin(thigh);
 
@@ -407,18 +410,14 @@ void MPCSolver::getStateSpaceMatrix()
     Ac(11,12) = 1.f;
     Ac.block(0,6,3,3) = R_yaw.transpose();
 
-/*    //Get foot position on the body frame
-    for(int i=0; i<4; i++) {
-        for (int j = 0; j < 3; j++){
-            footPosition[i][j] -= p[j];
-        }
-    }*/
-
+    //Get foot position on the body frame
     Eigen::Matrix<double,4,3> R_feet;
-/*    R_feet <<  footPosition[0][0], footPosition[0][1], footPosition[0][2], //FR
-            footPosition[1][0], footPosition[1][1], footPosition[1][2], //FL
-            footPosition[2][0], footPosition[2][1], footPosition[2][2], //RR
-            footPosition[3][0], footPosition[3][1], footPosition[3][2]; //RL*/
+    for (int row=0; row<4; row++) {
+        for (int col=0; col<3; col++){
+            sharedMemory->footPosition[row][col] -= mBaseP[col];
+            R_feet(row, col) = sharedMemory->footPosition[row][col];
+        }
+    }
     Bc.setZero();
 
     mBodyInertia = R_yaw*mBodyInertia*R_yaw.transpose();

@@ -21,11 +21,13 @@ private:
     void getJointStateSimul();
     void getRobotAngulerStateReal();
     void getRobotAngulerStateSimul();
+    void getRobotFootPositionSimul();
     void calculateRobotLinearState();
 private:
     raisim::ArticulatedSystem* mRobot;
     raisim::VecDyn mPosition;
     raisim::VecDyn mVelocity;
+    raisim::Vec<3> mFootPosition[4];
     double mQuaternion[4];
 };
 

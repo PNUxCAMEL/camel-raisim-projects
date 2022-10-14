@@ -47,6 +47,7 @@ typedef struct _SHM_
     double baseVelocity[3];
     double baseEulerPosition[3];
     double baseEulerVelocity[3];
+    double footPosition[4][3];
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];

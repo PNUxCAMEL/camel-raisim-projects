@@ -27,8 +27,8 @@ void MPCController::DoControl()
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);
 
-    /*computeControlInput();
-    setControlInput();*/
+    computeControlInput();
+    setControlInput();
 }
 
 void MPCController::computeControlInput()
@@ -38,16 +38,16 @@ void MPCController::computeControlInput()
         if (idx%2 == 0)
         {
             ConvexMPCSolver.GetJacobian(robotJacobian[idx],
-                                   sharedMemory->basePosition[idx*3],
-                                   sharedMemory->basePosition[idx*3+1],
-                                   sharedMemory->basePosition[idx*3+2],
+                                   sharedMemory->motorPosition[idx*3],
+                                   sharedMemory->motorPosition[idx*3+1],
+                                   sharedMemory->motorPosition[idx*3+2],
                                    1);
         }
         {
             ConvexMPCSolver.GetJacobian(robotJacobian[idx],
-                                   sharedMemory->basePosition[idx*3],
-                                   sharedMemory->basePosition[idx*3+1],
-                                   sharedMemory->basePosition[idx*3+2],
+                                   sharedMemory->motorPosition[idx*3],
+                                   sharedMemory->motorPosition[idx*3+1],
+                                   sharedMemory->motorPosition[idx*3+2],
                                    -1);
         }
 

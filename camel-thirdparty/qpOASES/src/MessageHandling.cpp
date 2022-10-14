@@ -212,7 +212,7 @@ MessageHandling::ReturnValueList returnValueList[] =
 { RET_KKT_MATRIX_SINGULAR, "KKT matrix is singular", VS_VISIBLE },
 { RET_QR_FACTORISATION_FAILED, "QR factorization of Schur complement failed", VS_VISIBLE },
 { RET_INERTIA_CORRECTION_FAILED, "Inertia correction of KKT matrix failed", VS_VISIBLE },
-{ RET_NO_SPARSE_SOLVER, "No Sparse Solver installed", VS_VISIBLE },
+{ RET_NO_SPARSE_SOLVER, "No Sparse MPCSolver installed", VS_VISIBLE },
 /* Simple exitflags */
 { RET_SIMPLE_STATUS_P1, "QP problem could not be solved within given number of iterations", VS_VISIBLE },
 { RET_SIMPLE_STATUS_P0, "QP problem solved", VS_VISIBLE },

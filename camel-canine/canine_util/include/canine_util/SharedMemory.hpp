@@ -37,6 +37,7 @@ typedef struct _SHM_
     bool simulState;
     int controlState;
     int visualState;
+    int gaitState;
     int can1State;
     int can2State;
     int motorErrorStatus[MOTOR_NUM];

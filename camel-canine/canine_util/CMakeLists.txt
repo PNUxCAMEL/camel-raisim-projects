@@ -13,7 +13,8 @@ add_library(canine_util
         src/CanMotorBackward.cpp
         src/CanMotorForward.cpp
         src/Command.cpp
-        src/StateEstimator.cpp)
+        src/StateEstimator.cpp
+        src/RobotMath.cpp)
 target_link_libraries(canine_util
         PUBLIC
         raisim::raisim

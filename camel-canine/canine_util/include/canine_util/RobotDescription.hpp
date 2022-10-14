@@ -104,4 +104,11 @@ enum SIMULATION_STATE
     WITH_SIMULATION
 };
 
+enum GAIT_TYPE
+{
+    STAND = 0,
+    TROT
+};
+
+
 #endif //RAISIM_ROBOTDESCRIPTION_H

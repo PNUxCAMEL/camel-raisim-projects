@@ -9,6 +9,7 @@
 
 #include "RobotDescription.hpp"
 #include "SharedMemory.hpp"
+#include "RobotMath.hpp"
 
 class StateEstimator{
 public:
@@ -16,11 +17,16 @@ public:
 
     void StateEstimatorFunction();
 private:
-    void EstimatorSimul();
+    void getJointStateReal();
+    void getJointStateSimul();
+    void getRobotAngulerStateReal();
+    void getRobotAngulerStateSimul();
+    void calculateRobotLinearState();
 private:
     raisim::ArticulatedSystem* mRobot;
     raisim::VecDyn mPosition;
     raisim::VecDyn mVelocity;
+    double mQuaternion[4];
 };
 
 #endif //RAISIM_STATEESTIMATOR_HPP

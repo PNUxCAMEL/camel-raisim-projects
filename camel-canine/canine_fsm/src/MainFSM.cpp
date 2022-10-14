@@ -63,8 +63,8 @@ void* RTControllerThread(void* arg) {
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                      << " ms" << std::endl;
+//            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+//                      << " ms" << std::endl;
         }
     }
 }
@@ -139,6 +139,7 @@ void clearSharedMemory()
     sharedMemory->simulState = ONLY_SIMULATION;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
+    sharedMemory->gaitState = STAND;
     sharedMemory->can1State = CAN_NO_ACT;
     sharedMemory->can2State = CAN_NO_ACT;
     sharedMemory->localTime = 0;

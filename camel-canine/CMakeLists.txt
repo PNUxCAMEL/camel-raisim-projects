@@ -20,6 +20,7 @@ add_subdirectory(canine_fsm)
 include_directories(
         ${EIGEN3_INCLUDE_DIRS}
         ${convexMPC_SOURCE_DIR}/include
+        ${qpOASES_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${GaitScheduler_SOURCE_DIR}/include
         ${ControlMain_SOURCE_DIR}/include
@@ -27,6 +28,9 @@ include_directories(
         ${canine_raisim_SOURCE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
         ${canine_fsm_SOURCE_DIR}/include
+)
+link_directories(
+        ${qpOASES_SOURCE_DIR}/bin
 )
 
 add_executable(camel-canine canine_demo/CanineMain.cpp)

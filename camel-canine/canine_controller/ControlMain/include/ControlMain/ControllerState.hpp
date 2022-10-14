@@ -10,7 +10,9 @@
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/EigenTypes.hpp>
+
 #include <PDcontroller/JointPDController.hpp>
+#include <convexMPC/MPCController.hpp>
 #include <GaitScheduler/Gait.hpp>
 
 class ControllerState{
@@ -22,9 +24,10 @@ public:
 private:
     uint16_t mIteration;
     uint16_t mGaitCounter;
-    JointPDController PDcontrol;
+    uint8_t mGaitLength;
 
-    int mHorizon;
+    JointPDController PDcontrol;
+    MPCController MPCcontrol;
     OffsetGait trot;
 };
 

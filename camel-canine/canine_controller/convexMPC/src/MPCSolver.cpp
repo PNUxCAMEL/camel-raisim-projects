@@ -36,7 +36,7 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory()
+void MPCSolver::SetTrajectory(const double* mP)
 {
     for(int i = 0; i < mHorizon ; i++)
     {
@@ -49,18 +49,22 @@ void MPCSolver::SetTrajectory()
         }
         else
         {
-            xd(i*13+3,0) = mBaseP[0]+0.7*(mDt*i);
+            xd(i*13+3,0) = mP[0]+0.7*(mDt*i);
             xd(i*13+9,0) = 0.7;
         }
     }
 }
 
-void MPCSolver::GetMetrices()
+void MPCSolver::GetMetrices(const double* mP, const double* mQ,
+                            const double* mV, const double* mW,
+                            const double mFoot[4][3])
 {
-    updateRobotStates();
-    x0 << mBaseQ, mBaseP, mBaseW, mBaseV, GRAVITY;
+    x0 << mQ[0],mQ[1],mQ[2],
+          mP[0],mP[1],mP[2],
+          mW[0],mW[1],mW[2],
+          mV[0],mV[1],mV[2], GRAVITY;
 
-    getStateSpaceMatrix();
+    getStateSpaceMatrix(mP, mQ, mFoot);
     transformC2QP();
     L.diagonal() = mWeightMat.replicate(mHorizon,1);
 
@@ -254,9 +258,9 @@ void MPCSolver::GetGRF(Vec3<double> _f[4]){
         for(int axis = 0; axis < 3; axis++)
         {
             _f[leg][axis] = q_soln[leg*3 + axis];
-            //std::cout << _f[leg][axis] << "  ";
+            std::cout << _f[leg][axis] << "  ";
         }
-        //std::cout << std::endl;
+        std::cout << std::endl;
     }
 }
 
@@ -394,10 +398,10 @@ inline Eigen::Matrix<double,3,3> getSkew(Vec3<double> r)
     return cm;
 }
 
-void MPCSolver::getStateSpaceMatrix()
+void MPCSolver::getStateSpaceMatrix(const double* mP, const double* mQ, const double mFoot[4][3])
 {
-    double yc = cos(mBaseQ[2]);
-    double ys = sin(mBaseQ[2]);
+    double yc = cos(mQ[2]);
+    double ys = sin(mQ[2]);
 
     R_yaw <<  yc,  -ys,   0,
             ys,  yc,   0,
@@ -414,8 +418,7 @@ void MPCSolver::getStateSpaceMatrix()
     Eigen::Matrix<double,4,3> R_feet;
     for (int row=0; row<4; row++) {
         for (int col=0; col<3; col++){
-            sharedMemory->footPosition[row][col] -= mBaseP[col];
-            R_feet(row, col) = sharedMemory->footPosition[row][col];
+            R_feet(row, col) = mFoot[row][col] - mP[col];
         }
     }
     Bc.setZero();
@@ -438,16 +441,5 @@ void MPCSolver::transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dyn
             dst[a] = src(r,c);
             a++;
         }
-    }
-}
-
-void MPCSolver::updateRobotStates()
-{
-    for (int idx=0; idx<3; idx++)
-    {
-        mBaseQ[idx] = sharedMemory->baseEulerPosition[idx];
-        mBaseP[idx] = sharedMemory->basePosition[idx];
-        mBaseW[idx] = sharedMemory->baseEulerVelocity[idx];
-        mBaseV[idx] = sharedMemory->baseVelocity[idx];
     }
 }

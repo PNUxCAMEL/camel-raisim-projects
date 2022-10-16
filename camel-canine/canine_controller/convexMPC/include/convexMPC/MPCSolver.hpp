@@ -22,8 +22,10 @@ public:
     MPCSolver(const uint8_t& horizon);
     ~MPCSolver();
 
-    void SetTrajectory();
-    void GetMetrices();
+    void SetTrajectory(const double* mP);
+    void GetMetrices(const double* mP, const double* mQ,
+                     const double* mV, const double* mW,
+                     const double mFoot[4][3]);
     void SolveQP();
     void GetGRF(Vec3<double> f[4]);
     void GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side);
@@ -31,8 +33,7 @@ public:
 private:
     void initMatrix();
     void resizeMatrix();
-    void updateRobotStates();
-    void getStateSpaceMatrix();
+    void getStateSpaceMatrix(const double* mP, const double* mQ, const double mFoot[4][3]);
     void transformC2QP();
 
     static void transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
@@ -42,10 +43,6 @@ private:
     const double mAlpha;
     Vec13<double> mWeightMat;
     const uint8_t mHorizon;
-    Vec3<double> mBaseP;
-    Vec3<double> mBaseV;
-    Vec3<double> mBaseQ;
-    Vec3<double> mBaseW;
 
     Eigen::Matrix<double,3,3> mBodyInertia;
     Eigen::Matrix<double,3,3> mBodyInertiaInverse;

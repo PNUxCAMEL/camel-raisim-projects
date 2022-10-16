@@ -65,8 +65,7 @@ void StateEstimator::getRobotAngulerStateSimul()
     TransformQuat2Euler(mQuaternion, sharedMemory->baseEulerPosition);
 }
 
-void StateEstimator::getRobotFootPositionSimul()
-{
+void StateEstimator::getRobotFootPositionSimul() {
     auto FRfootFrameIndex = mRobot->getFrameIdxByName("RF_FOOT");
     auto FLfootFrameIndex = mRobot->getFrameIdxByName("LF_FOOT");
     auto RRfootFrameIndex = mRobot->getFrameIdxByName("RH_FOOT");
@@ -78,10 +77,8 @@ void StateEstimator::getRobotFootPositionSimul()
     mRobot->getFramePosition(RRfootFrameIndex, mFootPosition[2]);
     mRobot->getFramePosition(RLfootFrameIndex, mFootPosition[3]);
 
-    for (int row=0; row<4; row++)
-    {
-        for (int col=0; col<3; col++)
-        {
+    for (int row = 0; row < 4; row++) {
+        for (int col = 0; col < 3; col++) {
             sharedMemory->footPosition[row][col] = mFootPosition[row][col];
         }
     }

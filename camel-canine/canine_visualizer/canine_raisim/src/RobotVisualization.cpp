@@ -13,7 +13,7 @@ RobotVisualization::RobotVisualization(raisim::World* world, raisim::Articulated
     , mTorque(raisim::VecDyn(18))
 {
     mWorld->setGravity({0.0, 0.0, -9.81});
-    mWorld->setTimeStep(0.01);
+    mWorld->setTimeStep(VISUAL_dT);
     mWorld->addGround();
     mRobot->setName("Canine");
     mTorque.setZero();
@@ -126,5 +126,6 @@ void RobotVisualization::updateVisualSimul()
         mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
     }
     mRobot->setGeneralizedForce(mTorque);
-    mServer->integrateWorldThreadSafe();
+    mWorld->integrate();
+    //mServer->integrateWorldThreadSafe();
 }

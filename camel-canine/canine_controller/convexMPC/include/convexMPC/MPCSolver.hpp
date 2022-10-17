@@ -22,7 +22,7 @@ public:
     MPCSolver(const uint8_t& horizon);
     ~MPCSolver();
 
-    void SetTrajectory(const double* mP);
+    void SetTrajectory(const double* mP, const double* mQ);
     void GetMetrices(const double* mP, const double* mQ,
                      const double* mV, const double* mW,
                      const double mFoot[4][3]);

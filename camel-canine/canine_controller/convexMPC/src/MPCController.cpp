@@ -12,10 +12,11 @@ MPCController::MPCController(const uint8_t& horizon)
 {
     for(double & motorIdx : mTorqueLimit)
     {
-        motorIdx = 11.0;
+        motorIdx = 50.0;
     }
 
     mGRF->setZero();
+    mTorque.setZero();
     robotJacobian->setZero();
     robottorque->setZero();
 }
@@ -24,9 +25,9 @@ void MPCController::DoControl()
 {
     //TODO: Make structure for robot states
     updateState();
-    ConvexMPCSolver.SetTrajectory(mBasePosition);
-    ConvexMPCSolver.GetMetrices(mBasePosition, mBaseVelocity,
-                                mBaseEulerPosition, mBaseEulerVelocity,
+    ConvexMPCSolver.SetTrajectory(mBasePosition, mBaseEulerPosition);
+    ConvexMPCSolver.GetMetrices(mBasePosition, mBaseEulerPosition,
+                                mBaseVelocity, mBaseEulerVelocity,
                                 mFootPosition);
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);
@@ -43,35 +44,34 @@ void MPCController::updateState()
     memcpy(mBaseEulerVelocity, sharedMemory->baseEulerVelocity, sizeof(double)*3);
     memcpy(mFootPosition, sharedMemory->footPosition, sizeof(double)*4*3);
     memcpy(mMotorPosition, sharedMemory->motorPosition, sizeof(double)*MOTOR_NUM);
-    memcpy(mMotorDesiredTorque, sharedMemory->motorDesiredTorque, sizeof(double)*MOTOR_NUM);
 }
 
 void MPCController::computeControlInput()
 {
     ConvexMPCSolver.GetJacobian(robotJacobian[0],
-                                sharedMemory->motorPosition[0],
-                                sharedMemory->motorPosition[1],
-                                sharedMemory->motorPosition[2],1);
+                                mMotorPosition[0],
+                                mMotorPosition[1],
+                                mMotorPosition[2],1);
     ConvexMPCSolver.GetJacobian(robotJacobian[1],
-                                sharedMemory->motorPosition[3],
-                                sharedMemory->motorPosition[4],
-                                sharedMemory->motorPosition[5],-1);
+                                mMotorPosition[3],
+                                mMotorPosition[4],
+                                mMotorPosition[5],-1);
     ConvexMPCSolver.GetJacobian(robotJacobian[2],
-                                sharedMemory->motorPosition[6],
-                                sharedMemory->motorPosition[7],
-                                sharedMemory->motorPosition[8],1);
+                                mMotorPosition[6],
+                                mMotorPosition[7],
+                                mMotorPosition[8],1);
     ConvexMPCSolver.GetJacobian(robotJacobian[3],
-                                sharedMemory->motorPosition[9],
-                                sharedMemory->motorPosition[10],
-                                sharedMemory->motorPosition[11],-1);
+                                mMotorPosition[9],
+                                mMotorPosition[10],
+                                mMotorPosition[11],-1);
 
     for(int idx=0; idx<4; idx++)
     {
         robotJacobian[idx].transposeInPlace();
         robottorque[idx] = robotJacobian[idx]*mGRF[idx];
-        mTorque[idx*3+6] = robottorque[idx][0];
-        mTorque[idx*3+7] = robottorque[idx][1];
-        mTorque[idx*3+8] = robottorque[idx][2];
+        mTorque[idx*3  ] = robottorque[idx][0];
+        mTorque[idx*3+1] = robottorque[idx][1];
+        mTorque[idx*3+2] = robottorque[idx][2];
     }
 }
 
@@ -88,5 +88,7 @@ void MPCController::setControlInput()
             mTorque[index] = -mTorqueLimit[index];
         }
         sharedMemory->motorDesiredTorque[index] = mTorque[index];
+        std::cout << mTorque[index] << "\t";
     }
+    std::cout << std::endl;
 }

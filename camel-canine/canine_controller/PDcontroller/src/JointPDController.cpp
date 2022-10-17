@@ -32,8 +32,8 @@ void JointPDController::DoHomeControl()
 void JointPDController::DoPDControl()
 {
     setTrajectory();
-/*    computeControlInput();
-    setControlInput();*/
+    computeControlInput();
+    setControlInput();
 }
 
 void JointPDController::InitHomeTrajectory()
@@ -52,7 +52,7 @@ void JointPDController::InitHomeTrajectory()
 
 void JointPDController::InitSwingTrajectory()
 {
-    mBezierTrajectoryGen.InitTrajectorySet(sharedMemory->localTime, 0.5);
+    mBezierTrajectoryGen.InitTrajectorySet(sharedMemory->localTime, 1);
 }
 
 void JointPDController::setTrajectory()

@@ -36,11 +36,11 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory(const double* mP)
+void MPCSolver::SetTrajectory(const double* mP, const double* mQ)
 {
     for(int i = 0; i < mHorizon ; i++)
     {
-        xd(i*13+5,0) = 0.37;
+        xd(i*13+5,0) = 0.34;
 
         if(sharedMemory->gaitState == STAND)
         {
@@ -262,10 +262,11 @@ void MPCSolver::GetGRF(Vec3<double> _f[4]){
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 
-void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side){
-
+void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side)
+{
     double s1 = std::sin(hip);
     double s2 = std::sin(thigh);
 

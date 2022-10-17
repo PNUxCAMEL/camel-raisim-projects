@@ -18,8 +18,8 @@
 #define F_MAX 240
 #define MU 0.6
 
-const double ALPHA = 1e-10;
-const double WEIGHT[13] = {0.5, 0.5, 50, 20, 20, 80, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f};
-const double BODY_INERTIA[9] = {0.060288,0,0, 0,0.081321,0, 0,0,0.12107};
+const double ALPHA = 1e-5;
+const double WEIGHT[13] = {5, 5, 20, 5, 5, 50, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f};
+const double BODY_INERTIA[9] = {0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107};
 
 #endif //RAISIM_MPCDESCRIPTION_HPP

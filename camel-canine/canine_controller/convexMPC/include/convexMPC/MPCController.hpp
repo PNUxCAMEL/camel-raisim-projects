@@ -32,8 +32,7 @@ private:
     double mMotorPosition[MOTOR_NUM];
     double mMotorDesiredTorque[MOTOR_NUM];
 
-
-    double mTorque[MOTOR_NUM];
+    Eigen::Matrix<double,12,1> mTorque;
     double mTorqueLimit[MOTOR_NUM];
 
     Eigen::Matrix<double,3,1> mGRF[4];

@@ -22,7 +22,7 @@ public:
     MPCSolver(const uint8_t& horizon);
     ~MPCSolver();
 
-    void SetTrajectory(const double* mP, const double* mQ);
+    void SetTrajectory(const double* mP);
     void GetMetrices(const double* mP, const double* mQ,
                      const double* mV, const double* mW,
                      const double mFoot[4][3]);
@@ -41,13 +41,14 @@ private:
 private:
     const double mDt;
     const double mAlpha;
+    double mStopPosX = 0.0;
+
     Vec13<double> mWeightMat;
     const uint8_t mHorizon;
 
     Eigen::Matrix<double,3,3> mBodyInertia;
     Eigen::Matrix<double,3,3> mBodyInertiaInverse;
 
-    double stopPosX = 0.0;
 
     Eigen::Matrix<double,13,13> Ac;
     Eigen::Matrix<double,13,12> Bc;

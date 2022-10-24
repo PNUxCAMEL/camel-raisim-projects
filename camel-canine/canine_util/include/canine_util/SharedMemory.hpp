@@ -10,8 +10,8 @@
 #define CMD_dT              0.001
 #define CONTROL_dT          0.005
 #define CAN_dT              0.005
-#define VISUAL_dT           0.005
-#define ESTIMATOR_dT        0.005
+#define VISUAL_dT           0.001
+#define ESTIMATOR_dT        0.001
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
 #define PI                  3.141592

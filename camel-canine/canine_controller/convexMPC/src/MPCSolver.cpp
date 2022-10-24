@@ -36,15 +36,18 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory(const double* mP, const double* mQ)
+void MPCSolver::SetTrajectory(const double* mP)
 {
     for(int i = 0; i < mHorizon ; i++)
     {
-        xd(i*13+5,0) = 0.34;
+        xd(i*13+5,0) = 0.37;
+
+        xd(i*13+3,0) = 0.0;
+        xd(i*13+9,0) = 0.0;
 
         if(sharedMemory->gaitState == STAND)
         {
-            xd(i*13+3,0) = stopPosX;
+            xd(i*13+3,0) = mStopPosX;
             xd(i*13+9,0) = 0.0;
         }
         else
@@ -82,7 +85,6 @@ void MPCSolver::GetMetrices(const double* mP, const double* mQ,
             k++;
         }
     }
-    //fmat initialize
     float mu = 1.f/MU;
     Eigen::Matrix<double,5,3> f_block;
 
@@ -92,9 +94,9 @@ void MPCSolver::GetMetrices(const double* mP, const double* mQ,
             0, -mu, 1.f,
             0,   0, 1.f;
 
-    for(int i = 0; i < mHorizon*4; i++) //12
+    for(int i = 0; i < mHorizon*4; i++)
     {
-        fmat.block(i*5,i*3,5,3) = f_block; //Such like diagonal matrix
+        fmat.block(i*5,i*3,5,3) = f_block;
     }
 }
 
@@ -116,38 +118,36 @@ void MPCSolver::SolveQP()
     transformMat2Real(ub_qpoases,U_b, 20*mHorizon, 1);
 
     for(int i =0; i<20*mHorizon; i++)
+    {
         lb_qpoases[i] = 0.f;
+    }
 
-    // Set red matrices
     int16_t num_constraints = 20*mHorizon;
     int16_t num_variables = 12*mHorizon;
 
     int new_cons = num_constraints;
     int new_vars = num_variables;
 
-    //Set the length of metrices depend on variables and constraintss
-    for(int i=0; i<num_constraints; i++)
-        con_elim[i] = 0;
-    for(int i=0; i<num_variables; i++)
-        var_elim[i] = 0;
-
-    // Both of lb, ub is not near the zero, var_elim[5]/con_elim[3] => 1
-    // the other side, var_elim[5]/con_elim[3] => 0
     for(int i=0; i<num_constraints; i++)
     {
-        // near the zero (-0.01 ~ 0.01)
-        // lb_qpoases => all zero
-        // ub_qpoases => 0~3: BIG_VALUE ,
-        //            =>  4 : depend on gait[0 or 1]*f_max / if stand it all set f_max.
-        if(!(near_zero(lb_qpoases[i]) && near_zero(ub_qpoases[i])))
-            continue;
+        con_elim[i] = 0;
+    }
+    for(int i=0; i<num_variables; i++)
+    {
+        var_elim[i] = 0;
+    }
 
-        // Both of lb, ub is not near the zero
-        // If gait is 0, the code below is passed
+    for(int i=0; i<num_constraints; i++)
+    {
+        if(!(near_zero(lb_qpoases[i]) && near_zero(ub_qpoases[i])))
+        {
+            continue;
+        }
+
         double* c_row = &A_qpoases[i*num_variables];
         for(int j=0; j<num_variables; j++)
         {
-            if(near_one(c_row[j])) //f_block third column values
+            if(near_one(c_row[j]))
             {
                 new_vars -= 3;
                 new_cons -= 5;
@@ -168,10 +168,8 @@ void MPCSolver::SolveQP()
     int con_idx[new_cons];
     int count = 0;
 
-    // If gait is 1, save the indexes
     for(int i=0; i<num_variables; i++)
     {
-        // If gait is 1
         if(!var_elim[i])
         {
             if(!(count<new_vars))
@@ -185,7 +183,6 @@ void MPCSolver::SolveQP()
     count=0;
     for(int i=0; i<num_constraints; i++)
     {
-        // If gait is 1
         if(!con_elim[i])
         {
             if(!(count<new_cons))
@@ -223,7 +220,6 @@ void MPCSolver::SolveQP()
         lb_red[i] = lb_qpoases[old];
     }
 
-    // Solve the problem using qpOASES
     qpOASES::int_t nWSR = 10000;
     qpOASES::QProblem problem(new_vars, new_cons);
     qpOASES::Options op;
@@ -252,17 +248,13 @@ void MPCSolver::SolveQP()
 }
 
 void MPCSolver::GetGRF(Vec3<double> _f[4]){
-    // [Fx,Fy,Fz]
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
             _f[leg][axis] = q_soln[leg*3 + axis];
-            std::cout << _f[leg][axis] << "  ";
         }
-        std::cout << std::endl;
     }
-    std::cout << std::endl;
 }
 
 void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side)
@@ -415,10 +407,11 @@ void MPCSolver::getStateSpaceMatrix(const double* mP, const double* mQ, const do
     Ac(11,12) = 1.f;
     Ac.block(0,6,3,3) = R_yaw.transpose();
 
-    //Get foot position on the body frame
     Eigen::Matrix<double,4,3> R_feet;
-    for (int row=0; row<4; row++) {
-        for (int col=0; col<3; col++){
+    for (int row=0; row<4; row++)
+    {
+        for (int col=0; col<3; col++)
+        {
             R_feet(row, col) = mFoot[row][col] - mP[col];
         }
     }
@@ -437,8 +430,10 @@ void MPCSolver::getStateSpaceMatrix(const double* mP, const double* mQ, const do
 void MPCSolver::transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols)
 {
     int32_t a = 0;
-    for(int16_t r = 0; r < rows; r++){
-        for(int16_t c = 0; c < cols; c++){
+    for(int16_t r = 0; r < rows; r++)
+    {
+        for(int16_t c = 0; c < cols; c++)
+        {
             dst[a] = src(r,c);
             a++;
         }

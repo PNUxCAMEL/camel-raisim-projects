@@ -19,12 +19,11 @@ CanMotorBackward canBackward("can5");
 
 Command userCommand;
 
-ControllerState userController;
-
 raisim::World world;
 raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
 RobotVisualization userVisual(&world, robot, &server);
+ControllerState userController(&world, robot);
 
 StateEstimator robotstate(robot);
 
@@ -63,8 +62,8 @@ void* RTControllerThread(void* arg) {
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-//            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-//                      << " ms" << std::endl;
+            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
+                      << " ms" << std::endl;
         }
     }
 }
@@ -167,6 +166,8 @@ void StartFSM()
     sharedCommand = (pUI_COMMAND) malloc(sizeof(UI_COMMAND));
     sharedMemory = (pSHM) malloc(sizeof(SHM));
     clearSharedMemory();
+
+    server.launchServer(8080);
 
     int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99,NULL);
     int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 6, 99,NULL);

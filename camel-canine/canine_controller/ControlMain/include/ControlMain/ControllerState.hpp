@@ -32,7 +32,6 @@ private:
     uint8_t mGaitLength;
     raisim::World* mWorld;
     raisim::ArticulatedSystem* mRobot;
-    raisim::RaisimServer* mServer;
 
     raisim::VecDyn mTorque = raisim::VecDyn(18);
 

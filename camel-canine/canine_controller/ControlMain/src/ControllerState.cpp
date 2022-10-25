@@ -39,7 +39,7 @@ void ControllerState::ControllerFunction()
         {
             PDcontrol.InitHomeTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+//            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_HOME_CONTROL:
@@ -74,10 +74,10 @@ void ControllerState::ControllerFunction()
         default:
             break;
     }
-    if (sharedMemory->simulState == ONLY_SIMULATION && sharedMemory->visualState == STATE_UPDATE_VISUAL)
-    {
-        integrateSimul();
-    }
+//    if (sharedMemory->simulState == ONLY_SIMULATION && sharedMemory->visualState == STATE_UPDATE_VISUAL)
+//    {
+//        integrateSimul();
+//    }
 }
 
 void ControllerState::integrateSimul()

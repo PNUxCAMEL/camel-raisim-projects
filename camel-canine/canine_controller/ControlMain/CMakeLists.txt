@@ -7,7 +7,7 @@ include_directories(
         ${canine_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${convexMPC_SOURCE_DIR}/include
-        ${GaitScheduler_SOURCE_DIR}/include
+        ${ControlUtils_SOURCE_DIR}/include
         ${qpOASES_SOURCE_DIR}/include
 )
 link_directories(

@@ -36,7 +36,7 @@ void RobotVisualization::VisualFunction()
         {
             //openRaisimServer();
             initRobotPose();
-            //sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_UPDATE_VISUAL:
@@ -44,6 +44,10 @@ void RobotVisualization::VisualFunction()
             if(sharedMemory->simulState == WITH_SIMULATION)
             {
                 updateVisualReal();
+            }
+            else
+            {
+                updateVisualSimul();
             }
             break;
         }
@@ -148,4 +152,14 @@ void RobotVisualization::updateVisualReal()
     initialJointPosition[17] = sharedMemory->motorPosition[LBHP_IDX];
     initialJointPosition[18] = sharedMemory->motorPosition[LBKP_IDX];
     mRobot->setGeneralizedCoordinate(initialJointPosition);
+}
+
+void RobotVisualization::updateVisualSimul()
+{
+    for (int idx=0; idx<MOTOR_NUM; idx++)
+    {
+        mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
+    }
+    mRobot->setGeneralizedForce(mTorque);
+    mWorld->integrate();
 }

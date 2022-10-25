@@ -66,22 +66,8 @@ void StateEstimator::getRobotAngulerStateSimul()
 }
 
 void StateEstimator::getRobotFootPositionSimul() {
-    auto FRfootFrameIndex = mRobot->getFrameIdxByName("RF_FOOT");
-    auto FLfootFrameIndex = mRobot->getFrameIdxByName("LF_FOOT");
-    auto RRfootFrameIndex = mRobot->getFrameIdxByName("RH_FOOT");
-    auto RLfootFrameIndex = mRobot->getFrameIdxByName("LH_FOOT");
+    //TODO:
 
-    //Get foot position on the world frame
-    mRobot->getFramePosition(FRfootFrameIndex, mFootPosition[0]);
-    mRobot->getFramePosition(FLfootFrameIndex, mFootPosition[1]);
-    mRobot->getFramePosition(RRfootFrameIndex, mFootPosition[2]);
-    mRobot->getFramePosition(RLfootFrameIndex, mFootPosition[3]);
-
-    for (int row = 0; row < 4; row++) {
-        for (int col = 0; col < 3; col++) {
-            sharedMemory->footPosition[row][col] = mFootPosition[row][col];
-        }
-    }
 }
 
 void StateEstimator::calculateRobotLinearState()

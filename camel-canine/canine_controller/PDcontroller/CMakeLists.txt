@@ -9,19 +9,18 @@ include_directories(
         include
         ${EIGEN3_INCLUDE_DIRS}
         ${canine_util_SOURCE_DIR}/include
-        ${GaitScheduler_SOURCE_DIR}/include
+        ${ControlUtils_SOURCE_DIR}/include
 )
 
 add_library(${PROJECT_NAME} STATIC
         src/JointPDController.cpp
-        src/BezierTrajectoryGenerator.cpp
-)
+        )
 
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
         camel-tools-trajectory
         raisim::raisim
         canine_util
-        canine_controller::GaitScheduler
+        canine_controller::ControlUtils
         camel-tools-thread
 )

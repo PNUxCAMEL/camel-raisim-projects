@@ -26,14 +26,14 @@ void JointPDController::DoHomeControl()
                 Kp[index] * (mCubicTrajectoryGen[index].getPositionTrajectory(sharedMemory->localTime) - sharedMemory->motorPosition[index])
                 + Kd[index] * (mCubicTrajectoryGen[index].getVelocityTrajectory(sharedMemory->localTime) - sharedMemory->motorVelocity[index]);
     }
-    setControlInput();
+    SetControlInput();
 }
 
 void JointPDController::DoPDControl()
 {
     setTrajectory();
     computeControlInput();
-    setControlInput();
+    SetControlInput();
 }
 
 void JointPDController::InitHomeTrajectory()
@@ -52,12 +52,14 @@ void JointPDController::InitHomeTrajectory()
 
 void JointPDController::InitSwingTrajectory()
 {
+/*
     mBezierTrajectoryGen.InitTrajectorySet(sharedMemory->localTime, 1);
+*/
 }
 
 void JointPDController::setTrajectory()
 {
-    double d = 0.0;
+/*    double d = 0.0;
     double phi = 0.0;
     double psi = 0.0;
 
@@ -99,7 +101,7 @@ void JointPDController::setTrajectory()
     for (int index = 0 ; index < MOTOR_NUM ; index++)
     {
         mDesiredVelocity[index] = 0.0;
-    }
+    }*/
 }
 
 void JointPDController::computeControlInput()
@@ -111,7 +113,7 @@ void JointPDController::computeControlInput()
     }
 }
 
-void JointPDController::setControlInput()
+void JointPDController::SetControlInput()
 {
     for (int index = 0; index < MOTOR_NUM; index++)
     {

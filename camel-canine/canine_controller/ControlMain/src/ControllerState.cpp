@@ -32,13 +32,14 @@ void ControllerState::ControllerFunction()
         }
         case STATE_READY:
         {
-            PDcontrol.setControlInput();
+            PDcontrol.SetControlInput();
             break;
         }
         case STATE_HOME_READY:
         {
             PDcontrol.InitHomeTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_HOME_CONTROL:
@@ -48,16 +49,10 @@ void ControllerState::ControllerFunction()
         }
         case STATE_PD_READY:
         {
-            PDcontrol.InitSwingTrajectory();
-            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_CONTROL:
         {
-            trot.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = trot.getGaitTable();
-            PDcontrol.DoPDControl();
-            mGaitCounter++;
             break;
         }
         case STATE_TROT_REDAY:

@@ -15,7 +15,7 @@
 
 #include <PDcontroller/JointPDController.hpp>
 #include <convexMPC/MPCController.hpp>
-#include <GaitScheduler/Gait.hpp>
+#include <ControlUtils/Gait.hpp>
 
 class ControllerState{
 public:

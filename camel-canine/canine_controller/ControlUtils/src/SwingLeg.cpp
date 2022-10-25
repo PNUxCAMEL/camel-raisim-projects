@@ -1,7 +1,7 @@
 //
 // Created by hs on 22. 10. 24.
 //
-#include <convexMPC/SwingLeg.hpp>
+#include "../include/ControlUtils/SwingLeg.hpp"
 #include <iostream>
 
 SwingLeg::SwingLeg(double duration)

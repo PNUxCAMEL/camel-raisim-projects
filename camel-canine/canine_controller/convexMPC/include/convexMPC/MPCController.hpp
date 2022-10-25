@@ -8,7 +8,7 @@
 #include <canine_util/SharedMemory.hpp>
 
 #include "MPCSolver.hpp"
-#include "SwingLeg.hpp"
+#include <ControlUtils/SwingLeg.hpp>
 
 using Eigen::Dynamic;
 

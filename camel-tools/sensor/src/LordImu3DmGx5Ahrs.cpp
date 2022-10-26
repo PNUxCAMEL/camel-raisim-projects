@@ -7,7 +7,6 @@
 static constexpr uint32_t Hash(const char* c)
 {
     return *c ? static_cast<uint32_t>(*c) + 33 * Hash(c + 1) : 5381;
-
 };
 
 LordImu3DmGx5Ahrs::LordImu3DmGx5Ahrs(mscl::InertialNode* node)
@@ -39,24 +38,9 @@ LordImu3DmGx5Ahrs::LordImu3DmGx5Ahrs(mscl::InertialNode* node)
     mAngularVelocity[1] = 0;
     mAngularVelocity[2] = 0;
 
-    mEstLinearAccel[0] = 0;
-    mEstLinearAccel[1] = 0;
-    mEstLinearAccel[2] = 0;
-
-    mLinearVelocity[0] = 0;
-    mLinearVelocity[1] = 0;
-    mLinearVelocity[2] = 0;
-
-    mPrevLinearVelocity[0] = 0;
-    mPrevLinearVelocity[1] = 0;
-    mPrevLinearVelocity[2] = 0;
-
     std::cout << "Model Name : " << mNode->modelName() << std::endl;
     std::cout << "Model Number : " << mNode->modelNumber() << std::endl;
     std::cout << "Serial : " << mNode->serialNumber() << std::endl;
-
-    clock_gettime(CLOCK_REALTIME, &TIME_PREV);
-    clock_gettime(CLOCK_REALTIME, &TIME_NOW);
 }
 
 void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
@@ -68,7 +52,6 @@ void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_AHRS_IMU, ahrsImuChs);
 
     mscl::MipChannels estFilterChs;
-    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_LINEAR_ACCEL, mscl::SampleRate::Hertz(samplingHz)));
     estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ORIENT_EULER, mscl::SampleRate::Hertz(samplingHz)));
     estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ANGULAR_RATE, mscl::SampleRate::Hertz(samplingHz)));
     estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ORIENT_QUATERNION, mscl::SampleRate::Hertz(samplingHz)));
@@ -79,8 +62,6 @@ void LordImu3DmGx5Ahrs::ParseData()
 {
     mscl::MipDataPackets packets = mNode->getDataPackets(500);
 
-    clock_gettime(CLOCK_REALTIME, &TIME_NOW);
-    double timeDiff = timediff_us(&TIME_PREV, &TIME_NOW) * 1e-6;
     for (mscl::MipDataPacket packet : packets)
     {
         mscl::MipDataPoints data = packet.data();
@@ -144,20 +125,8 @@ void LordImu3DmGx5Ahrs::ParseData()
             case Hash("estAngularRateZ"):
                 mAngularVelocity[2] = dataPoint.as_double();
                 break;
-            case Hash("estLinearAccelX"):
-                mLinearVelocity[0] = mLinearVelocity[0] + mEstLinearAccel[0] * (timeDiff); ///todo current time - RealCurrentTime
-                mEstLinearAccel[0] = dataPoint.as_double();
-                break;
-            case Hash("estLinearAccelY"):
-                mLinearVelocity[1] = mLinearVelocity[1] + mEstLinearAccel[1] * (timeDiff); ///todo current time - RealCurrentTime
-                mEstLinearAccel[1] = dataPoint.as_double();
-                break;
-            case Hash("estLinearAccelZ"):
-                mLinearVelocity[2] = mLinearVelocity[2] + mEstLinearAccel[2] * (timeDiff); ///todo current time - RealCurrentTime
-                mEstLinearAccel[2] = dataPoint.as_double();
-                break;
             default:
-                std::cout << "default" << std::endl;
+//                std::cout << "default" << std::endl;
                 break;
             }
             if (!dataPoint.valid())
@@ -166,8 +135,6 @@ void LordImu3DmGx5Ahrs::ParseData()
             }
         }
     }
-    std::cout << timeDiff << std::endl;
-    clock_gettime(CLOCK_REALTIME, &TIME_PREV);
 }
 
 double* LordImu3DmGx5Ahrs::GetEulerAngle()
@@ -215,14 +182,4 @@ double* LordImu3DmGx5Ahrs::GetMagVector()
 double* LordImu3DmGx5Ahrs::GetAngularVelocity()
 {
     return mAngularVelocity;
-}
-
-double* LordImu3DmGx5Ahrs::GetLinearAcceleration()
-{
-    return mEstLinearAccel;
-}
-
-double* LordImu3DmGx5Ahrs::GetLinearVelocity()
-{
-    return mLinearVelocity;
 }

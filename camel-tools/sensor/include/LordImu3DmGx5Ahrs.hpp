@@ -8,7 +8,6 @@
 #include <iostream>
 #include <string>
 #include "mscl/mscl.h"
-#include "camel-tools/ThreadGenerator.hpp"
 
 
 class LordImu3DmGx5Ahrs
@@ -24,8 +23,6 @@ public:
     double* GetStabilizedAccelVector();
     double* GetMagVector();
     double* GetAngularVelocity();
-    double* GetLinearAcceleration();
-    double* GetLinearVelocity();
 
 private:
     mscl::InertialNode* mNode;
@@ -42,14 +39,7 @@ private:
     double mScaledMagVector[3];
     ///angular Velocity
     double mAngularVelocity[3];
-    ///Linear Accel
-    double mEstLinearAccel[3];
-    ///linera vel
-    double mLinearVelocity[3];
-    double mPrevLinearVelocity[3];
 
-    struct timespec TIME_NOW;
-    struct timespec TIME_PREV;
 };
 
 

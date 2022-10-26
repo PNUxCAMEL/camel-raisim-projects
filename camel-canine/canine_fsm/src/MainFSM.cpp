@@ -51,39 +51,42 @@ void* NRTVisualThread(void* arg)
     }
 }
 
-//TODO: Cha is gonna implemet "GetLinearVelocity" and "GetEulerVelocity"
-//sharedMemory->baseEulerVelocity
-//sharedMemory->baseVelocity
+//TODO: Cha is gonna implemet "GetLinearVelocity" and "GetEulerVelocity" from T265 tracking camera.
 void* NRTImuThread(void* arg)
 {
     std::cout << "entered #nrt_IMU_thread" << std::endl;
     IMUBase.SetConfig(250);
-    double* baseAngularPositionEuler;
+    double* baseAngularPosition;
+    double* baseAngularVelocity;
+    double* baseLinearPosition;
     double* baseLinearVelocity;
-    double* baseLinearAccleleration;
-    mscl::EulerAngles tempEuler(3.141592, 0, 0);
-    node.setSensorToVehicleRotation_eulerAngles(tempEuler);
+
+    mscl::EulerAngles IMUAngularPositionOffset(3.141592, 0, 0);
+    node.setSensorToVehicleRotation_eulerAngles(IMUAngularPositionOffset);
 
     while (true)
     {
         IMUBase.ParseData();
 
-        baseAngularPositionEuler = IMUBase.GetEulerAngle();
-        baseLinearVelocity = IMUBase.GetLinearVelocity();
-        baseLinearAccleleration = IMUBase.GetLinearAcceleration();
+        baseAngularPosition = IMUBase.GetEulerAngle();
+        baseAngularVelocity = IMUBase.GetAngularVelocity();
+//
+        sharedMemory->baseEulerPosition[0] = baseAngularPosition[0];
+        sharedMemory->baseEulerPosition[1] = -baseAngularPosition[1];
+        sharedMemory->baseEulerPosition[2] = -baseAngularPosition[2];
 
-        sharedMemory->baseEulerPosition[0] = baseAngularPositionEuler[0];
-        sharedMemory->baseEulerPosition[1] = -baseAngularPositionEuler[1];
-        sharedMemory->baseEulerPosition[2] = -baseAngularPositionEuler[2];
-
-        sharedMemory->baseVelocity[0] = baseLinearVelocity[0];
-        sharedMemory->baseVelocity[1] = baseLinearVelocity[1];
-        sharedMemory->baseVelocity[2] = baseLinearVelocity[2];
-
-        sharedMemory->basePosition[0] = baseLinearAccleleration[0];
-        sharedMemory->basePosition[1] = baseLinearAccleleration[1];
-        sharedMemory->basePosition[2] = baseLinearAccleleration[2];
-
+        sharedMemory->baseEulerVelocity[0] = baseAngularVelocity[0];
+        sharedMemory->baseEulerVelocity[1] = -baseAngularVelocity[1];
+        sharedMemory->baseEulerVelocity[2] = -baseAngularVelocity[2];
+//
+//        sharedMemory->basePosition[0] = baseLinearPosition[0];
+//        sharedMemory->basePosition[1] = baseLinearPosition[1];
+//        sharedMemory->basePosition[2] = baseLinearPosition[2];
+//
+//        sharedMemory->baseVelocity[0] = baseLinearVelocity[0];
+//        sharedMemory->baseVelocity[1] = baseLinearVelocity[1];
+//        sharedMemory->baseVelocity[2] = baseLinearVelocity[2];
+//
         double cy = cos(sharedMemory->baseEulerPosition[2] * 0.5);
         double sy = sin(sharedMemory->baseEulerPosition[2] * 0.5);
         double cp = cos(sharedMemory->baseEulerPosition[1] * 0.5);

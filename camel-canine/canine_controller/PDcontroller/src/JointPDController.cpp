@@ -48,8 +48,8 @@ void JointPDController::SetPDGain(double* Kp, double* Kd)
 void JointPDController::InitHomeTrajectory()
 {
     double timeDuration = 2.0;
-    double homeHip = 50.5172;
-    double homeKnee = -63.7920;
+    double homeHip = 45.0;
+    double homeKnee = -80.0;
     mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[LFHR_IDX], 0.0, sharedMemory->localTime, timeDuration);
     mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[LFHP_IDX], homeHip * D2R, sharedMemory->localTime, timeDuration);
     mCubicTrajectoryGen[2].updateTrajectory(sharedMemory->motorPosition[LFKP_IDX], homeKnee * D2R, sharedMemory->localTime, timeDuration);

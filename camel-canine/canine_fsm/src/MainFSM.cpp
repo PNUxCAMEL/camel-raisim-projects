@@ -34,43 +34,55 @@ LordImu3DmGx5Ahrs IMUBase(&node);
 void* NRTCommandThread(void* arg)
 {
     std::cout << "entered #nrt_command_thread" << std::endl;
-    while(true)
+    while (true)
     {
         userCommand.commandFunction();
-        usleep(CMD_dT*1e6);
+        usleep(CMD_dT * 1e6);
     }
 }
 
 void* NRTVisualThread(void* arg)
 {
     std::cout << "entered #nrt_command_thread" << std::endl;
-    while(true)
+    while (true)
     {
         userVisual.VisualFunction();
-        usleep(VISUAL_dT*1e6);
+        usleep(VISUAL_dT * 1e6);
     }
 }
 
+//TODO: Cha is gonna implemet "GetLinearVelocity" and "GetEulerVelocity"
+//sharedMemory->baseEulerVelocity
+//sharedMemory->baseVelocity
 void* NRTImuThread(void* arg)
 {
     std::cout << "entered #nrt_IMU_thread" << std::endl;
-    IMUBase.SetConfig(1000);
+    IMUBase.SetConfig(250);
     double* baseAngularPositionEuler;
     double* baseLinearVelocity;
-    while(true)
+    double* baseLinearAccleleration;
+    mscl::EulerAngles tempEuler(3.141592, 0, 0);
+    node.setSensorToVehicleRotation_eulerAngles(tempEuler);
+
+    while (true)
     {
-        IMUBase.PareData();
+        IMUBase.ParseData();
+
         baseAngularPositionEuler = IMUBase.GetEulerAngle();
-        if(baseAngularPositionEuler[0] > 0)
-        {
-            sharedMemory->baseEulerPosition[0] =  baseAngularPositionEuler[0] - 3.141592;
-        }
-        else
-        {
-            sharedMemory->baseEulerPosition[0] =  baseAngularPositionEuler[0] + 3.141592;
-        }
+        baseLinearVelocity = IMUBase.GetLinearVelocity();
+        baseLinearAccleleration = IMUBase.GetLinearAcceleration();
+
+        sharedMemory->baseEulerPosition[0] = baseAngularPositionEuler[0];
         sharedMemory->baseEulerPosition[1] = -baseAngularPositionEuler[1];
         sharedMemory->baseEulerPosition[2] = -baseAngularPositionEuler[2];
+
+        sharedMemory->baseVelocity[0] = baseLinearVelocity[0];
+        sharedMemory->baseVelocity[1] = baseLinearVelocity[1];
+        sharedMemory->baseVelocity[2] = baseLinearVelocity[2];
+
+        sharedMemory->basePosition[0] = baseLinearAccleleration[0];
+        sharedMemory->basePosition[1] = baseLinearAccleleration[1];
+        sharedMemory->basePosition[2] = baseLinearAccleleration[2];
 
         double cy = cos(sharedMemory->baseEulerPosition[2] * 0.5);
         double sy = sin(sharedMemory->baseEulerPosition[2] * 0.5);
@@ -84,67 +96,73 @@ void* NRTImuThread(void* arg)
         sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
         sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
 
-        usleep(IMU_dT*1e6);
+        usleep(IMU_dT * 1e6);
     }
 }
 
-void* RTControllerThread(void* arg) {
+void* RTControllerThread(void* arg)
+{
     std::cout << "entered #rt_controller_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(CONTROL_dT * 1e6);
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
-    std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 <<"Hz"<< std::endl;
-    while (true) {
+    std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << "Hz" << std::endl;
+    while (true)
+    {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
         userController.ControllerFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                      << " ms" << std::endl;
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
+        {
+            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }
 
-void* RTCANForward(void* arg) {
+void* RTCANForward(void* arg)
+{
     std::cout << "entered #rt_can_forward_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(CAN_dT * 1e6);
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
-    while (true) {
+    while (true)
+    {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
         canForward.CanFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                << " ms" << std::endl;
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
+        {
+            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }
 
-void* RTCANBackward(void* arg) {
+void* RTCANBackward(void* arg)
+{
     std::cout << "entered #rt_can_backward_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(CAN_dT * 1e6);
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
-    while (true) {
+    while (true)
+    {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
         canBackward.CanFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {
-            std::cout << "RT Deadline Miss, can backward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                << " ms" << std::endl;
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
+        {
+            std::cout << "RT Deadline Miss, can backward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }
@@ -162,7 +180,7 @@ void clearSharedMemory()
     sharedMemory->can1State = CAN_NO_ACT;
     sharedMemory->can2State = CAN_NO_ACT;
     sharedMemory->localTime = 0;
-    for(int index = 0; index < MOTOR_NUM ; index++)
+    for (int index = 0; index < MOTOR_NUM; index++)
     {
         sharedMemory->motorErrorStatus[index] = 0;
         sharedMemory->motorTemp[index] = 0;
@@ -172,7 +190,7 @@ void clearSharedMemory()
         sharedMemory->motorDesiredTorque[index] = 0;
         sharedMemory->motorVoltage[index] = 0;
     }
-    for(int index = 0; index < 3 ; index++)
+    for (int index = 0; index < 3; index++)
     {
         sharedMemory->basePosition[index] = 0;
         sharedMemory->baseVelocity[index] = 0;
@@ -188,13 +206,13 @@ void clearSharedMemory()
 
 void StartFSM()
 {
-    sharedCommand = (pUI_COMMAND) malloc(sizeof(UI_COMMAND));
-    sharedMemory = (pSHM) malloc(sizeof(SHM));
+    sharedCommand = (pUI_COMMAND)malloc(sizeof(UI_COMMAND));
+    sharedMemory = (pSHM)malloc(sizeof(SHM));
     clearSharedMemory();
 
-    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99,NULL);
-    int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99,NULL);
-    int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99,NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99, NULL);
+    int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99, NULL);
+    int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99, NULL);
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
     int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);

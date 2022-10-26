@@ -10,6 +10,7 @@ include_directories(
         ${ControlMain_SOURCE_DIR}/include
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
+        ${GaitScheduler_SOUCRE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
 )

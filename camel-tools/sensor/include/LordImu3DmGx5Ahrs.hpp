@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include "mscl/mscl.h"
+#include "camel-tools/ThreadGenerator.hpp"
 
 
 class LordImu3DmGx5Ahrs
@@ -22,41 +23,33 @@ public:
     double* GetAccelVector();
     double* GetStabilizedAccelVector();
     double* GetMagVector();
-    double* GetGyroVector();
+    double* GetAngularVelocity();
     double* GetLinearAcceleration();
+    double* GetLinearVelocity();
+
 private:
     mscl::InertialNode* mNode;
     std::string mOrientQuaternion;
     ///quaternion
     double mQuaternion[4];
     /// ///mEulerAngle[0] : roll, mEulerAngle[1] : pitch, mEulerAngle[0] : yaw
-    double mRoll;
-    double mPitch;
-    double mYaw;
     double mEulerAngle[3];
-    ///모든 가속도
-    double mScaledAccelX;
-    double mScaledAccelY;
-    double mScaledAccelZ;
+    ///all acceleration
     double mScaledAccelVector[3];
-    ///중력가속도만 검출
-    double mStabilizedAccelX;
-    double mStabilizedAccelY;
-    double mStabilizedAccelZ;
+    ///a
     double mStabilizedAccelVector[3];
     ///magnetometer
-    double mScaledMagX;
-    double mScaledMagY;
-    double mScaledMagZ;
     double mScaledMagVector[3];
-    ///gyro
-    double mScaledGyroX;
-    double mScaledGyroY;
-    double mScaledGyroZ;
-    double mScaledGyroVector[3];
-    //Linear Accel
+    ///angular Velocity
+    double mAngularVelocity[3];
+    ///Linear Accel
     double mEstLinearAccel[3];
+    ///linera vel
+    double mLinearVelocity[3];
+    double mPrevLinearVelocity[3];
 
+    struct timespec TIME_NOW;
+    struct timespec TIME_PREV;
 };
 
 

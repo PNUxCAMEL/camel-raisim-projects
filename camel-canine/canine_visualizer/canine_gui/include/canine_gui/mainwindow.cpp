@@ -617,7 +617,7 @@ void MainWindow::on_BT_MOTOR_OFF_clicked()
 
 void MainWindow::on_BT_HOME_clicked()
 {
-    ui->LE_HOME->setStyleSheet("background-color:lightblue");
+    ui->LE_HOME->setStyleSheet("background-color:lightblue0");
     ui->LE_PD_CONTROL->setStyleSheet("background-color:pink");
     ui->LE_CUSTOM1->setStyleSheet("background-color:pink");
     ui->LE_CUSTOM2->setStyleSheet("background-color:pink");

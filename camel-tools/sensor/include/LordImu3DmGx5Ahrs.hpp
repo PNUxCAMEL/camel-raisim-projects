@@ -16,7 +16,7 @@ public:
     LordImu3DmGx5Ahrs(mscl::InertialNode* node);
 
     void SetConfig(int samplingHz);
-    void PareData();
+    void ParseData();
     double* GetQuaternion();
     double* GetEulerAngle();
     double* GetAccelVector();

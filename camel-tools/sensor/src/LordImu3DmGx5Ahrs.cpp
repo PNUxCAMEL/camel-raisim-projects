@@ -34,7 +34,7 @@ void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_ESTFILTER, estFilterChs);
 }
 
-void LordImu3DmGx5Ahrs::PareData()
+void LordImu3DmGx5Ahrs::ParseData()
 {
     mscl::MipDataPackets packets = mNode->getDataPackets(500);
     for (mscl::MipDataPacket packet : packets)

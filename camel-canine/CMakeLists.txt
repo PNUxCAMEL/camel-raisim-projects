@@ -8,6 +8,7 @@ find_package(camel-tools-thread REQUIRED)
 
 add_subdirectory(canine_controller/convexMPC)
 add_subdirectory(canine_controller/PDcontroller)
+add_subdirectory(canine_controller/WBController)
 add_subdirectory(canine_controller/ControlUtils)
 add_subdirectory(canine_controller/ControlMain)
 
@@ -19,13 +20,17 @@ add_subdirectory(canine_fsm)
 
 include_directories(
         ${EIGEN3_INCLUDE_DIRS}
-        ${convexMPC_SOURCE_DIR}/include
         ${qpOASES_SOURCE_DIR}/include
+
+        ${convexMPC_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
+        ${WBController_SOURCE_DIR}/include
         ${ControlUtils_SOURCE_DIR}/include
         ${ControlMain_SOURCE_DIR}/include
+
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
+
         ${canine_util_SOURCE_DIR}/include
         ${canine_fsm_SOURCE_DIR}/include
 )

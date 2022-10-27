@@ -4,8 +4,6 @@
 
 #include "convexMPC/MPCSolver.hpp"
 
-char var_elim[2000];
-char con_elim[2000];
 
 extern pSHM sharedMemory;
 
@@ -253,8 +251,11 @@ void MPCSolver::GetGRF(Vec3<double> _f[4]){
         for(int axis = 0; axis < 3; axis++)
         {
             _f[leg][axis] = q_soln[leg*3 + axis];
+            std::cout << _f[leg][axis] << "\t";
         }
+        std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 
 void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side)

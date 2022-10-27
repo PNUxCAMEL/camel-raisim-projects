@@ -8,7 +8,7 @@
 #include "RobotDescription.hpp"
 
 #define CMD_dT              0.001
-#define CONTROL_dT          0.005
+#define CONTROL_dT          0.002
 #define CAN_dT              0.005
 #define VISUAL_dT           0.001
 #define ESTIMATOR_dT        0.001

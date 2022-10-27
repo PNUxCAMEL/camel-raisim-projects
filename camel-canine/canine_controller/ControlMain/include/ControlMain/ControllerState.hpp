@@ -13,6 +13,7 @@
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/EigenTypes.hpp>
 
+#include <WBController/WBC.hpp>
 #include <PDcontroller/JointPDController.hpp>
 #include <convexMPC/MPCController.hpp>
 #include <ControlUtils/Gait.hpp>
@@ -37,6 +38,8 @@ private:
 
     JointPDController PDcontrol;
     MPCController MPCcontrol;
+    WBC WBControl;
+
     OffsetGait stand, trot;
 };
 

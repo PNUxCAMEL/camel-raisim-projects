@@ -12,8 +12,8 @@
 #define GRAVITY -9.81
 #define BODYMASS 10
 #define LHIP 0.085
-#define LTHI 0.2
-#define LCAL 0.2
+#define LTHI 0.23
+#define LCAL 0.23
 
 #define F_MAX 240
 #define MU 0.6

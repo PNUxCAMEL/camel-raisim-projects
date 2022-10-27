@@ -36,7 +36,7 @@ void RobotVisualization::VisualFunction()
         {
             //openRaisimServer();
             initRobotPose();
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            //sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_UPDATE_VISUAL:
@@ -45,10 +45,10 @@ void RobotVisualization::VisualFunction()
             {
                 updateVisualReal();
             }
-            else
-            {
-                updateVisualSimul();
-            }
+//            else
+//            {
+//                updateVisualSimul();
+//            }
             break;
         }
         default:

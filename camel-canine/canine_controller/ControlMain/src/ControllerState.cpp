@@ -12,7 +12,7 @@ ControllerState::ControllerState(raisim::World* world, raisim::ArticulatedSystem
     , mRobot(robot)
     , mIteration(0)
     , mGaitCounter(0)
-    , mGaitLength(5)
+    , mGaitLength(3)
     , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
     , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
     , MPCcontrol(mGaitLength)
@@ -39,7 +39,7 @@ void ControllerState::ControllerFunction()
         {
             PDcontrol.InitHomeTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
-//            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_HOME_CONTROL:
@@ -55,18 +55,34 @@ void ControllerState::ControllerFunction()
         {
             break;
         }
+        case STATE_WBC_READY:
+        {
+            WBControl.InitTrajectory();
+            sharedMemory->controlState = STATE_WBC_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            sharedMemory->gaitState = STAND;
+            break;
+        }
+        case STATE_WBC_CONTROL:
+        {
+            stand.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = stand.getGaitTable();
+            WBControl.DoWBControl();
+            mGaitCounter++;
+            break;
+        }
         case STATE_TROT_REDAY:
         {
             MPCcontrol.InitSwingLegTrajectory();
             sharedMemory->controlState = STATE_TROT_CONTROL;
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = TROT;
+            sharedMemory->gaitState = STAND;
             break;
         }
         case STATE_TROT_CONTROL:
         {
-            trot.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = trot.getGaitTable();
+            stand.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = stand.getGaitTable();
             MPCcontrol.DoControl();
             mGaitCounter++;
             break;
@@ -74,10 +90,10 @@ void ControllerState::ControllerFunction()
         default:
             break;
     }
-//    if (sharedMemory->simulState == ONLY_SIMULATION && sharedMemory->visualState == STATE_UPDATE_VISUAL)
-//    {
-//        integrateSimul();
-//    }
+    if (sharedMemory->simulState == ONLY_SIMULATION && sharedMemory->visualState == STATE_UPDATE_VISUAL)
+    {
+        integrateSimul();
+    }
 }
 
 void ControllerState::integrateSimul()

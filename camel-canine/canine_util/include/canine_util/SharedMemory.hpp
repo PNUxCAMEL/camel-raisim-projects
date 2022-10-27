@@ -25,7 +25,7 @@ typedef struct _UI_COMMAND_
     char userParamChar[MAX_COMMAND_DATA];
     int userParamInt[MAX_COMMAND_DATA];
     double userParamDouble[MAX_COMMAND_DATA];
-} UI_COMMAND, *pUI_COMMAND;
+} UI_COMMAND, * pUI_COMMAND;
 
 typedef struct _SHM_
 {
@@ -51,13 +51,13 @@ typedef struct _SHM_
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
-}SHM, *pSHM;
+} SHM, * pSHM;
 
-typedef struct _CUSTOM_DATA_ {
-    double       customVariableDouble[MAX_CUSTOM_DATA];
-    int         customVariableInt[MAX_CUSTOM_DATA];
-} CUSTOM_DATA, *pCUSTOM_DATA;
-
+typedef struct _CUSTOM_DATA_
+{
+    double customVariableDouble[MAX_CUSTOM_DATA];
+    int customVariableInt[MAX_CUSTOM_DATA];
+} CUSTOM_DATA, * pCUSTOM_DATA;
 
 
 #endif //RAISIM_SHAREDMEMORY_H

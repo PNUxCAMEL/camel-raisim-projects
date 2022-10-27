@@ -40,7 +40,7 @@ void JointPDController::InitHomeTrajectory()
 {
     double timeDuration = 2.0;
     double homeHip = 45;
-    double homeKnee = -90;
+    double homeKnee = -80;
 
     for (int idx=0; idx<4; idx++)
     {

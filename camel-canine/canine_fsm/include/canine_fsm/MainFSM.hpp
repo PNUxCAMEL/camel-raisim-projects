@@ -21,7 +21,6 @@
 #include <canine_util/StateEstimator.hpp>
 #include <canine_raisim//RobotVisualization.hpp>
 
-
 void StartFSM();
 void *RTControllerThread(void *arg);
 void *RTCANForward(void *arg);

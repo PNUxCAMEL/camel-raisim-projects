@@ -13,21 +13,16 @@
 
 class StateEstimator{
 public:
-    StateEstimator(raisim::ArticulatedSystem* robot);
+    StateEstimator();
 
     void StateEstimatorFunction();
 private:
-    void getJointStateReal();
-    void getJointStateSimul();
-    void getRobotAngulerStateReal();
-    void getRobotAngulerStateSimul();
-    void getRobotFootPositionSimul();
-    void calculateRobotLinearState();
+    void getJointState();
+    void getRobotAngulerState();
+    void getRobotLinearState();
+    void getRobotFootPosition();
 private:
-    raisim::ArticulatedSystem* mRobot;
-    raisim::VecDyn mPosition;
-    raisim::VecDyn mVelocity;
-    raisim::Vec<3> mFootPosition[4];
+
     double mQuaternion[4];
 };
 

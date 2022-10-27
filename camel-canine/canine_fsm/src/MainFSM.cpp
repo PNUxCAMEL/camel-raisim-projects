@@ -7,6 +7,7 @@
 pthread_t RTThreadController;
 pthread_t RTThreadCANForward;
 pthread_t RTThreadCANBackward;
+pthread_t RTThreadStateEstimator;
 pthread_t NRTThreadCommand;
 pthread_t NRTThreadVisual;
 pthread_t NRTThreadIMU;
@@ -19,17 +20,18 @@ CanMotorBackward canBackward("can5");
 
 Command userCommand;
 
-ControllerState userController;
-
 raisim::World world;
 raisim::RaisimServer server(&world);
-RobotVisualization userVisual(&world, &server);
+raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
+RobotVisualization userVisual(&world, robot, &server);
+ControllerState userController(&world, robot);
 
 const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
 mscl::InertialNode node(mConnection);
 LordImu3DmGx5Ahrs IMUBase(&node);
 
+StateEstimator robotstate(robot);
 
 void* NRTCommandThread(void* arg)
 {
@@ -126,6 +128,28 @@ void* RTControllerThread(void* arg)
     }
 }
 
+void* RTStateEstimator(void* arg)
+{
+    std::cout << "entered #rt_can_forward_thread" << std::endl;
+    struct timespec TIME_NEXT;
+    struct timespec TIME_NOW;
+    const long PERIOD_US = long(ESTIMATOR_dT * 1e6);
+    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
+    while (true) {
+        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
+        timespec_add_us(&TIME_NEXT, PERIOD_US);
+
+        robotstate.StateEstimatorFunction();
+
+        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
+        {
+            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+        }
+    }
+}
+
+
 void* RTCANForward(void* arg)
 {
     std::cout << "entered #rt_can_forward_thread" << std::endl;
@@ -213,9 +237,12 @@ void StartFSM()
     sharedMemory = (pSHM)malloc(sizeof(SHM));
     clearSharedMemory();
 
+    server.launchServer(8080);
     int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99, NULL);
     int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99, NULL);
     int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99, NULL);
+    int thread_id_rt4 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread4", 4, 99,NULL);
+
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
     int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);

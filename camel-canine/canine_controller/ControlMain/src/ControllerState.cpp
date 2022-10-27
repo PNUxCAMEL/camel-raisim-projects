@@ -7,9 +7,17 @@
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
-ControllerState::ControllerState()
-    : mIteration(0)
+ControllerState::ControllerState(raisim::World* world, raisim::ArticulatedSystem* robot)
+    : mWorld(world)
+    , mRobot(robot)
+    , mIteration(0)
+    , mGaitCounter(0)
+    , mGaitLength(5)
+    , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
+    , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
+    , MPCcontrol(mGaitLength)
 {
+    mTorque.setZero();
 }
 
 void ControllerState::ControllerFunction()
@@ -24,13 +32,14 @@ void ControllerState::ControllerFunction()
         }
         case STATE_READY:
         {
-            PDcontrol.setControlInput();
+            PDcontrol.SetControlInput();
             break;
         }
         case STATE_HOME_READY:
         {
             PDcontrol.InitHomeTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
+//            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_HOME_CONTROL:
@@ -40,7 +49,6 @@ void ControllerState::ControllerFunction()
         }
         case STATE_PD_READY:
         {
-            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_CONTROL:
@@ -49,16 +57,35 @@ void ControllerState::ControllerFunction()
         }
         case STATE_TROT_REDAY:
         {
-            PDcontrol.InitSwingTrajectory();
+            MPCcontrol.InitSwingLegTrajectory();
             sharedMemory->controlState = STATE_TROT_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            sharedMemory->gaitState = TROT;
             break;
         }
         case STATE_TROT_CONTROL:
         {
-            PDcontrol.DoPDControl();
+            trot.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = trot.getGaitTable();
+            MPCcontrol.DoControl();
+            mGaitCounter++;
             break;
         }
         default:
             break;
     }
+//    if (sharedMemory->simulState == ONLY_SIMULATION && sharedMemory->visualState == STATE_UPDATE_VISUAL)
+//    {
+//        integrateSimul();
+//    }
+}
+
+void ControllerState::integrateSimul()
+{
+    for (int idx=0; idx<MOTOR_NUM; idx++)
+    {
+        mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
+    }
+    mRobot->setGeneralizedForce(mTorque);
+    mWorld->integrate();
 }

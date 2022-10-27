@@ -5,65 +5,47 @@
 #ifndef RAISIM_MPCCONTROLLER_H
 #define RAISIM_MPCCONTROLLER_H
 
-#include "qpsolver.hpp"
-#include "Trajectory.hpp"
+#include <canine_util/SharedMemory.hpp>
+
+#include "MPCSolver.hpp"
+#include <ControlUtils/SwingLeg.hpp>
 
 using Eigen::Dynamic;
 
 class MPCController{
 public:
-    //Constructor
-    MPCController(raisim::World *world, raisim::ArticulatedSystem *robot, double dT);
-
-    void doControl();
-    void setTrajectory();
-
-    void setGait(int index);
-    void resetParam(int, double);
-    void resetWeight(Vec13<double>, double);
-
-    // For real-time plotting
-    ConvexMPCSolver cmpcSolver;
-    raisim::VecDyn position = raisim::VecDyn(19);
-
+    MPCController(const uint8_t& horizon);
+    void DoControl();
+    void InitSwingLegTrajectory();
 private:
-    void initialize();
     void updateState();
-    void setLegcontrol();
     void computeControlInput();
     void setControlInput();
+    void setLegcontrol();
 
 private:
-    raisim::World* mWorld;
-    raisim::ArticulatedSystem* mRobot;
-    double mDT;
+    const uint8_t mHorizon;
+    MPCSolver ConvexMPCSolver;
+    SwingLeg SwingLegTrajectory;
 
-    int *mpcTable;
-    int mMPCHorizon;
+    double mDesiredPosition[2];
+    double mBasePosition[3];
+    double mBaseVelocity[3];
+    double mBaseEulerPosition[3];
+    double mBaseEulerVelocity[3];
+    double mFootPosition[4][3];
+    double mMotorPosition[MOTOR_NUM];
+    double mMotorVelocity[MOTOR_NUM];
+    double mMotorDesiredTorque[MOTOR_NUM];
 
-    Gait *currentGait;
-    GaitType currentGaitName;
+    Eigen::Matrix<double,12,1> mTorque;
+    double mTorqueLimit[MOTOR_NUM];
 
-    OffsetGait stand, trot, pace, bound;
-
-    int iteration = 0;
-
-    LegTrajectory legGenerator;
-
-    double alpha = 1e-10;
-    double torqueLimit = 50.0;
-    double legDpos = 0.0;
-
-    raisim::VecDyn velocity = raisim::VecDyn(18);
-    raisim::VecDyn torque = raisim::VecDyn(18);
-    raisim::VecDyn Legtemptorque = raisim::VecDyn(12);
-
-    raisim::Mat<3, 3> bdyInertia;
-    raisim::Vec<3> footPosition[4];
-
-    Eigen::Matrix<double,3,1> f[4], robottorque[4];
+    Eigen::Matrix<double,3,1> mGRF[4];
+    Eigen::Matrix<double,3,1> robottorque[4];
+    Eigen::Matrix<double,3,1> swingtorque[4];
     Eigen::Matrix<double,3,3> robotJacobian[4];
-    Eigen::Matrix<double, 13,1> weightMat;
+
 };
 
 #endif //RAISIM_MPCCONTROLLER_H

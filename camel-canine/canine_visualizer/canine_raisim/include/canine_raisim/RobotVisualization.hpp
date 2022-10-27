@@ -13,21 +13,25 @@
 
 class RobotVisualization {
 public:
-    RobotVisualization(raisim::World *world, raisim::RaisimServer *server);
+    RobotVisualization(raisim::World* world,
+                       raisim::ArticulatedSystem* robot,
+                       raisim::RaisimServer* server);
+    ~RobotVisualization();
     void VisualFunction();
 
 private:
     void openRaisimServer();
     void updateVisualReal();
     void updateVisualSimul();
+    void initRobotPose();
 
 private:
-    raisim::RaisimServer *mServer;
-    raisim::ArticulatedSystem *mRobot;
-    raisim::World *mWorld;
+    raisim::RaisimServer* mServer;
+    raisim::ArticulatedSystem* mRobot;
+    raisim::World* mWorld;
     std::string mUrdfPath;
 
-
+    raisim::VecDyn mTorque;
 };
 
 

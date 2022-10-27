@@ -12,6 +12,7 @@
 #define CAN_dT              0.005
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
+#define ESTIMATOR_dT        0.001
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
 #define PI                  3.141592
@@ -29,6 +30,7 @@ typedef struct _UI_COMMAND_
 
 typedef struct _SHM_
 {
+    int* gaitTable;
     bool newCommand;
     bool can1Status;
     bool can2Status;
@@ -36,6 +38,7 @@ typedef struct _SHM_
     bool simulState;
     int controlState;
     int visualState;
+    int gaitState;
     int can1State;
     int can2State;
     int motorErrorStatus[MOTOR_NUM];
@@ -46,6 +49,7 @@ typedef struct _SHM_
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];
+    double footPosition[4][3];
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];
@@ -58,6 +62,7 @@ typedef struct _CUSTOM_DATA_
     double customVariableDouble[MAX_CUSTOM_DATA];
     int customVariableInt[MAX_CUSTOM_DATA];
 } CUSTOM_DATA, * pCUSTOM_DATA;
+
 
 
 #endif //RAISIM_SHAREDMEMORY_H

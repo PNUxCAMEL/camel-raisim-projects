@@ -8,13 +8,6 @@
 #include <iostream>
 #include <canine_util/EigenTypes.hpp>
 
-enum class GaitType {
-    STAND,
-    TROT,
-    PACE,
-    BOUND
-};
-
 class Gait{
 public:
     virtual int* getGaitTable() = 0;

@@ -24,14 +24,15 @@ raisim::World world;
 raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
 RobotVisualization userVisual(&world, robot, &server);
-ControllerState userController(&world, robot);
+StateEstimator robotstate;
+ControllerState userController;
 
 const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
 mscl::InertialNode node(mConnection);
 LordImu3DmGx5Ahrs IMUBase(&node);
 
-StateEstimator robotstate(robot);
+
 
 void* NRTCommandThread(void* arg)
 {
@@ -201,7 +202,6 @@ void clearSharedMemory()
     sharedMemory->can1Status = false;
     sharedMemory->can2Status = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->simulState = true;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->can1State = CAN_NO_ACT;
@@ -237,7 +237,6 @@ void StartFSM()
     sharedMemory = (pSHM)malloc(sizeof(SHM));
     clearSharedMemory();
 
-    server.launchServer(8080);
     int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99, NULL);
     int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99, NULL);
     int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99, NULL);

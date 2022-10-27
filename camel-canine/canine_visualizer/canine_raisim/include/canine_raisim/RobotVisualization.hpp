@@ -21,17 +21,12 @@ public:
 
 private:
     void openRaisimServer();
-    void updateVisualReal();
-    void updateVisualSimul();
-    void initRobotPose();
+    void updateVisual();
 
 private:
     raisim::RaisimServer* mServer;
     raisim::ArticulatedSystem* mRobot;
     raisim::World* mWorld;
-    std::string mUrdfPath;
-
-    raisim::VecDyn mTorque;
 };
 
 

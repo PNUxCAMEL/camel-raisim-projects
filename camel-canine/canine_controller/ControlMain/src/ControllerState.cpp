@@ -67,6 +67,7 @@ void ControllerState::ControllerFunction()
         {
             trot.setIterations(mGaitCounter);
             sharedMemory->gaitTable = trot.getGaitTable();
+
             MPCcontrol.DoControl();
             mGaitCounter++;
             break;

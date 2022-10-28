@@ -99,36 +99,36 @@ void StateEstimator::getRobotFootPositionSimul() {
                                     0,0,1,-0.015,
                                     0,0,0,1;
 //
-    mTransMatRightRearHip2Base(0,0) = mTransMatBase2RightRearHip(0,0), mTransMatRightRearHip2Base(0,1) = mTransMatBase2RightRearHip(1,0), mTransMatRightRearHip2Base(0,2) = mTransMatBase2RightRearHip(2,0), mTransMatRightRearHip2Base(0,3) = -0.175;
-    mTransMatRightRearHip2Base(1,0) = mTransMatBase2RightRearHip(0,1), mTransMatRightRearHip2Base(1,1) = mTransMatBase2RightRearHip(1,1), mTransMatRightRearHip2Base(1,2) = mTransMatBase2RightRearHip(2,1), mTransMatRightRearHip2Base(1,3) =  0.055*cos(mPosition[13]);
-    mTransMatRightRearHip2Base(2,0) = mTransMatBase2RightRearHip(0,2), mTransMatRightRearHip2Base(2,1) = mTransMatBase2RightRearHip(1,2), mTransMatRightRearHip2Base(2,2) = mTransMatBase2RightRearHip(2,2), mTransMatRightRearHip2Base(2,3) = -0.055*sin(mPosition[13]);
-    mTransMatRightRearHip2Base(3,0) = 0, mTransMatRightRearHip2Base(3,1) = 0, mTransMatRightRearHip2Base(3,2) = 0, mTransMatRightRearHip2Base(3,3) = 1;
-
-    mTransMatRightRearThigh2Hip(0,0) = mTransMatRightRearHip2Thigh(0,0), mTransMatRightRearThigh2Hip(0,1) = mTransMatRightRearHip2Thigh(1,0), mTransMatRightRearThigh2Hip(0,2) = mTransMatRightRearHip2Thigh(2,0), mTransMatRightRearThigh2Hip(0,3) = -0.075*cos(mPosition[14]);
-    mTransMatRightRearThigh2Hip(1,0) = mTransMatRightRearHip2Thigh(0,1), mTransMatRightRearThigh2Hip(1,1) = mTransMatRightRearHip2Thigh(1,1), mTransMatRightRearThigh2Hip(1,2) = mTransMatRightRearHip2Thigh(2,1), mTransMatRightRearThigh2Hip(1,3) =  0.030496;
-    mTransMatRightRearThigh2Hip(2,0) = mTransMatRightRearHip2Thigh(0,2), mTransMatRightRearThigh2Hip(2,1) = mTransMatRightRearHip2Thigh(1,2), mTransMatRightRearThigh2Hip(2,2) = mTransMatRightRearHip2Thigh(2,2), mTransMatRightRearThigh2Hip(2,3) = -0.075*sin(mPosition[14]);
-    mTransMatRightRearThigh2Hip(3,0) = 0, mTransMatRightRearThigh2Hip(3,1) = 0, mTransMatRightRearThigh2Hip(3,2) = 0, mTransMatRightRearThigh2Hip(3,3) = 1;
-
-    mTransMatRightRearKnee2Thigh(0,0) = mTransMatRightRearThigh2Knee(0,0), mTransMatRightRearKnee2Thigh(0,1) = mTransMatRightRearThigh2Knee(1,0), mTransMatRightRearKnee2Thigh(0,2) = mTransMatRightRearThigh2Knee(2,0), mTransMatRightRearKnee2Thigh(0,3) = -0.23*sin(mPosition[15]);
-    mTransMatRightRearKnee2Thigh(1,0) = mTransMatRightRearThigh2Knee(0,1), mTransMatRightRearKnee2Thigh(1,1) = mTransMatRightRearThigh2Knee(1,1), mTransMatRightRearKnee2Thigh(1,2) = mTransMatRightRearThigh2Knee(2,1), mTransMatRightRearKnee2Thigh(1,3) =  0.077;
-    mTransMatRightRearKnee2Thigh(2,0) = mTransMatRightRearThigh2Knee(0,2), mTransMatRightRearKnee2Thigh(2,1) = mTransMatRightRearThigh2Knee(1,2), mTransMatRightRearKnee2Thigh(2,2) = mTransMatRightRearThigh2Knee(2,2), mTransMatRightRearKnee2Thigh(2,3) =  0.23*cos(mPosition[15]);
-    mTransMatRightRearKnee2Thigh(3,0) = 0, mTransMatRightRearKnee2Thigh(3,1) = 0, mTransMatRightRearKnee2Thigh(3,2) = 0, mTransMatRightRearKnee2Thigh(3,3) = 1;
-
-    mTransMatRightRearFoot2Knee(0,0) = mTransMatRightRearKnee2Foot(0,0), mTransMatRightRearFoot2Knee(0,1) = mTransMatRightRearKnee2Foot(1,0), mTransMatRightRearFoot2Knee(0,2) = mTransMatRightRearKnee2Foot(2,0), mTransMatRightRearFoot2Knee(0,3) = -0.23*sin(mTempAngleForRightRearFoot);
-    mTransMatRightRearFoot2Knee(1,0) = mTransMatRightRearKnee2Foot(0,1), mTransMatRightRearFoot2Knee(1,1) = mTransMatRightRearKnee2Foot(1,1), mTransMatRightRearFoot2Knee(1,2) = mTransMatRightRearKnee2Foot(2,1), mTransMatRightRearFoot2Knee(1,3) =  0;
-    mTransMatRightRearFoot2Knee(2,0) = mTransMatRightRearKnee2Foot(0,2), mTransMatRightRearFoot2Knee(2,1) = mTransMatRightRearKnee2Foot(1,2), mTransMatRightRearFoot2Knee(2,2) = mTransMatRightRearKnee2Foot(2,2), mTransMatRightRearFoot2Knee(2,3) =  0.23*cos(mTempAngleForRightRearFoot);
-    mTransMatRightRearFoot2Knee(3,0) = 0, mTransMatRightRearFoot2Knee(3,1) = 0, mTransMatRightRearFoot2Knee(3,2) = 0, mTransMatRightRearFoot2Knee(3,3) = 1;
-
-    mTransMatRightRearGround2Foot(0,0) = mTransMatRightRearFoot2Ground(0,0), mTransMatRightRearGround2Foot(0,1) = mTransMatRightRearFoot2Ground(1,0), mTransMatRightRearGround2Foot(0,2) = mTransMatRightRearFoot2Ground(2,0), mTransMatRightRearGround2Foot(0,3) = 0;
-    mTransMatRightRearGround2Foot(1,0) = mTransMatRightRearFoot2Ground(0,1), mTransMatRightRearGround2Foot(1,1) = mTransMatRightRearFoot2Ground(1,1), mTransMatRightRearGround2Foot(1,2) = mTransMatRightRearFoot2Ground(2,1), mTransMatRightRearGround2Foot(1,3) = 0;
-    mTransMatRightRearGround2Foot(2,0) = mTransMatRightRearFoot2Ground(0,2), mTransMatRightRearGround2Foot(2,1) = mTransMatRightRearFoot2Ground(1,2), mTransMatRightRearGround2Foot(2,2) = mTransMatRightRearFoot2Ground(2,2), mTransMatRightRearGround2Foot(2,3) = 0.015;
-    mTransMatRightRearGround2Foot(3,0) = 0, mTransMatRightRearGround2Foot(3,1) = 0, mTransMatRightRearGround2Foot(3,2) = 0, mTransMatRightRearGround2Foot(3,3) = 1;
+//    mTransMatRightRearHip2Base(0,0) = mTransMatBase2RightRearHip(0,0), mTransMatRightRearHip2Base(0,1) = mTransMatBase2RightRearHip(1,0), mTransMatRightRearHip2Base(0,2) = mTransMatBase2RightRearHip(2,0), mTransMatRightRearHip2Base(0,3) = -0.175;
+//    mTransMatRightRearHip2Base(1,0) = mTransMatBase2RightRearHip(0,1), mTransMatRightRearHip2Base(1,1) = mTransMatBase2RightRearHip(1,1), mTransMatRightRearHip2Base(1,2) = mTransMatBase2RightRearHip(2,1), mTransMatRightRearHip2Base(1,3) =  0.055*cos(mPosition[13]);
+//    mTransMatRightRearHip2Base(2,0) = mTransMatBase2RightRearHip(0,2), mTransMatRightRearHip2Base(2,1) = mTransMatBase2RightRearHip(1,2), mTransMatRightRearHip2Base(2,2) = mTransMatBase2RightRearHip(2,2), mTransMatRightRearHip2Base(2,3) = -0.055*sin(mPosition[13]);
+//    mTransMatRightRearHip2Base(3,0) = 0, mTransMatRightRearHip2Base(3,1) = 0, mTransMatRightRearHip2Base(3,2) = 0, mTransMatRightRearHip2Base(3,3) = 1;
 //
-//    mTransMatRightRearHip2Base = mTransMatBase2RightRearHip.inverse();
-//    mTransMatRightRearThigh2Hip = mTransMatRightRearHip2Thigh.inverse();
-//    mTransMatRightRearKnee2Thigh = mTransMatRightRearThigh2Knee.inverse();
-//    mTransMatRightRearFoot2Knee = mTransMatRightRearKnee2Foot.inverse();
-//    mTransMatRightRearGround2Foot = mTransMatRightRearFoot2Ground.inverse();
+//    mTransMatRightRearThigh2Hip(0,0) = mTransMatRightRearHip2Thigh(0,0), mTransMatRightRearThigh2Hip(0,1) = mTransMatRightRearHip2Thigh(1,0), mTransMatRightRearThigh2Hip(0,2) = mTransMatRightRearHip2Thigh(2,0), mTransMatRightRearThigh2Hip(0,3) = -0.075*cos(mPosition[14]);
+//    mTransMatRightRearThigh2Hip(1,0) = mTransMatRightRearHip2Thigh(0,1), mTransMatRightRearThigh2Hip(1,1) = mTransMatRightRearHip2Thigh(1,1), mTransMatRightRearThigh2Hip(1,2) = mTransMatRightRearHip2Thigh(2,1), mTransMatRightRearThigh2Hip(1,3) =  0.030496;
+//    mTransMatRightRearThigh2Hip(2,0) = mTransMatRightRearHip2Thigh(0,2), mTransMatRightRearThigh2Hip(2,1) = mTransMatRightRearHip2Thigh(1,2), mTransMatRightRearThigh2Hip(2,2) = mTransMatRightRearHip2Thigh(2,2), mTransMatRightRearThigh2Hip(2,3) = -0.075*sin(mPosition[14]);
+//    mTransMatRightRearThigh2Hip(3,0) = 0, mTransMatRightRearThigh2Hip(3,1) = 0, mTransMatRightRearThigh2Hip(3,2) = 0, mTransMatRightRearThigh2Hip(3,3) = 1;
+//
+//    mTransMatRightRearKnee2Thigh(0,0) = mTransMatRightRearThigh2Knee(0,0), mTransMatRightRearKnee2Thigh(0,1) = mTransMatRightRearThigh2Knee(1,0), mTransMatRightRearKnee2Thigh(0,2) = mTransMatRightRearThigh2Knee(2,0), mTransMatRightRearKnee2Thigh(0,3) = -0.23*sin(mPosition[15]);
+//    mTransMatRightRearKnee2Thigh(1,0) = mTransMatRightRearThigh2Knee(0,1), mTransMatRightRearKnee2Thigh(1,1) = mTransMatRightRearThigh2Knee(1,1), mTransMatRightRearKnee2Thigh(1,2) = mTransMatRightRearThigh2Knee(2,1), mTransMatRightRearKnee2Thigh(1,3) =  0.077;
+//    mTransMatRightRearKnee2Thigh(2,0) = mTransMatRightRearThigh2Knee(0,2), mTransMatRightRearKnee2Thigh(2,1) = mTransMatRightRearThigh2Knee(1,2), mTransMatRightRearKnee2Thigh(2,2) = mTransMatRightRearThigh2Knee(2,2), mTransMatRightRearKnee2Thigh(2,3) =  0.23*cos(mPosition[15]);
+//    mTransMatRightRearKnee2Thigh(3,0) = 0, mTransMatRightRearKnee2Thigh(3,1) = 0, mTransMatRightRearKnee2Thigh(3,2) = 0, mTransMatRightRearKnee2Thigh(3,3) = 1;
+//
+//    mTransMatRightRearFoot2Knee(0,0) = mTransMatRightRearKnee2Foot(0,0), mTransMatRightRearFoot2Knee(0,1) = mTransMatRightRearKnee2Foot(1,0), mTransMatRightRearFoot2Knee(0,2) = mTransMatRightRearKnee2Foot(2,0), mTransMatRightRearFoot2Knee(0,3) = -0.23*sin(mTempAngleForRightRearFoot);
+//    mTransMatRightRearFoot2Knee(1,0) = mTransMatRightRearKnee2Foot(0,1), mTransMatRightRearFoot2Knee(1,1) = mTransMatRightRearKnee2Foot(1,1), mTransMatRightRearFoot2Knee(1,2) = mTransMatRightRearKnee2Foot(2,1), mTransMatRightRearFoot2Knee(1,3) =  0;
+//    mTransMatRightRearFoot2Knee(2,0) = mTransMatRightRearKnee2Foot(0,2), mTransMatRightRearFoot2Knee(2,1) = mTransMatRightRearKnee2Foot(1,2), mTransMatRightRearFoot2Knee(2,2) = mTransMatRightRearKnee2Foot(2,2), mTransMatRightRearFoot2Knee(2,3) =  0.23*cos(mTempAngleForRightRearFoot);
+//    mTransMatRightRearFoot2Knee(3,0) = 0, mTransMatRightRearFoot2Knee(3,1) = 0, mTransMatRightRearFoot2Knee(3,2) = 0, mTransMatRightRearFoot2Knee(3,3) = 1;
+//
+//    mTransMatRightRearGround2Foot(0,0) = mTransMatRightRearFoot2Ground(0,0), mTransMatRightRearGround2Foot(0,1) = mTransMatRightRearFoot2Ground(1,0), mTransMatRightRearGround2Foot(0,2) = mTransMatRightRearFoot2Ground(2,0), mTransMatRightRearGround2Foot(0,3) = 0;
+//    mTransMatRightRearGround2Foot(1,0) = mTransMatRightRearFoot2Ground(0,1), mTransMatRightRearGround2Foot(1,1) = mTransMatRightRearFoot2Ground(1,1), mTransMatRightRearGround2Foot(1,2) = mTransMatRightRearFoot2Ground(2,1), mTransMatRightRearGround2Foot(1,3) = 0;
+//    mTransMatRightRearGround2Foot(2,0) = mTransMatRightRearFoot2Ground(0,2), mTransMatRightRearGround2Foot(2,1) = mTransMatRightRearFoot2Ground(1,2), mTransMatRightRearGround2Foot(2,2) = mTransMatRightRearFoot2Ground(2,2), mTransMatRightRearGround2Foot(2,3) = 0.015;
+//    mTransMatRightRearGround2Foot(3,0) = 0, mTransMatRightRearGround2Foot(3,1) = 0, mTransMatRightRearGround2Foot(3,2) = 0, mTransMatRightRearGround2Foot(3,3) = 1;
+//
+    mTransMatRightRearHip2Base = mTransMatBase2RightRearHip.inverse();
+    mTransMatRightRearThigh2Hip = mTransMatRightRearHip2Thigh.inverse();
+    mTransMatRightRearKnee2Thigh = mTransMatRightRearThigh2Knee.inverse();
+    mTransMatRightRearFoot2Knee = mTransMatRightRearKnee2Foot.inverse();
+    mTransMatRightRearGround2Foot = mTransMatRightRearFoot2Ground.inverse();
 
     mTransMatBase2RightRearGround = mTransMatBase2RightRearHip * mTransMatRightRearHip2Thigh * mTransMatRightRearThigh2Knee * mTransMatRightRearKnee2Foot * mTransMatRightRearFoot2Ground;
     mTransMatRightRearGround2Base = mTransMatRightRearGround2Foot * mTransMatRightRearFoot2Knee * mTransMatRightRearKnee2Thigh * mTransMatRightRearThigh2Hip * mTransMatRightRearHip2Base;
@@ -222,6 +222,7 @@ void StateEstimator::calculateRobotLinearState()
     mVelocity[0] = mBodyVelocity[0];
     mVelocity[1] = mBodyVelocity[1];
     mVelocity[2] = mBodyVelocity[2];
+
 
     for(int idx=0; idx<3; idx++)
     {

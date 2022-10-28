@@ -45,13 +45,35 @@ void MPCController::DoControl()
 
 void MPCController::updateState()
 {
-    memcpy(mBasePosition, sharedMemory->basePosition, sizeof(double)*3);
-    memcpy(mBaseVelocity, sharedMemory->baseVelocity, sizeof(double)*3);
-    memcpy(mBaseEulerPosition, sharedMemory->baseEulerPosition, sizeof(double)*3);
-    memcpy(mBaseEulerVelocity, sharedMemory->baseEulerVelocity, sizeof(double)*3);
-    memcpy(mFootPosition, sharedMemory->footPosition, sizeof(double)*4*3);
-    memcpy(mMotorPosition, sharedMemory->motorPosition, sizeof(double)*MOTOR_NUM);
-    memcpy(mMotorVelocity, sharedMemory->motorVelocity, sizeof(double)*MOTOR_NUM);
+//    memcpy(mBasePosition, sharedMemory->basePosition, sizeof(double)*3);
+//    memcpy(mBaseVelocity, sharedMemory->baseVelocity, sizeof(double)*3);
+//    memcpy(mBaseEulerPosition, sharedMemory->baseEulerPosition, sizeof(double)*3);
+//    memcpy(mBaseEulerVelocity, sharedMemory->baseEulerVelocity, sizeof(double)*3);
+//    memcpy(mFootPosition, sharedMemory->footPosition, sizeof(double)*4*3);
+//    memcpy(mMotorPosition, sharedMemory->motorPosition, sizeof(double)*MOTOR_NUM);
+//    memcpy(mMotorVelocity, sharedMemory->motorVelocity, sizeof(double)*MOTOR_NUM);
+
+    for(int i = 0; i < 3 ; i++)
+    {
+        mBasePosition[i] = sharedMemory->basePosition[i];
+        mBaseVelocity[i] =  sharedMemory->baseVelocity[i];
+        mBaseEulerPosition[i] =  sharedMemory->baseEulerPosition[i];
+        mBaseEulerVelocity[i] =  sharedMemory->baseEulerVelocity[i];
+    }
+
+    for(int i = 0; i < 4; i++)
+    {
+        for(int j = 0; j < 3; j++)
+        {
+            mFootPosition[i][j] = sharedMemory->footPosition[i][j];
+        }
+    }
+
+    for(int i = 0; i < MOTOR_NUM ; i++)
+    {
+        mMotorPosition[i] = sharedMemory->motorPosition[i];
+        mMotorVelocity[i] = sharedMemory->motorVelocity[i];
+    }
 }
 
 void MPCController::setLegcontrol()

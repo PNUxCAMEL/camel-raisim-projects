@@ -35,7 +35,6 @@ typedef struct _SHM_
     bool can1Status;
     bool can2Status;
     bool motorStatus;
-    bool simulState;
     int controlState;
     int visualState;
     int gaitState;

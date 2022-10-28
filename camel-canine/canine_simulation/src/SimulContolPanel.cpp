@@ -13,8 +13,8 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         , mIteration(0)
         , mGaitCounter(0)
         , mGaitLength(5)
-        , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
-        , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
+        , stand(mGaitLength, Vec4<int>(50,50,50,50), Vec4<int>(50,50,50,50), 50)
+        , trot(mGaitLength, Vec4<int>(0,25,25,0), Vec4<int>(25,25,25,25), 50)
         , MPCcontrol(mGaitLength)
 {
     mTorque.setZero();
@@ -60,13 +60,13 @@ void SimulControlPanel::ControllerFunction()
             MPCcontrol.InitSwingLegTrajectory();
             sharedMemory->controlState = STATE_TROT_CONTROL;
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = TROT;
+            sharedMemory->gaitState = STAND;
             break;
         }
         case STATE_TROT_CONTROL:
         {
-            trot.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = trot.getGaitTable();
+            stand.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = stand.getGaitTable();
             MPCcontrol.DoControl();
             mGaitCounter++;
             break;

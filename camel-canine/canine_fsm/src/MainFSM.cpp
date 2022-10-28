@@ -24,14 +24,15 @@ raisim::World world;
 raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
 RobotVisualization userVisual(&world, robot, &server);
-ControllerState userController(&world, robot);
+StateEstimator robotstate;
+ControllerState userController;
 
 const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
 mscl::InertialNode node(mConnection);
 LordImu3DmGx5Ahrs IMUBase(&node);
 
-StateEstimator robotstate(robot);
+
 
 void* NRTCommandThread(void* arg)
 {
@@ -130,7 +131,7 @@ void* RTControllerThread(void* arg)
 
 void* RTStateEstimator(void* arg)
 {
-    std::cout << "entered #rt_can_forward_thread" << std::endl;
+    std::cout << "entered #rt_state_estimation_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(ESTIMATOR_dT * 1e6);
@@ -144,7 +145,7 @@ void* RTStateEstimator(void* arg)
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
         {
-            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+            std::cout << "RT Deadline Miss, state estimation thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }
@@ -176,7 +177,6 @@ void clearSharedMemory()
     sharedMemory->can1Status = false;
     sharedMemory->can2Status = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->simulState = WITH_SIMULATION;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->can1State = CAN_NO_ACT;

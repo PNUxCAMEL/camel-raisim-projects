@@ -10,13 +10,11 @@ RobotVisualization::RobotVisualization(raisim::World* world, raisim::Articulated
     : mWorld(world)
     , mRobot(robot)
     , mServer(server)
-    , mTorque(raisim::VecDyn(18))
 {
     mWorld->setGravity({0.0, 0.0, -9.81});
     mWorld->setTimeStep(VISUAL_dT);
     mWorld->addGround();
     mRobot->setName("Canine");
-    mTorque.setZero();
 }
 
 RobotVisualization::~RobotVisualization()
@@ -40,8 +38,7 @@ void RobotVisualization::VisualFunction()
         }
         case STATE_UPDATE_VISUAL:
         {
-            updateVisualReal();
-
+            updateVisual();
             break;
         }
         default:
@@ -55,60 +52,7 @@ void RobotVisualization::openRaisimServer()
     sleep(1);
 }
 
-void RobotVisualization::initRobotPose()
-{
-    Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
-    Eigen::VectorXd initialJointVelocity(mRobot->getGeneralizedVelocityDim());
-    initialJointPosition.setZero();
-    initialJointVelocity.setZero();
-
-    initialJointPosition[2] = 0.0578;
-    initialJointPosition[3] = 1.0;
-
-    for (int idx=0; idx<4; idx++)
-    {
-        initialJointPosition[idx*3+7] = 0.0;
-        initialJointPosition[idx*3+8] = 2.5;
-        initialJointPosition[idx*3+9] = -2.9;
-    }
-
-//    // base_x,y,z
-//    initialJointPosition[0] = 0.0;
-//    initialJointPosition[1] = 0.0;
-//    initialJointPosition[2] = 0.37;
-//
-//    // base_rotation [quaternion]
-//    initialJointPosition[3] = 1.0;
-//    initialJointPosition[4] = 0.0;
-//    initialJointPosition[5] = 0.0;
-//    initialJointPosition[6] = 0.0;
-//
-//    // FR_hip,thigh,calf
-//    initialJointPosition[7] = 0.0;
-//    initialJointPosition[8] = 0.7;
-//    initialJointPosition[9] = -1.4;
-//
-//    // FL_hip,thigh,calf
-//    initialJointPosition[10] = -0.0;
-//    initialJointPosition[11] = 0.7;
-//    initialJointPosition[12] = -1.4;
-//
-//    // RR_hip,thigh,calf
-//    initialJointPosition[13] = 0.0;
-//    initialJointPosition[14] = 0.7;
-//    initialJointPosition[15] = -1.4;
-//
-//    // RL_hip,thigh,calf
-//    initialJointPosition[16] = -0.0;
-//    initialJointPosition[17] = 0.7;
-//    initialJointPosition[18] = -1.4;
-
-    mRobot->setGeneralizedCoordinate(initialJointPosition);
-    mRobot->setGeneralizedForce(Eigen::VectorXd::Zero(mRobot->getDOF()));
-    mRobot->setGeneralizedVelocity(initialJointVelocity);
-}
-
-void RobotVisualization::updateVisualReal()
+void RobotVisualization::updateVisual()
 {
     Eigen::VectorXd initialJointPosition(mRobot->getGeneralizedCoordinateDim());
     initialJointPosition.setZero();
@@ -145,14 +89,4 @@ void RobotVisualization::updateVisualReal()
     initialJointPosition[17] = sharedMemory->motorPosition[LBHP_IDX];
     initialJointPosition[18] = sharedMemory->motorPosition[LBKP_IDX];
     mRobot->setGeneralizedCoordinate(initialJointPosition);
-}
-
-void RobotVisualization::updateVisualSimul()
-{
-    for (int idx=0; idx<MOTOR_NUM; idx++)
-    {
-        mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
-    }
-    mRobot->setGeneralizedForce(mTorque);
-    mWorld->integrate();
 }

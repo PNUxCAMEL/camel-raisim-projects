@@ -7,7 +7,6 @@ find_package(raisim CONFIG REQUIRED)
 find_package(camel-tools-thread REQUIRED)
 find_package(camel-tools-sensor REQUIRED)
 
-
 add_subdirectory(canine_controller/convexMPC)
 add_subdirectory(canine_controller/PDcontroller)
 add_subdirectory(canine_controller/ControlUtils)
@@ -18,6 +17,8 @@ add_subdirectory(canine_visualizer/canine_raisim)
 
 add_subdirectory(canine_util)
 add_subdirectory(canine_fsm)
+
+add_subdirectory(canine_simulation)
 
 include_directories(
         ${EIGEN3_INCLUDE_DIRS}
@@ -30,6 +31,7 @@ include_directories(
         ${canine_raisim_SOURCE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
         ${canine_fsm_SOURCE_DIR}/include
+        ${canine_simulation_SOURCE_DIR}/include
 )
 link_directories(
         ${qpOASES_SOURCE_DIR}/bin
@@ -45,5 +47,14 @@ target_link_libraries(camel-canine
         Qt5::Widgets
         PRIVATE
         canine_fsm
+        mscl
+)
+
+add_executable(camel-canine-simul canine_demo/CanineSimul.cpp)
+target_link_libraries(camel-canine-simul
+        PUBLIC
+        Qt5::Widgets
+        PRIVATE
+        canine_simulation
         mscl
 )

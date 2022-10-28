@@ -43,7 +43,7 @@ void Command::commandFunction()
             }
             case HOME:
             {
-                sharedMemory->controlState = STATE_HOME_READY;
+                sharedMemory->controlState = STATE_HOME_STAND_UP_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
@@ -65,6 +65,9 @@ void Command::commandFunction()
             }
             case CUSTOM_2:
             {
+                sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
+                sharedMemory->can1State = CAN_SET_TORQUE;
+                sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             default:

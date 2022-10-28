@@ -1,19 +1,18 @@
 //
-// Created by hs on 22. 10. 14.
+// Created by hs on 22. 10. 27.
 //
 
-#ifndef RAISIM_STATEESTIMATOR_HPP
-#define RAISIM_STATEESTIMATOR_HPP
+#ifndef RAISIM_SIMULSTATEESTIMATOR_HPP
+#define RAISIM_SIMULSTATEESTIMATOR_HPP
 
 #include <raisim/World.hpp>
 
-#include "RobotDescription.hpp"
-#include "SharedMemory.hpp"
-#include "RobotMath.hpp"
+#include <canine_util/SharedMemory.hpp>
+#include <canine_util/RobotMath.hpp>
 
-class StateEstimator{
+class SimulStateEstimator{
 public:
-    StateEstimator();
+    SimulStateEstimator(raisim::ArticulatedSystem* robot);
 
     void StateEstimatorFunction();
 private:
@@ -22,12 +21,14 @@ private:
     void getRobotLinearState();
     void getRobotFootPosition();
 private:
-
+    raisim::ArticulatedSystem* mRobot;
+    raisim::VecDyn mPosition;
+    raisim::VecDyn mVelocity;
+    raisim::Vec<3> mFootPosition[4];
     double mQuaternion[4];
 
     double mTempAngleForRightRearFoot;
     double mTempAngleForLeftRearFoot;
-
 
     Eigen::Matrix4d mTransMatBase2LeftRearGround;
     Eigen::Matrix4d mTransMatBase2LeftRearHip;
@@ -69,9 +70,6 @@ private:
     bool bIsRightRearFirst; /// is it the first iteration of the right rear leg touching the floor.
     bool bIsLeftRearFirst; /// is it the first iteration of the left rear leg touching the floor.
     bool bIsFirstRun;
-
-
-
 };
 
-#endif //RAISIM_STATEESTIMATOR_HPP
+#endif //RAISIM_SIMULSTATEESTIMATOR_HPP

@@ -4,7 +4,6 @@
 
 #include "../include/LordImu3DmGx5Ahrs.hpp"
 
-
 static constexpr uint32_t Hash(const char* c)
 {
     return *c ? static_cast<uint32_t>(*c) + 33 * Hash(c + 1) : 5381;
@@ -13,6 +12,32 @@ static constexpr uint32_t Hash(const char* c)
 LordImu3DmGx5Ahrs::LordImu3DmGx5Ahrs(mscl::InertialNode* node)
 {
     mNode = node;
+
+    mEulerAngle[0] = 0;
+    mEulerAngle[1] = 0;
+    mEulerAngle[2] = 0;
+
+    mQuaternion[0] = 0;
+    mQuaternion[1] = 0;
+    mQuaternion[2] = 0;
+    mQuaternion[3] = 0;
+
+    mScaledAccelVector[0] = 0;
+    mScaledAccelVector[1] = 0;
+    mScaledAccelVector[2] = 0;
+
+    mStabilizedAccelVector[0] = 0;
+    mStabilizedAccelVector[1] = 0;
+    mStabilizedAccelVector[2] = 0;
+
+    mScaledMagVector[0] = 0;
+    mScaledMagVector[1] = 0;
+    mScaledMagVector[2] = 0;
+
+    mAngularVelocity[0] = 0;
+    mAngularVelocity[1] = 0;
+    mAngularVelocity[2] = 0;
+
     std::cout << "Model Name : " << mNode->modelName() << std::endl;
     std::cout << "Model Number : " << mNode->modelNumber() << std::endl;
     std::cout << "Serial : " << mNode->serialNumber() << std::endl;
@@ -21,21 +46,22 @@ LordImu3DmGx5Ahrs::LordImu3DmGx5Ahrs(mscl::InertialNode* node)
 void LordImu3DmGx5Ahrs::SetConfig(int samplingHz)
 {
     mscl::MipChannels ahrsImuChs;
-    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_ORIENTATION_QUATERNION, mscl::SampleRate::Hertz(samplingHz)));
-    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_EULER_ANGLES, mscl::SampleRate::Hertz(samplingHz)));
     ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_SCALED_ACCEL_VEC, mscl::SampleRate::Hertz(samplingHz)));
     ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_SCALED_MAG_VEC, mscl::SampleRate::Hertz(samplingHz)));
-    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_SCALED_GYRO_VEC, mscl::SampleRate::Hertz(samplingHz)));
-    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_STABILIZED_ACCEL_VEC, mscl::SampleRate::Hertz(100)));
+    ahrsImuChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_SENSOR_STABILIZED_ACCEL_VEC, mscl::SampleRate::Hertz(samplingHz)));
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_AHRS_IMU, ahrsImuChs);
 
     mscl::MipChannels estFilterChs;
+    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ORIENT_EULER, mscl::SampleRate::Hertz(samplingHz)));
+    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ANGULAR_RATE, mscl::SampleRate::Hertz(samplingHz)));
+    estFilterChs.push_back(mscl::MipChannel(mscl::MipTypes::CH_FIELD_ESTFILTER_ESTIMATED_ORIENT_QUATERNION, mscl::SampleRate::Hertz(samplingHz)));
     mNode->setActiveChannelFields(mscl::MipTypes::CLASS_ESTFILTER, estFilterChs);
 }
 
-void LordImu3DmGx5Ahrs::PareData()
+void LordImu3DmGx5Ahrs::ParseData()
 {
     mscl::MipDataPackets packets = mNode->getDataPackets(500);
+
     for (mscl::MipDataPacket packet : packets)
     {
         mscl::MipDataPoints data = packet.data();
@@ -46,71 +72,66 @@ void LordImu3DmGx5Ahrs::PareData()
             uint32_t hash = Hash(dataPoint.channelName().c_str());
             switch (hash)
             {
-            case Hash("roll"):
-                mRoll = dataPoint.as_double();
+            case Hash("estRoll"):
+                mEulerAngle[0] = dataPoint.as_double();
+                break;
+            case Hash("estPitch"):
+                mEulerAngle[1] = dataPoint.as_double();
+                break;
+            case Hash("estYaw"):
+                mEulerAngle[2] = dataPoint.as_double();
                 break;
 
-            case Hash("pitch"):
-                mPitch = dataPoint.as_double();
-                break;
-
-            case Hash("yaw"):
-                mYaw = dataPoint.as_double();
-                break;
-
-            case Hash("orientQuaternion"):
+            case Hash("estOrientQuaternion"):
                 mOrientQuaternion = dataPoint.as_string();
                 break;
 
             case Hash("scaledAccelX"):
-                mScaledAccelX = dataPoint.as_double();
+                mScaledAccelVector[0] = dataPoint.as_double();
                 break;
             case Hash("scaledAccelY"):
-                mScaledAccelY = dataPoint.as_double();
+                mScaledAccelVector[1] = dataPoint.as_double();
                 break;
             case Hash("scaledAccelZ"):
-                mScaledAccelZ = dataPoint.as_double();
+                mScaledAccelVector[2] = dataPoint.as_double();
                 break;
 
             case Hash("stabilizedAccelX"):
-                mStabilizedAccelX = dataPoint.as_double();
+                mStabilizedAccelVector[0] = dataPoint.as_double();
                 break;
-
             case Hash("stabilizedAccelY"):
-                mStabilizedAccelY = dataPoint.as_double();
+                mStabilizedAccelVector[1] = dataPoint.as_double();
                 break;
-
             case Hash("stabilizedAccelZ"):
-                mStabilizedAccelZ = dataPoint.as_double();
+                mStabilizedAccelVector[2] = dataPoint.as_double();
                 break;
 
             case Hash("scaledMagX"):
-                mScaledMagX = dataPoint.as_double();
+                mScaledMagVector[0] = dataPoint.as_double();
                 break;
             case Hash("scaledMagY"):
-                mScaledMagY = dataPoint.as_double();
+                mScaledMagVector[0] = dataPoint.as_double();
                 break;
             case Hash("scaledMagZ"):
-                mScaledMagZ = dataPoint.as_double();
+                mScaledMagVector[0] = dataPoint.as_double();
                 break;
 
-            case Hash("scaledGyroX"):
-                mScaledGyroX = dataPoint.as_double();
+            case Hash("estAngularRateX"):
+                mAngularVelocity[0] = dataPoint.as_double();
                 break;
-            case Hash("scaledGyroY"):
-                mScaledGyroY = dataPoint.as_double();
+            case Hash("estAngularRateY"):
+                mAngularVelocity[1] = dataPoint.as_double();
                 break;
-            case Hash("scaledGyroZ"):
-                mScaledGyroZ = dataPoint.as_double();
+            case Hash("estAngularRateZ"):
+                mAngularVelocity[2] = dataPoint.as_double();
                 break;
-
             default:
-                std::cout << "default" << std::endl;
+//                std::cout << "default" << std::endl;
                 break;
             }
             if (!dataPoint.valid())
             {
-                std::cout << "[Invalid] ";
+//                std::cout << "[Invalid] ";
             }
         }
     }
@@ -118,10 +139,6 @@ void LordImu3DmGx5Ahrs::PareData()
 
 double* LordImu3DmGx5Ahrs::GetEulerAngle()
 {
-    mEulerAngle[0] = mRoll;
-    mEulerAngle[1] = mPitch;
-    mEulerAngle[2] = mYaw;
-
     return mEulerAngle;
 }
 
@@ -149,36 +166,20 @@ double* LordImu3DmGx5Ahrs::GetQuaternion()
 
 double* LordImu3DmGx5Ahrs::GetAccelVector()
 {
-    mScaledAccelVector[0] = mScaledAccelX;
-    mScaledAccelVector[1] = mScaledAccelY;
-    mScaledAccelVector[2] = mScaledAccelZ;
-
     return mScaledAccelVector;
 }
 
 double* LordImu3DmGx5Ahrs::GetStabilizedAccelVector()
 {
-    mStabilizedAccelVector[0] = mStabilizedAccelX;
-    mStabilizedAccelVector[1] = mStabilizedAccelY;
-    mStabilizedAccelVector[2] = mStabilizedAccelZ;
-
     return mStabilizedAccelVector;
 }
 
 double* LordImu3DmGx5Ahrs::GetMagVector()
 {
-    mScaledMagVector[0] = mScaledMagX;
-    mScaledMagVector[1] = mScaledMagY;
-    mScaledMagVector[2] = mScaledMagZ;
-
     return mScaledMagVector;
 }
 
-double* LordImu3DmGx5Ahrs::GetGyroVector()
+double* LordImu3DmGx5Ahrs::GetAngularVelocity()
 {
-    mScaledGyroVector[0] = mScaledGyroX;
-    mScaledGyroVector[1] = mScaledGyroY;
-    mScaledGyroVector[2] = mScaledGyroZ;
-
-    return mScaledGyroVector;
+    return mAngularVelocity;
 }

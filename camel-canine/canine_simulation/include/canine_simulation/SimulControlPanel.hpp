@@ -1,9 +1,9 @@
 //
-// Created by hs on 22. 10. 6.
+// Created by hs on 22. 10. 27.
 //
 
-#ifndef RAISIM_CONTROLLERSTATE_HPP
-#define RAISIM_CONTROLLERSTATE_HPP
+#ifndef RAISIM_SIMULCONTROLPANEL_HPP
+#define RAISIM_SIMULCONTROLPANEL_HPP
 
 #include <stdint.h>
 
@@ -17,13 +17,19 @@
 #include <convexMPC/MPCController.hpp>
 #include <ControlUtils/Gait.hpp>
 
-class ControllerState{
+class SimulControlPanel{
 public:
-    ControllerState();
+    SimulControlPanel(raisim::World* world, raisim::ArticulatedSystem* robot);
 
     void ControllerFunction();
 
 private:
+    void integrateSimul();
+
+private:
+    raisim::World* mWorld;
+    raisim::ArticulatedSystem* mRobot;
+
     uint16_t mIteration;
     uint16_t mGaitCounter;
     uint8_t mGaitLength;
@@ -35,4 +41,4 @@ private:
     OffsetGait stand, trot;
 };
 
-#endif //RAISIM_CONTROLSTATE_H
+#endif //RAISIM_SIMULCONTROLPANEL_HPP

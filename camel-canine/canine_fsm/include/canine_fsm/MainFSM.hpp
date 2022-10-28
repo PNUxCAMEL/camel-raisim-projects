@@ -9,16 +9,17 @@
 #include <QApplication>
 
 #include <camel-tools/ThreadGenerator.hpp>
+#include <camel-tools/sensor.hpp>
 
 #include <ControlMain/ControllerState.hpp>
 #include <canine_util/CanMotorForward.hpp>
 #include <canine_util/CanMotorBackward.hpp>
 #include <canine_util/Command.hpp>
+//#include <canine_util/ImuBase.hpp>
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/StateEstimator.hpp>
 #include <canine_raisim//RobotVisualization.hpp>
-
 
 void StartFSM();
 void *RTControllerThread(void *arg);

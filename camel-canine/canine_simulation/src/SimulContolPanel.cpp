@@ -1,24 +1,26 @@
 //
-// Created by hs on 22. 10. 6.
+// Created by hs on 22. 10. 27.
 //
 
-#include <ControlMain/ControllerState.hpp>
+#include <canine_simulation/SimulControlPanel.hpp>
 
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
-ControllerState::ControllerState()
-    : mIteration(0)
-    , mGaitCounter(0)
-    , mGaitLength(3)
-    , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
-    , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
-    , MPCcontrol(mGaitLength)
+SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSystem* robot)
+        : mWorld(world)
+        , mRobot(robot)
+        , mIteration(0)
+        , mGaitCounter(0)
+        , mGaitLength(5)
+        , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
+        , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
+        , MPCcontrol(mGaitLength)
 {
     mTorque.setZero();
 }
 
-void ControllerState::ControllerFunction()
+void SimulControlPanel::ControllerFunction()
 {
     sharedMemory->localTime = mIteration * CONTROL_dT;
     mIteration++;
@@ -37,6 +39,7 @@ void ControllerState::ControllerFunction()
         {
             PDcontrol.InitHomeTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_HOME_CONTROL:
@@ -52,33 +55,18 @@ void ControllerState::ControllerFunction()
         {
             break;
         }
-        case STATE_WBC_READY:
-        {
-            WBControl.InitTrajectory();
-            sharedMemory->controlState = STATE_WBC_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = STAND;
-            break;
-        }
-        case STATE_WBC_CONTROL:
-        {
-            stand.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = stand.getGaitTable();
-            WBControl.DoWBControl();
-            mGaitCounter++;
-            break;
-        }
         case STATE_TROT_REDAY:
         {
             MPCcontrol.InitSwingLegTrajectory();
             sharedMemory->controlState = STATE_TROT_CONTROL;
-            sharedMemory->gaitState = STAND;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            sharedMemory->gaitState = TROT;
             break;
         }
         case STATE_TROT_CONTROL:
         {
-            stand.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = stand.getGaitTable();
+            trot.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = trot.getGaitTable();
             MPCcontrol.DoControl();
             mGaitCounter++;
             break;
@@ -86,4 +74,18 @@ void ControllerState::ControllerFunction()
         default:
             break;
     }
+    if (sharedMemory->visualState == STATE_UPDATE_VISUAL)
+    {
+        integrateSimul();
+    }
+}
+
+void SimulControlPanel::integrateSimul()
+{
+    for (int idx=0; idx<MOTOR_NUM; idx++)
+    {
+        mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
+    }
+    mRobot->setGeneralizedForce(mTorque);
+    mWorld->integrate();
 }

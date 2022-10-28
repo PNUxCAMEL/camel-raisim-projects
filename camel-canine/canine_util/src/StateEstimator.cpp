@@ -6,76 +6,34 @@
 
 extern pSHM sharedMemory;
 
-StateEstimator::StateEstimator(raisim::ArticulatedSystem* robot)
-    : mRobot(robot)
-    , mPosition(raisim::VecDyn(19))
-    , mVelocity(raisim::VecDyn(18))
+StateEstimator::StateEstimator()
 {
 }
 
 void StateEstimator::StateEstimatorFunction()
 {
-    if (sharedMemory->simulState == WITH_SIMULATION)
-    {
-        getJointStateReal();
-        getRobotAngulerStateReal();
-    }
-    else
-    {
-        getJointStateSimul();
-        getRobotAngulerStateSimul();
-        getRobotFootPositionSimul();
-    }
-    calculateRobotLinearState();
+    getJointState();
+    getRobotAngulerState();
+    getRobotLinearState();
+    getRobotFootPosition();
 }
 
-void StateEstimator::getJointStateReal()
+void StateEstimator::getJointState()
 {
     //TODO: Get real robot encoder value from can
 }
 
-void StateEstimator::getJointStateSimul()
+void StateEstimator::getRobotAngulerState()
 {
-    mPosition = mRobot->getGeneralizedCoordinate();
-    mVelocity = mRobot->getGeneralizedVelocity();
-
-    for (int idx=0; idx<MOTOR_NUM; idx++)
-    {
-        sharedMemory->motorPosition[idx] = mPosition[idx+7];
-        sharedMemory->motorVelocity[idx] = mVelocity[idx+6];
-    }
+    //TODO: Get angular velocity, orientation from IMU
 }
 
-void StateEstimator::getRobotAngulerStateReal()
+void StateEstimator::getRobotLinearState()
 {
-    //TODO: Get angular velocity, position from IMU
+    //TODO: Get position, linear velocity from Kinematics and IMU, T265
 }
 
-void StateEstimator::getRobotAngulerStateSimul()
+void StateEstimator::getRobotFootPosition()
 {
-    for(int idx=0; idx<3; idx++)
-    {
-        sharedMemory->baseEulerVelocity[idx] = mVelocity[idx+3];
-    }
-
-    for(int idx=0; idx<4; idx++)
-    {
-        mQuaternion[idx] = mPosition[idx+3];
-    }
-    TransformQuat2Euler(mQuaternion, sharedMemory->baseEulerPosition);
-}
-
-void StateEstimator::getRobotFootPositionSimul() {
-    //TODO:
-
-}
-
-void StateEstimator::calculateRobotLinearState()
-{
-    //TODO: Calculate global body position and velocity
-    for(int idx=0; idx<3; idx++)
-    {
-        sharedMemory->basePosition[idx] = mPosition[idx];
-        sharedMemory->baseVelocity[idx] = mVelocity[idx];
-    }
+    //TODO: Get foot position from body frame based on kinematics
 }

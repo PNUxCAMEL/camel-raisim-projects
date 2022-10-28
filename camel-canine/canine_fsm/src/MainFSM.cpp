@@ -5,12 +5,12 @@
 #include <canine_fsm/MainFSM.hpp>
 
 pthread_t RTThreadController;
-pthread_t RTThreadCANForward;
-pthread_t RTThreadCANBackward;
 pthread_t RTThreadStateEstimator;
 pthread_t NRTThreadCommand;
 pthread_t NRTThreadVisual;
 pthread_t NRTThreadIMU;
+pthread_t NRTThreadCANForward;
+pthread_t NRTThreadCANBackward;
 
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
@@ -150,47 +150,22 @@ void* RTStateEstimator(void* arg)
 }
 
 
-void* RTCANForward(void* arg)
+void* NRTCANForward(void* arg)
 {
-    std::cout << "entered #rt_can_forward_thread" << std::endl;
-    struct timespec TIME_NEXT;
-    struct timespec TIME_NOW;
-    const long PERIOD_US = long(CAN_dT * 1e6);
-    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
+    std::cout << "entered #nrt_can_forward_thread" << std::endl;
+
     while (true)
     {
-        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
-        timespec_add_us(&TIME_NEXT, PERIOD_US);
-
         canForward.CanFunction();
-
-        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
-        {
-            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
-        }
     }
 }
 
-void* RTCANBackward(void* arg)
+void* NRTCANBackward(void* arg)
 {
-    std::cout << "entered #rt_can_backward_thread" << std::endl;
-    struct timespec TIME_NEXT;
-    struct timespec TIME_NOW;
-    const long PERIOD_US = long(CAN_dT * 1e6);
-    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
+    std::cout << "entered #nrt_can_backward_thread" << std::endl;
     while (true)
     {
-        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
-        timespec_add_us(&TIME_NEXT, PERIOD_US);
-
         canBackward.CanFunction();
-
-        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
-        {
-            std::cout << "RT Deadline Miss, can backward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
-        }
     }
 }
 
@@ -201,7 +176,7 @@ void clearSharedMemory()
     sharedMemory->can1Status = false;
     sharedMemory->can2Status = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->simulState = true;
+    sharedMemory->simulState = WITH_SIMULATION;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->can1State = CAN_NO_ACT;
@@ -237,13 +212,13 @@ void StartFSM()
     sharedMemory = (pSHM)malloc(sizeof(SHM));
     clearSharedMemory();
 
-    server.launchServer(8080);
-    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99, NULL);
-    int thread_id_rt2 = generate_rt_thread(RTThreadCANForward, RTCANForward, "rt_thread2", 6, 99, NULL);
-    int thread_id_rt3 = generate_rt_thread(RTThreadCANBackward, RTCANBackward, "rt_thread3", 7, 99, NULL);
-    int thread_id_rt4 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread4", 4, 99,NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99, NULL);
+    int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 7, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
     int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);
+    int thread_id_nrt4 = generate_nrt_thread(NRTThreadCANForward, NRTCANForward, "nrt_thread4", 3, NULL);
+    int thread_id_nrt5 = generate_nrt_thread(NRTThreadCANBackward, NRTCANBackward, "nrt_thread5", 4, NULL);
+
 }

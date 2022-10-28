@@ -39,7 +39,6 @@ void ControllerState::ControllerFunction()
         {
             PDcontrol.InitHomeTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
-//            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_HOME_CONTROL:
@@ -74,18 +73,4 @@ void ControllerState::ControllerFunction()
         default:
             break;
     }
-//    if (sharedMemory->simulState == ONLY_SIMULATION && sharedMemory->visualState == STATE_UPDATE_VISUAL)
-//    {
-//        integrateSimul();
-//    }
-}
-
-void ControllerState::integrateSimul()
-{
-    for (int idx=0; idx<MOTOR_NUM; idx++)
-    {
-        mTorque[idx+6] = sharedMemory->motorDesiredTorque[idx];
-    }
-    mRobot->setGeneralizedForce(mTorque);
-    mWorld->integrate();
 }

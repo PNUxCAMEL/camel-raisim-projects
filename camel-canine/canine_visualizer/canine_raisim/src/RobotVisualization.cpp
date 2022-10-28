@@ -34,21 +34,14 @@ void RobotVisualization::VisualFunction()
         }
         case STATE_OPEN_RAISIM:
         {
-            //openRaisimServer();
-            initRobotPose();
+            openRaisimServer();
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_UPDATE_VISUAL:
         {
-            if(sharedMemory->simulState == WITH_SIMULATION)
-            {
-                updateVisualReal();
-            }
-            else
-            {
-                updateVisualSimul();
-            }
+            updateVisualReal();
+
             break;
         }
         default:

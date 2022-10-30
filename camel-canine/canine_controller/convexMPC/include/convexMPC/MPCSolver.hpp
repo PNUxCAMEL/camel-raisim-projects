@@ -23,8 +23,8 @@ public:
     ~MPCSolver();
 
     void SetTrajectory(const double* mP);
-    void GetMetrices(const double* mP, const double* mQ,
-                     const double* mV, const double* mW,
+    void GetMetrices(const double* mQ, const double* mP,
+                     const double* mW, const double* mV,
                      const double mFoot[4][3]);
     void SolveQP();
     void GetGRF(Vec3<double> f[4]);
@@ -41,6 +41,8 @@ private:
 private:
     const double mDt;
     const double mAlpha;
+    const double mMu;
+    const int mFmax;
     double mStopPosX = 0.0;
     char var_elim[2000];
     char con_elim[2000];

@@ -48,7 +48,7 @@ void SimulCommand::commandFunction()
             }
             case CUSTOM_2:
             {
-                sharedMemory->controlState = STATE_TROT_REDAY;
+                sharedMemory->controlState = STATE_MPC_REDAY;
                 break;
             }
             default:

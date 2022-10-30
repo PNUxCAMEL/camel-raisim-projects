@@ -2,7 +2,6 @@
 // Created by hs on 22. 10. 24.
 //
 #include "../include/ControlUtils/SwingLeg.hpp"
-#include <iostream>
 
 SwingLeg::SwingLeg(double duration)
     : mTimeDuration(duration)

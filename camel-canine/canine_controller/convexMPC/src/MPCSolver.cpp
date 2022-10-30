@@ -10,6 +10,8 @@ extern pSHM sharedMemory;
 MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(CONTROL_dT)
     , mAlpha(ALPHA)
+    , mFmax(240)
+    , mMu(0.6)
     , mWeightMat(WEIGHT)
     , mHorizon(horizon)
     , mBodyInertia(BODY_INERTIA)
@@ -40,24 +42,22 @@ void MPCSolver::SetTrajectory(const double* mP)
     {
         xd(i*13+5,0) = 0.37;
 
-        xd(i*13+3,0) = 0.0;
-        xd(i*13+9,0) = 0.0;
 
-        if(sharedMemory->gaitState == STAND)
+/*        if(sharedMemory->gaitState == STAND)
         {
             xd(i*13+3,0) = mStopPosX;
             xd(i*13+9,0) = 0.0;
         }
         else
         {
-            xd(i*13+3,0) = mP[0]+0.7*(mDt*i);
-            xd(i*13+9,0) = 0.7;
-        }
+            xd(i*13+3,0) = mP[0]+0.3*(mDt*i);
+            xd(i*13+9,0) = 0.3;
+        }*/
     }
 }
 
-void MPCSolver::GetMetrices(const double* mP, const double* mQ,
-                            const double* mV, const double* mW,
+void MPCSolver::GetMetrices(const double* mQ, const double* mP,
+                            const double* mW, const double* mV,
                             const double mFoot[4][3])
 {
     x0 << mQ[0],mQ[1],mQ[2],
@@ -75,15 +75,15 @@ void MPCSolver::GetMetrices(const double* mP, const double* mQ,
     int k = 0;
     for(int i = 0; i < mHorizon; i++){
         for(int16_t j = 0; j < 4; j++){
-            U_b(5*k + 0) = BIG_NUMBER;
-            U_b(5*k + 1) = BIG_NUMBER;
-            U_b(5*k + 2) = BIG_NUMBER;
-            U_b(5*k + 3) = BIG_NUMBER;
-            U_b(5*k + 4) = F_MAX*sharedMemory->gaitTable[i*4+j];
+            U_b(5*k + 0) = 5e10;
+            U_b(5*k + 1) = 5e10;
+            U_b(5*k + 2) = 5e10;
+            U_b(5*k + 3) = 5e10;
+            U_b(5*k + 4) = mFmax*sharedMemory->gaitTable[i*4+j];
             k++;
         }
     }
-    float mu = 1.f/MU;
+    float mu = 1.f/mMu;
     Eigen::Matrix<double,5,3> f_block;
 
     f_block <<  mu, 0,  1.f,
@@ -271,16 +271,16 @@ void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thi
 
     //right leg side = 1 / left leg side = -1
     J << 0,
-            LTHI*c2+LCAL*c32,
-            LCAL*c32,
+            LEN_THI*c2+LEN_CAL*c32,
+            LEN_CAL*c32,
 
-            (-1)*side*LHIP*s1-LTHI*c1*c2-LCAL*c1*c32,
-            LTHI*s1*s2+LCAL*s1*s32,
-            LCAL*s1*s32,
+            (-1)*side*LEN_HIP*s1-LEN_THI*c1*c2-LEN_CAL*c1*c32,
+            LEN_THI*s1*s2+LEN_CAL*s1*s32,
+            LEN_CAL*s1*s32,
 
-            side*LHIP*c1-LTHI*s1*c2-LCAL*s1*c32,
-            -LTHI*c1*s2-LCAL*c1*s32,
-            -LCAL*c1*s32;
+            side*LEN_HIP*c1-LEN_THI*s1*c2-LEN_CAL*s1*c32,
+            -LEN_THI*c1*s2-LEN_CAL*c1*s32,
+            -LEN_CAL*c1*s32;
 }
 
 void MPCSolver::resizeMatrix()

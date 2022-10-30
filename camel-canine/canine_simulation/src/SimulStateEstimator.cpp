@@ -15,6 +15,9 @@ SimulStateEstimator::SimulStateEstimator(raisim::ArticulatedSystem* robot)
 
 void SimulStateEstimator::StateEstimatorFunction()
 {
+    mPosition = mRobot->getGeneralizedCoordinate();
+    mVelocity = mRobot->getGeneralizedVelocity();
+
     getJointState();
     getRobotAngulerState();
     getRobotLinearState();
@@ -24,9 +27,6 @@ void SimulStateEstimator::StateEstimatorFunction()
 
 void SimulStateEstimator::getJointState()
 {
-    mPosition = mRobot->getGeneralizedCoordinate();
-    mVelocity = mRobot->getGeneralizedVelocity();
-
     for (int idx=0; idx<MOTOR_NUM; idx++)
     {
         sharedMemory->motorPosition[idx] = mPosition[idx+7];
@@ -68,4 +68,12 @@ void SimulStateEstimator::getRobotFootPosition()
     mRobot->getFramePosition(FLfootFrameIndex, mFootPosition[1]);
     mRobot->getFramePosition(RRfootFrameIndex, mFootPosition[2]);
     mRobot->getFramePosition(RLfootFrameIndex, mFootPosition[3]);
+
+    for (int leg=0; leg<4; leg++)
+    {
+        for (int mt=0; mt<3; mt++)
+        {
+            sharedMemory->footPosition[leg][mt] = mFootPosition[leg][mt];
+        }
+    }
 }

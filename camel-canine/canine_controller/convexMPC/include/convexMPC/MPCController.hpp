@@ -36,7 +36,6 @@ private:
     double mFootPosition[4][3];
     double mMotorPosition[MOTOR_NUM];
     double mMotorVelocity[MOTOR_NUM];
-    double mMotorDesiredTorque[MOTOR_NUM];
 
     Eigen::Matrix<double,12,1> mTorque;
     double mTorqueLimit[MOTOR_NUM];

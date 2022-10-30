@@ -5,12 +5,14 @@
 #ifndef RAISIM_ROBOTDESCRIPTION_H
 #define RAISIM_ROBOTDESCRIPTION_H
 
+constexpr int MOTOR_NUM = 12;
+constexpr int MOTOR_NUM_PER_CAN = 6;
+
+constexpr double GRAVITY = -9.81;
+constexpr double BODYMASS = 10.0;
 constexpr double LEN_HIP = 0.085;
 constexpr double LEN_THI = 0.23;
 constexpr double LEN_CAL = 0.23;
-
-constexpr int MOTOR_NUM = 12;
-constexpr int MOTOR_NUM_PER_CAN = 6;
 
 //TODO: change data structure of motor ID to keymap
 constexpr int MOTOR_RFHR_ID = 0x145;
@@ -79,10 +81,10 @@ enum CONTROL_STATE
     STATE_HOME_CONTROL,
     STATE_PD_READY,
     STATE_PD_CONTROL,
+    STATE_MPC_REDAY,
+    STATE_MPC_CONTROL,
     STATE_WBC_READY,
     STATE_WBC_CONTROL,
-    STATE_TROT_REDAY,
-    STATE_TROT_CONTROL
 };
 
 enum CAN_STATE

@@ -22,7 +22,7 @@ private:
     double sumX = 0.0;
     double sumZ = 0.0;
 
-    double pz[PNUM] = {-0.37, -0.2, -0.2, -0.37};
+    double pz[PNUM] = {-0.37, -0.27, -0.27,-0.37};
     double px[PNUM] = {0, 0, 0, 0};
 };
 

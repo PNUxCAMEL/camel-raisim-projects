@@ -32,8 +32,8 @@ void MPCController::DoControl()
     //TODO: Make structure for robot states
     updateState();
     ConvexMPCSolver.SetTrajectory(mBasePosition);
-    ConvexMPCSolver.GetMetrices(mBasePosition, mBaseEulerPosition,
-                                mBaseVelocity, mBaseEulerVelocity,
+    ConvexMPCSolver.GetMetrices(mBaseEulerPosition, mBasePosition,
+                                mBaseEulerVelocity, mBaseVelocity,
                                 mFootPosition);
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);
@@ -45,13 +45,27 @@ void MPCController::DoControl()
 
 void MPCController::updateState()
 {
-    memcpy(mBasePosition, sharedMemory->basePosition, sizeof(double)*3);
-    memcpy(mBaseVelocity, sharedMemory->baseVelocity, sizeof(double)*3);
-    memcpy(mBaseEulerPosition, sharedMemory->baseEulerPosition, sizeof(double)*3);
-    memcpy(mBaseEulerVelocity, sharedMemory->baseEulerVelocity, sizeof(double)*3);
-    memcpy(mFootPosition, sharedMemory->footPosition, sizeof(double)*4*3);
-    memcpy(mMotorPosition, sharedMemory->motorPosition, sizeof(double)*MOTOR_NUM);
-    memcpy(mMotorVelocity, sharedMemory->motorVelocity, sizeof(double)*MOTOR_NUM);
+    for (int idx=0; idx<3; idx++)
+    {
+        mBasePosition[idx] = sharedMemory->basePosition[idx];
+        mBaseVelocity[idx] = sharedMemory->baseVelocity[idx];
+        mBaseEulerPosition[idx] = sharedMemory->baseEulerPosition[idx];
+        mBaseEulerVelocity[idx] = sharedMemory->baseEulerVelocity[idx];
+    }
+
+    for (int leg=0; leg<4; leg++)
+    {
+        for (int mt=0; mt<3; mt++)
+        {
+            mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
+        }
+    }
+
+    for (int idx=0; idx<MOTOR_NUM; idx++)
+    {
+        mMotorPosition[idx] = sharedMemory->motorPosition[idx];
+        mMotorVelocity[idx] = sharedMemory->motorVelocity[idx];
+    }
 }
 
 void MPCController::setLegcontrol()
@@ -74,7 +88,7 @@ void MPCController::setLegcontrol()
         jointPos[1] = phi + psi - 1.57;
     jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
 
-    double Pgain[3] = {5,20,30};
+    double Pgain[3] = {20,20,30};
     double Dgain[3] = {0.5,1,1};
 
     double posError[3];

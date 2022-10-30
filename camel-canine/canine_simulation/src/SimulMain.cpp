@@ -69,7 +69,6 @@ void* RTStateEstimator(void* arg)
 
         StateEstimator.StateEstimatorFunction();
 
-
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
         {
@@ -84,7 +83,6 @@ void clearSharedMemory()
     sharedMemory->can1Status = false;
     sharedMemory->can2Status = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->simulState = true;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->can1State = CAN_NO_ACT;

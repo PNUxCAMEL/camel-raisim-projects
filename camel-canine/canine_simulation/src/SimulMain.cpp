@@ -22,7 +22,7 @@ SimulStateEstimator StateEstimator(robot);
 
 void* NRTCommandThread(void* arg)
 {
-    std::cout << "entered #nrt_command_thread" << std::endl;
+    std::cout << "entered #Command_NRT_thread" << std::endl;
     while (true)
     {
         userCommand.commandFunction();
@@ -32,7 +32,7 @@ void* NRTCommandThread(void* arg)
 
 void *RTControllerThread(void *arg)
 {
-    std::cout << "entered #rt_time_checker_thread" << std::endl;
+    std::cout << "entered #Controller_RT_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(CONTROL_dT * 1e6); // 200Hz 짜리 쓰레드
@@ -49,7 +49,7 @@ void *RTControllerThread(void *arg)
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
-            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+            std::cout << "RT Deadline Miss, Controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
 
     }
@@ -57,7 +57,7 @@ void *RTControllerThread(void *arg)
 
 void* RTStateEstimator(void* arg)
 {
-    std::cout << "entered #rt_State_Estimator_thread" << std::endl;
+    std::cout << "entered #StateEsitimator_RT_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(ESTIMATOR_dT * 1e6);
@@ -71,7 +71,7 @@ void* RTStateEstimator(void* arg)
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
         {
-            std::cout << "RT Deadline Miss, estimator thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+            std::cout << "RT Deadline Miss, State estimator thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }

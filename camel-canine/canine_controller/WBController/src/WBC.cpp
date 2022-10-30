@@ -8,11 +8,14 @@ extern pSHM sharedMemory;
 
 WBC::WBC()
 {
+    for(auto & idx : mTorqueLimit)
+    {
+        idx << 50.0, 50.0, 50.0;
+    }
     mTorque->setZero();
     mTorqueJacobian->setZero();
     mGRF->setZero();
     mMotorPosition->setZero();
-    mTorqueLimit->setZero();
     mJacobian->setZero();
 }
 
@@ -36,11 +39,23 @@ void WBC::DoWBControl()
 
 void WBC::updateState()
 {
-    memcpy(mBasePosition, sharedMemory->basePosition, sizeof(double)*3);
-    memcpy(mBaseVelocity, sharedMemory->baseVelocity, sizeof(double)*3);
-    memcpy(mBaseEulerPosition, sharedMemory->baseEulerPosition, sizeof(double)*3);
-    memcpy(mBaseEulerVelocity, sharedMemory->baseEulerVelocity, sizeof(double)*3);
-    memcpy(mFootPosition, sharedMemory->footPosition, sizeof(double)*4*3);
+    for (int idx=0; idx<3; idx++)
+    {
+        mBasePosition[idx] = sharedMemory->basePosition[idx];
+        mBaseVelocity[idx] = sharedMemory->baseVelocity[idx];
+        mBaseEulerPosition[idx] = sharedMemory->baseEulerPosition[idx];
+        mBaseEulerVelocity[idx] = sharedMemory->baseEulerVelocity[idx];
+    }
+
+    for (int leg=0; leg<4; leg++)
+    {
+        for (int mt=0; mt<3; mt++)
+        {
+            mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
+            mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
+            mMotorVelocity[leg][mt] = sharedMemory->motorVelocity[leg*3+mt];
+        }
+    }
 
     mInitState << mBaseEulerPosition[0], mBaseEulerPosition[1], mBaseEulerPosition[2],
                   mBasePosition[0], mBasePosition[1], mBasePosition[2],
@@ -51,9 +66,9 @@ void WBC::updateState()
 void WBC::setTrajectory()
 {
     mDesiredState << 0, 0, 0,
-                     0, 0, mCubicTrajectoryGen.getPositionTrajectory(sharedMemory->localTime),
+                     0, 0, 0.37,
                      0, 0, 0,
-                     0, 0, mCubicTrajectoryGen.getVelocityTrajectory(sharedMemory->localTime),
+                     0, 0, 0,
                      0;
 }
 

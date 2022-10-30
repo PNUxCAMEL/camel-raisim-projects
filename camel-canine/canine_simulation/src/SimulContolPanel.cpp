@@ -55,6 +55,22 @@ void SimulControlPanel::ControllerFunction()
         {
             break;
         }
+        case STATE_WBC_READY:
+        {
+            WBControl.InitTrajectory();
+            sharedMemory->controlState = STATE_WBC_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            sharedMemory->gaitState = STAND;
+            break;
+        }
+        case STATE_WBC_CONTROL:
+        {
+            stand.setIterations(mGaitCounter);
+            sharedMemory->gaitTable = stand.getGaitTable();
+            WBControl.DoWBControl();
+            mGaitCounter++;
+            break;
+        }
         case STATE_MPC_REDAY:
         {
             MPCcontrol.InitSwingLegTrajectory();

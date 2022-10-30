@@ -36,6 +36,7 @@ private:
     Vec3<double> mTorqueJacobian[4];
     Vec3<double> mGRF[4];
     Vec3<double> mMotorPosition[4];
+    Vec3<double> mMotorVelocity[4];
     Vec3<double> mTorqueLimit[4];
     Mat3<double> mJacobian[4];
 

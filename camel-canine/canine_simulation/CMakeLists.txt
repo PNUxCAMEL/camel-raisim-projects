@@ -15,6 +15,7 @@ include_directories(
         ${ControlUtils_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${convexMPC_SOURCE_DIR}/include
+        ${WBController_SOURCE_DIR}/include
 )
 link_directories(
         ${qpOASES_SOURCE_DIR}/bin
@@ -26,15 +27,15 @@ add_library(${PROJECT_NAME}
         src/SimulStateEstimator.cpp
         src/SimulContolPanel.cpp
         src/SimulVisualizer.cpp
-        src/SimulCommand.cpp)
+        src/SimulCommand.cpp
+)
 
 target_link_libraries(${PROJECT_NAME}
-        PUBLIC
         raisim::raisim
         camel-tools-thread
-        PRIVATE
         canine_visualizer::canine_gui
         canine_controller::ControlUtils
-        canine_controller::convexMPC
         canine_controller::PDcontroller
+        canine_controller::WBController
+        canine_controller::convexMPC
 )

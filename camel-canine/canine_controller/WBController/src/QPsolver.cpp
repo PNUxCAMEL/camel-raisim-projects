@@ -15,7 +15,7 @@ QPsolver::QPsolver()
 {
     mWeightMat << 0.5, 0.5, 50, 20, 20, 80, 0.1, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
     mYaw.setZero();
-    mBodyInertia.setZero();
+    mBodyInertia << 0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107;
     mBodyInertiaInverse.setZero();
 
     Ac.setZero();
@@ -80,11 +80,8 @@ void QPsolver::GetGRF(Vec3<double>* f)
         for(int axis = 0; axis < 3; axis++)
         {
             f[leg][axis] = q_soln[leg*3 + axis];
-            std::cout << f[leg][axis] << "\t";
         }
-        std::cout << std::endl;
     }
-    std::cout << std::endl;
 }
 
 void QPsolver::setStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4][3])

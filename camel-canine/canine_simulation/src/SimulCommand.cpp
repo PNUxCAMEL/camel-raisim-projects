@@ -44,6 +44,7 @@ void SimulCommand::commandFunction()
             }
             case CUSTOM_1:
             {
+                sharedMemory->controlState = STATE_WBC_READY;
                 break;
             }
             case CUSTOM_2:

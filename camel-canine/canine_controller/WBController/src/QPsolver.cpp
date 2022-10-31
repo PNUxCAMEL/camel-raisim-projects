@@ -13,7 +13,7 @@ QPsolver::QPsolver()
     , mForceMax(240)
     , mMu(0.6)
 {
-    mWeightMat << 0.5, 0.5, 50, 20, 20, 80, 0.1, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
+    mWeightMat << 0.5, 0.5, 50, 20, 20, 80, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
     mYaw.setZero();
     mBodyInertia << 0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107;
     mBodyInertiaInverse.setZero();

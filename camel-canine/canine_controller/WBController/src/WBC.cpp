@@ -10,7 +10,7 @@ WBC::WBC()
 {
     for(auto & idx : mTorqueLimit)
     {
-        idx << 50.0, 50.0, 50.0;
+        idx << 11.0, 11.0, 11.0;
     }
     mTorque->setZero();
     mTorqueJacobian->setZero();
@@ -23,7 +23,7 @@ void WBC::InitTrajectory()
 {
     double timeDuration = 2.0;
     mCubicTrajectoryGen.updateTrajectory(sharedMemory->basePosition[2],
-                                         sharedMemory->basePosition[2]-0.1,
+                                         0.37,
                                          sharedMemory->localTime, timeDuration);
 }
 
@@ -66,9 +66,9 @@ void WBC::updateState()
 void WBC::setTrajectory()
 {
     mDesiredState << 0, 0, 0,
-                     0, 0, 0.37,
+                     0, 0, mCubicTrajectoryGen.getPositionTrajectory(sharedMemory->localTime),
                      0, 0, 0,
-                     0, 0, 0,
+                     0, 0, mCubicTrajectoryGen.getVelocityTrajectory(sharedMemory->localTime),
                      0;
 }
 

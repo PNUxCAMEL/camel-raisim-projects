@@ -24,6 +24,25 @@ void SimulControlPanel::ControllerFunction()
 {
     sharedMemory->localTime = mIteration * CONTROL_dT;
     mIteration++;
+    switch (sharedMemory->gaitState)
+    {
+        case STAND:
+        {
+            stand.setIterations(mIteration);
+            sharedMemory->gaitTable = stand.getGaitTable();
+            break;
+        }
+        case TROT:
+        {
+            trot.setIterations(mIteration);
+            sharedMemory->gaitTable = trot.getGaitTable();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
     switch (sharedMemory->controlState)
     {
         case STATE_CONTROL_STOP:
@@ -60,15 +79,11 @@ void SimulControlPanel::ControllerFunction()
             WBControl.InitTrajectory();
             sharedMemory->controlState = STATE_WBC_CONTROL;
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = STAND;
             break;
         }
         case STATE_WBC_CONTROL:
         {
-            stand.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = stand.getGaitTable();
             WBControl.DoWBControl();
-            mGaitCounter++;
             break;
         }
         case STATE_MPC_REDAY:
@@ -81,10 +96,7 @@ void SimulControlPanel::ControllerFunction()
         }
         case STATE_MPC_CONTROL:
         {
-            trot.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = trot.getGaitTable();
             MPCcontrol.DoControl();
-            mGaitCounter++;
             break;
         }
         default:

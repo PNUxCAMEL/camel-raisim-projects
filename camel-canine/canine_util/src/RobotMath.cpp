@@ -4,9 +4,106 @@
 
 #include <canine_util/RobotMath.hpp>
 
+void TransformationBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const double& hip,const double& thi,const double& cal)
+{
+    Mat4<double> Bas2Hip;
+    Mat4<double> Hip2Thi;
+    Mat4<double> Thi2Cal;
+    Mat4<double> Cal2Foo;
+    double kee = -(thi+cal);
+
+    switch (legIndex)
+    {
+        case(R_FRON):
+        {
+            Bas2Hip <<             1,             0,              0,     0.175,
+                                   0, std::cos(hip), -std::sin(hip),    -0.055,
+                                   0, std::sin(hip),  std::cos(hip),         0,
+                                   0,             0,              0,         1;
+            Hip2Thi << std::cos(thi),             0,  std::sin(thi),    0.0705,
+                                   0,             1,              0, -0.030496,
+                      -std::sin(thi),             0,  std::cos(thi),         0,
+                                   0,             0,              0,         1;
+            Thi2Cal << std::cos(cal),             0,  std::sin(cal),         0,
+                                   0,             1,              0,    -0.077,
+                      -std::sin(cal),             0,  std::cos(cal),     -0.23,
+                                   0,             0,              0,         1;
+            Cal2Foo << std::cos(kee),             0,  std::sin(kee),         0,
+                                   0,             1,              0,         0,
+                      -std::sin(kee),             0,  std::cos(kee),     -0.23,
+                                   0,             0,              0,         1;
+            break;
+        }
+        case(L_FRON):
+        {
+            Bas2Hip <<             1,             0,              0,     0.175,
+                                   0, std::cos(hip), -std::sin(hip),     0.055,
+                                   0, std::sin(hip),  std::cos(hip),         0,
+                                   0,             0,              0,         1;
+            Hip2Thi << std::cos(thi),             0,  std::sin(thi),    0.0705,
+                                   0,             1,              0,  0.030496,
+                      -std::sin(thi),             0,  std::cos(thi),         0,
+                                   0,             0,              0,         1;
+            Thi2Cal << std::cos(cal),             0,  std::sin(cal),         0,
+                                   0,             1,              0,     0.077,
+                      -std::sin(cal),             0,  std::cos(cal),     -0.23,
+                                   0,             0,              0,         1;
+            Cal2Foo << std::cos(kee),             0,  std::sin(kee),         0,
+                                   0,             1,              0,         0,
+                      -std::sin(kee),             0,  std::cos(kee),     -0.23,
+                                   0,             0,              0,         1;
+            break;
+        }
+        case(R_BACK):
+        {
+            Bas2Hip <<             1,             0,              0,    -0.175,
+                                   0, std::cos(hip), -std::sin(hip),    -0.055,
+                                   0, std::sin(hip),  std::cos(hip),         0,
+                                   0,             0,              0,         1;
+            Hip2Thi << std::cos(thi),             0,  std::sin(thi),   -0.0705,
+                                   0,             1,              0, -0.030496,
+                      -std::sin(thi),             0,  std::cos(thi),         0,
+                                   0,             0,              0,         1;
+            Thi2Cal << std::cos(cal),             0,  std::sin(cal),         0,
+                                   0,             1,              0,    -0.077,
+                      -std::sin(cal),             0,  std::cos(cal),     -0.23,
+                                   0,             0,              0,         1;
+            Cal2Foo << std::cos(kee),             0,  std::sin(kee),         0,
+                                   0,             1,              0,         0,
+                      -std::sin(kee),             0,  std::cos(kee),     -0.23,
+                                   0,             0,              0,         1;
+            break;
+        }
+        case(L_BACK):
+        {
+            Bas2Hip <<             1,             0,              0,    -0.175,
+                                   0, std::cos(hip), -std::sin(hip),     0.055,
+                                   0, std::sin(hip),  std::cos(hip),         0,
+                                   0,             0,              0,         1;
+            Hip2Thi << std::cos(thi),             0,  std::sin(thi),   -0.0705,
+                                   0,             1,              0,  0.030496,
+                      -std::sin(thi),             0,  std::cos(thi),         0,
+                                   0,             0,              0,         1;
+            Thi2Cal << std::cos(cal),             0,  std::sin(cal),         0,
+                                   0,             1,              0,     0.077,
+                      -std::sin(cal),             0,  std::cos(cal),     -0.23,
+                                   0,             0,              0,         1;
+            Cal2Foo << std::cos(kee),             0,  std::sin(kee),         0,
+                                   0,             1,              0,         0,
+                      -std::sin(kee),             0,  std::cos(kee),     -0.23,
+                                   0,             0,              0,         1;
+
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    *Base2Foot = Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
+}
 
 template <class T>
-
 T t_min(T a, T b)
 {
     if(a<b) return a;

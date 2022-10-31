@@ -43,6 +43,14 @@ constexpr double LBKP_POS_OFFSET = -3.3375;
 
 //constexpr double LUMPED_MASS = 0.0;
 
+enum LEG_INDEX
+{
+    R_FRON = 0,
+    L_FRON,
+    R_BACK,
+    L_BACK
+};
+
 enum MOTOR_INDEX
 {
     RFHR_IDX = 0,

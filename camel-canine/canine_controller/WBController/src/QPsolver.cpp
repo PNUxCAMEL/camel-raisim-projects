@@ -105,7 +105,7 @@ void QPsolver::setStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4
     {
         for (int col=0; col<3; col++)
         {
-            R_feet(row, col) = mFoot[row][col] - x0[col+3];
+            R_feet(row, col) = mFoot[row][col];
         }
     }
     Bc.setZero();

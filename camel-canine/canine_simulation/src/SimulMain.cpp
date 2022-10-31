@@ -84,6 +84,7 @@ void clearSharedMemory()
     sharedMemory->motorStatus = false;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
+    sharedMemory->gaitState = STAND;
     sharedMemory->can1State = CAN_NO_ACT;
     sharedMemory->can2State = CAN_NO_ACT;
     sharedMemory->localTime = 0;

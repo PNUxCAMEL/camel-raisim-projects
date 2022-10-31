@@ -10,7 +10,7 @@
 #include "EigenTypes.hpp"
 #include "RobotDescription.hpp"
 
-
+void TransformationBody2Foot(Mat4<double>* Bas2Foo, LEG_INDEX legIndex, const double& hip,const double& thi,const double& cal);
 void TransformQuat2Euler(const double* quat, double* euler);
 void GetJacobian(Eigen::Matrix<double,3,3>& J, const Eigen::Matrix<double,3,1>& pos, int side);
 Eigen::Matrix<double,3,3> GetSkew(Vec3<double> r);

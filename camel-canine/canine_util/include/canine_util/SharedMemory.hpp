@@ -6,6 +6,7 @@
 #define RAISIM_SHAREDMEMORY_H
 
 #include "RobotDescription.hpp"
+#include "EigenTypes.hpp"
 
 #define CMD_dT              0.001
 #define CONTROL_dT          0.005
@@ -43,6 +44,7 @@ typedef struct _SHM_
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
+    double initPosition[3]; ///todo
     double basePosition[3]; ///todo
     double baseVelocity[3]; ///todo
     double baseEulerPosition[3];
@@ -54,6 +56,7 @@ typedef struct _SHM_
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
+
 } SHM, * pSHM;
 
 typedef struct _CUSTOM_DATA_

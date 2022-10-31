@@ -23,7 +23,7 @@ void WBC::InitTrajectory()
 {
     double timeDuration = 2.0;
     mCubicTrajectoryGen.updateTrajectory(sharedMemory->basePosition[2],
-                                         0.37,
+                                         0.34,
                                          sharedMemory->localTime, timeDuration);
 }
 
@@ -31,6 +31,8 @@ void WBC::DoWBControl()
 {
     updateState();
     setTrajectory();
+    std::cout << mInitState << std::endl;
+    std::cout << mDesiredState << std::endl;
     ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
     ForceQPsolver.GetGRF(mGRF);
     computeControlInput();
@@ -66,7 +68,7 @@ void WBC::updateState()
 void WBC::setTrajectory()
 {
     mDesiredState << 0, 0, 0,
-                     0, 0, mCubicTrajectoryGen.getPositionTrajectory(sharedMemory->localTime),
+            0.293582, 0.162496, mCubicTrajectoryGen.getPositionTrajectory(sharedMemory->localTime),
                      0, 0, 0,
                      0, 0, mCubicTrajectoryGen.getVelocityTrajectory(sharedMemory->localTime),
                      0;

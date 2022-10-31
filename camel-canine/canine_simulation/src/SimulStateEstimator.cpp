@@ -131,7 +131,7 @@ void SimulStateEstimator::getRobotFootPosition()
 
 ///right
     mTransMatBase2RightRearHip<< 1, 0, 0, -0.175,
-        0, std::cos(mPosition[13]), -std::sin(mPosition[13]), 0.055,
+        0, std::cos(mPosition[13]), -std::sin(mPosition[13]), -0.055,
         0, std::sin(mPosition[13]), std::cos(mPosition[13]), 0,
         0, 0, 0, 1;
     mTransMatRightRearHip2Thigh << std::cos(mPosition[14]), 0, std::sin(mPosition[14]), -0.0705,
@@ -165,7 +165,7 @@ void SimulStateEstimator::getRobotFootPosition()
 
     ///left
     mTransMatBase2LeftRearHip<< 1, 0, 0, -0.175,
-        0, std::cos(mPosition[16]), -std::sin(mPosition[16]), 0.055,
+        0, std::cos(mPosition[16]), -std::sin(mPosition[16]), -0.055,
         0, std::sin(mPosition[16]), std::cos(mPosition[16]), 0,
         0, 0, 0, 1;
     mTransMatLeftRearHip2Thigh<< std::cos(mPosition[17]), 0, std::sin(mPosition[17]), -0.0705,

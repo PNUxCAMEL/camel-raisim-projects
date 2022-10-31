@@ -27,8 +27,8 @@ public:
 private:
     void setTrajectory();
     void computeControlInput();
-    void setHomeTrajectory();
     void updateHomeTrajectory();
+    void setHomeTrajectory();
 
 
 private:

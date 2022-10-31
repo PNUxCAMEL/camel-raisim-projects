@@ -9,7 +9,6 @@
 
 #define CMD_dT              0.001
 #define CONTROL_dT          0.0025
-#define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
 #define ESTIMATOR_dT        0.001

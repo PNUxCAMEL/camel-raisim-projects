@@ -14,8 +14,8 @@ JointPDController::JointPDController()
 {
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        Kp[motorIdx] = 100.0;
-        Kd[motorIdx] = 2.5;
+        Kp[motorIdx] = 150.0;
+        Kd[motorIdx] = 4.5;
         mTorqueLimit[motorIdx] = 11.0;
     }
 }
@@ -117,7 +117,7 @@ void JointPDController::updateHomeTrajectory()
     case HOME_STAND_UP_PHASE1:
         for (int idx = 0; idx < 4; idx++)
         {
-            double homeHip = 100;
+            double homeHip = 105;
             double homeKnee = -157;
             double timeDuration = 1.0;
             mRefTime = sharedMemory->localTime + timeDuration;
@@ -138,7 +138,7 @@ void JointPDController::updateHomeTrajectory()
         {
             double homeHip = 55.5;
             double homeKnee = -98.0;
-            double timeDuration = 1.5;
+            double timeDuration = 2.0;
             mRefTime = sharedMemory->localTime + timeDuration;
             mCubicTrajectoryGen[idx * 3].updateTrajectory(mDesiredPosition[idx * 3], 0.0, sharedMemory->localTime, timeDuration);
             mCubicTrajectoryGen[idx * 3 + 1].updateTrajectory(mDesiredPosition[idx * 3 + 1], homeHip * D2R, sharedMemory->localTime, timeDuration);
@@ -149,9 +149,9 @@ void JointPDController::updateHomeTrajectory()
     case HOME_STAND_DOWN_PHASE1:
         for (int idx = 0; idx < 4; idx++)
         {
-            double homeHip = 78;
+            double homeHip = 88;
             double homeKnee = -157;
-            double timeDuration = 1.5;
+            double timeDuration = 2.0;
             mRefTime = sharedMemory->localTime + timeDuration;
             mCubicTrajectoryGen[idx * 3].updateTrajectory(mDesiredPosition[idx * 3], 0.0, sharedMemory->localTime, timeDuration);
             mCubicTrajectoryGen[idx * 3 + 1].updateTrajectory(mDesiredPosition[idx * 3 + 1], homeHip * D2R, sharedMemory->localTime, timeDuration);
@@ -160,7 +160,7 @@ void JointPDController::updateHomeTrajectory()
         mHomeState = HOME_STAND_DOWN_PHASE2;
         break;
     case HOME_STAND_DOWN_PHASE2:
-        if(sharedMemory->localTime > mRefTime + 1.0)
+        if(sharedMemory->localTime > mRefTime + 0.5)
         {
             mHomeState = HOME_STAND_DOWN_PHASE3;
         }

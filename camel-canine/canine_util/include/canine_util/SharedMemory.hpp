@@ -43,12 +43,12 @@ typedef struct _SHM_
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
-    double basePosition[3];
-    double baseVelocity[3];
+    double basePosition[3]; ///todo
+    double baseVelocity[3]; ///todo
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];
-    double footPosition[4][3];
+    double footPosition[4][3];  ///todo
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];

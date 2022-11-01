@@ -13,12 +13,6 @@ SimulStateEstimator::SimulStateEstimator(raisim::ArticulatedSystem* robot)
         , bIsFirstRun(true)
         , mPosFilter(ESTIMATOR_dT, 100)
         , mVelFilter(ESTIMATOR_dT, 10)
-        , mPosFilterX(ESTIMATOR_dT, 100)
-        , mPosFilterY(ESTIMATOR_dT, 100)
-        , mPosFilterZ(ESTIMATOR_dT, 100)
-        , mVelFilterX(ESTIMATOR_dT, 10)
-        , mVelFilterY(ESTIMATOR_dT, 10)
-        , mVelFilterZ(ESTIMATOR_dT, 10)
 {
 }
 
@@ -92,40 +86,15 @@ void SimulStateEstimator::getRobotLinearState()
     }
     else
     {
-        double tempVal;
-        for (int idx=0; idx<3; idx++)
-        {
-            tempVal = sharedMemory->basePosition[idx];
-            sharedMemory->basePosition[idx] = -mTransMat[2](idx,3)-sharedMemory->initPosition[idx];
-            sharedMemory->baseVelocity[idx] = (sharedMemory->basePosition[idx]-tempVal)/ESTIMATOR_dT;
+        mTempPosPrev = sharedMemory->basePosition;
 
-            switch (idx) {
-                case(0):
-                {
-                    sharedMemory->basePosition[idx] = mPosFilterX.GetFilteredVar(-mTransMat[2](idx,3)-sharedMemory->initPosition[idx]);
-                    sharedMemory->baseVelocity[idx] = mVelFilterX.GetFilteredVar((sharedMemory->basePosition[idx]-tempVal)/ESTIMATOR_dT);
-                    break;
-                }
-                case(1):
-                {
-                    sharedMemory->basePosition[idx] = mPosFilterY.GetFilteredVar(-mTransMat[2](idx,3)-sharedMemory->initPosition[idx]);
-                    sharedMemory->baseVelocity[idx] = mVelFilterY.GetFilteredVar((sharedMemory->basePosition[idx]-tempVal)/ESTIMATOR_dT);
-                    break;
-                }
-                case(2):
-                {
-                    sharedMemory->basePosition[idx] = mPosFilterZ.GetFilteredVar(-mTransMat[2](idx,3)-sharedMemory->initPosition[idx]);
-                    sharedMemory->baseVelocity[idx] = mVelFilterZ.GetFilteredVar((sharedMemory->basePosition[idx]-tempVal)/ESTIMATOR_dT);
-                    break;
-                }
-                default:
-                {
-                    break;
-                }
-            }
-        }
-/*        sharedMemory->basePosition = mPosFilter.GetFilteredVar(sharedMemory->basePosition);
-        sharedMemory->baseVelocity = mVelFilter.GetFilteredVar(sharedMemory->baseVelocity);*/
+        mTempPos[0] = -mTransMat[2](0,3)-sharedMemory->initPosition[0];
+        mTempPos[1] = -mTransMat[2](1,3)-sharedMemory->initPosition[1];
+        mTempPos[2] = -mTransMat[2](2,3)-sharedMemory->initPosition[2];
+        sharedMemory->basePosition = mPosFilter.GetFilteredVar(mTempPos);
+
+        mTempVel = (sharedMemory->basePosition-mTempPosPrev)/ESTIMATOR_dT;
+        sharedMemory->baseVelocity = mVelFilter.GetFilteredVar(mTempVel);
     }
 }
 

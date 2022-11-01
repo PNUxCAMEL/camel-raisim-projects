@@ -6,7 +6,6 @@
 #define RAISIM_SIMULSTATEESTIMATOR_HPP
 
 #include <raisim/World.hpp>
-#include <camel-tools/LPF.hpp>
 
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotMath.hpp>
@@ -26,18 +25,15 @@ private:
 private:
     CanineFilter::Vec3LPF mPosFilter;
     CanineFilter::Vec3LPF mVelFilter;
-    LPF mPosFilterX;
-    LPF mPosFilterY;
-    LPF mPosFilterZ;
-    LPF mVelFilterX;
-    LPF mVelFilterY;
-    LPF mVelFilterZ;
 
     raisim::ArticulatedSystem* mRobot;
     raisim::VecDyn mPosition;
     raisim::VecDyn mVelocity;
     Vec4<double> mQuaternion;
     Mat4<double> mTransMat[4];
+    Vec3<double> mTempPosPrev;
+    Vec3<double> mTempPos;
+    Vec3<double> mTempVel;
     bool bIsFirstRun;
 
 };

@@ -3,15 +3,25 @@
 //
 
 #include <canine_util/RobotMath.hpp>
+#include <iostream>
 
-void TransformationBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const double& hip,const double& thi,const double& cal)
+void TransformationBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, Vec4<double> quat, const double& hip,const double& thi,const double& cal)
 {
+    Mat4<double> BaseRot;
     Mat4<double> Bas2Hip;
     Mat4<double> Hip2Thi;
     Mat4<double> Thi2Cal;
     Mat4<double> Cal2Foo;
     double kee = -(thi+cal);
+    double w = quat[0];
+    double x = quat[1];
+    double y = quat[2];
+    double z = quat[3];
 
+    BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y, 0,
+                                     2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x, 0,
+                                     2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2), 0,
+                                               0,                                 0,                                 0, 1;
     switch (legIndex)
     {
         case(R_FRON):
@@ -100,7 +110,7 @@ void TransformationBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const 
             break;
         }
     }
-    *Base2Foot = Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
+    *Base2Foot = BaseRot*Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
 }
 
 template <class T>
@@ -116,7 +126,7 @@ T sq(T a)
     return a*a;
 }
 
-void TransformQuat2Euler(const double* quat, double* euler)
+void TransformQuat2Euler(const Vec4<double>& quat, double* euler)
 {
     //edge case!
     float as = t_min(-2.*(quat[1]*quat[3]-quat[0]*quat[2]),.99999);

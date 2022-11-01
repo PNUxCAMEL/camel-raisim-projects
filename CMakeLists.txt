@@ -18,3 +18,5 @@ endif()
 if(${CAMEL_THIRDPARTY_QPOASES})
     add_subdirectory(camel-thirdparty/qpOASES)
 endif()
+
+add_subdirectory(camel-canine-leg-left_temp)

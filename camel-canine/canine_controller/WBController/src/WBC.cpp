@@ -22,17 +22,21 @@ WBC::WBC()
 void WBC::InitTrajectory()
 {
     double timeDuration = 2.0;
-    mCubicTrajectoryGen.updateTrajectory(sharedMemory->basePosition[2],
-                                         0.34,
-                                         sharedMemory->localTime, timeDuration);
+    mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->basePosition[0],
+                                            -0.1,
+                                            sharedMemory->localTime, timeDuration);
+    mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->basePosition[1],
+                                            -0.1,
+                                            sharedMemory->localTime, timeDuration);
+    mCubicTrajectoryGen[2].updateTrajectory(sharedMemory->basePosition[2],
+                                            0.34,
+                                            sharedMemory->localTime, timeDuration);
 }
 
 void WBC::DoWBControl()
 {
     updateState();
     setTrajectory();
-    std::cout << mInitState << std::endl;
-    std::cout << mDesiredState << std::endl;
     ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
     ForceQPsolver.GetGRF(mGRF);
     computeControlInput();
@@ -67,11 +71,21 @@ void WBC::updateState()
 
 void WBC::setTrajectory()
 {
-    mDesiredState << 0, 0, 0,
-            0.293582, 0.162496, mCubicTrajectoryGen.getPositionTrajectory(sharedMemory->localTime),
-                     0, 0, 0,
-                     0, 0, mCubicTrajectoryGen.getVelocityTrajectory(sharedMemory->localTime),
-                     0;
+    mDesiredState.setZero();
+    mDesiredState(3,0) = 0.0;
+    mDesiredState(4,0) = 0.0;
+    mDesiredState(5,0) = mCubicTrajectoryGen[2].getPositionTrajectory(sharedMemory->localTime);
+    mDesiredState(9,0) = 0.0;
+    mDesiredState(10,0) = 0.0;
+    mDesiredState(11,0) = mCubicTrajectoryGen[2].getVelocityTrajectory(sharedMemory->localTime);
+
+    sharedMemory->baseDesiredPosition[0] = mDesiredState(3,0);
+    sharedMemory->baseDesiredPosition[1] = mDesiredState(4,0);
+    sharedMemory->baseDesiredPosition[2] = mDesiredState(5,0);
+
+    sharedMemory->baseDesiredVelocity[0] = mDesiredState(9,0);
+    sharedMemory->baseDesiredVelocity[1] = mDesiredState(10,0);
+    sharedMemory->baseDesiredVelocity[2] = mDesiredState(11,0);
 }
 
 void WBC::computeControlInput()

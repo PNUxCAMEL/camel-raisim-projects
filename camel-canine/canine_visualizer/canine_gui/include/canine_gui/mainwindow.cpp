@@ -117,7 +117,7 @@ void MainWindow::InitTable(QTableWidget *table){
 }
 
 void MainWindow::GraphInitialize(){
-    QPen myPen, dotPen, filterPen;
+    QPen myPen, desiredPen, dotPen, filterPen;
     myPen.setWidthF(1);
     filterPen.setStyle(Qt::DotLine);
     filterPen.setWidth(1);
@@ -167,41 +167,61 @@ void MainWindow::GraphInitialize(){
 
     myPen.setWidthF(1.5);
     myPen.setColor(Qt::blue);
+    desiredPen.setWidthF(1.5);
+    desiredPen.setColor(Qt::red);
     ui->PLOT_POS_BASE_X->legend->setVisible(true);
     ui->PLOT_POS_BASE_X->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_POS_BASE_X->addGraph();
     ui->PLOT_POS_BASE_X->graph(0)->setPen(myPen);
     ui->PLOT_POS_BASE_X->graph(0)->setName("position x");
+    ui->PLOT_POS_BASE_X->addGraph();
+    ui->PLOT_POS_BASE_X->graph(1)->setPen(desiredPen);
+    ui->PLOT_POS_BASE_X->graph(1)->setName("Desired Px");
 
     ui->PLOT_POS_BASE_Y->legend->setVisible(true);
     ui->PLOT_POS_BASE_Y->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_POS_BASE_Y->addGraph();
     ui->PLOT_POS_BASE_Y->graph(0)->setPen(myPen);
     ui->PLOT_POS_BASE_Y->graph(0)->setName("position y");
+    ui->PLOT_POS_BASE_Y->addGraph();
+    ui->PLOT_POS_BASE_Y->graph(1)->setPen(desiredPen);
+    ui->PLOT_POS_BASE_Y->graph(1)->setName("Desired Py");
 
     ui->PLOT_POS_BASE_Z->legend->setVisible(true);
     ui->PLOT_POS_BASE_Z->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_POS_BASE_Z->addGraph();
     ui->PLOT_POS_BASE_Z->graph(0)->setPen(myPen);
     ui->PLOT_POS_BASE_Z->graph(0)->setName("position z");
+    ui->PLOT_POS_BASE_Z->addGraph();
+    ui->PLOT_POS_BASE_Z->graph(1)->setPen(desiredPen);
+    ui->PLOT_POS_BASE_Z->graph(1)->setName("Desired Pz");
 
     ui->PLOT_VEL_BASE_X->legend->setVisible(true);
     ui->PLOT_VEL_BASE_X->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_VEL_BASE_X->addGraph();
     ui->PLOT_VEL_BASE_X->graph(0)->setPen(myPen);
     ui->PLOT_VEL_BASE_X->graph(0)->setName("velocity x");
+    ui->PLOT_VEL_BASE_X->addGraph();
+    ui->PLOT_VEL_BASE_X->graph(1)->setPen(desiredPen);
+    ui->PLOT_VEL_BASE_X->graph(1)->setName("Desired Vx");
 
     ui->PLOT_VEL_BASE_Y->legend->setVisible(true);
     ui->PLOT_VEL_BASE_Y->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_VEL_BASE_Y->addGraph();
     ui->PLOT_VEL_BASE_Y->graph(0)->setPen(myPen);
     ui->PLOT_VEL_BASE_Y->graph(0)->setName("velocity y");
+    ui->PLOT_VEL_BASE_Y->addGraph();
+    ui->PLOT_VEL_BASE_Y->graph(1)->setPen(desiredPen);
+    ui->PLOT_VEL_BASE_Y->graph(1)->setName("Desired Vy");
 
     ui->PLOT_VEL_BASE_Z->legend->setVisible(true);
     ui->PLOT_VEL_BASE_Z->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_VEL_BASE_Z->addGraph();
     ui->PLOT_VEL_BASE_Z->graph(0)->setPen(myPen);
     ui->PLOT_VEL_BASE_Z->graph(0)->setName("velocity z");
+    ui->PLOT_VEL_BASE_Z->addGraph();
+    ui->PLOT_VEL_BASE_Z->graph(1)->setPen(desiredPen);
+    ui->PLOT_VEL_BASE_Z->graph(1)->setName("Desired Vz");
 
     ui->PLOT_POS_BASE_ROLL->legend->setVisible(true);
     ui->PLOT_POS_BASE_ROLL->legend->setFont(QFont("Helvetica", 9));
@@ -437,6 +457,13 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_BASE_X->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseVelocity[0]);
     ui->PLOT_VEL_BASE_Y->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseVelocity[1]);
     ui->PLOT_VEL_BASE_Z->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseVelocity[2]);
+
+    ui->PLOT_POS_BASE_X->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredPosition[0]);
+    ui->PLOT_POS_BASE_Y->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredPosition[1]);
+    ui->PLOT_POS_BASE_Z->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredPosition[2]);
+    ui->PLOT_VEL_BASE_X->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredVelocity[0]);
+    ui->PLOT_VEL_BASE_Y->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredVelocity[1]);
+    ui->PLOT_VEL_BASE_Z->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredVelocity[2]);
 
     ui->PLOT_POS_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[0]);
     ui->PLOT_POS_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[1]);

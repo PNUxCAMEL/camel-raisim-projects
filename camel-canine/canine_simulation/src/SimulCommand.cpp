@@ -22,10 +22,12 @@ void SimulCommand::commandFunction()
             }
             case VISUAL_ON:
             {
+                sharedMemory->visualState = STATE_OPEN_RAISIM;
                 break;
             }
             case MOTOR_ON:
             {
+                sharedMemory->visualState = STATE_VISUAL_STOP;
                 break;
             }
             case MOTOR_OFF:

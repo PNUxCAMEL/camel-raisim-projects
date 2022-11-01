@@ -29,7 +29,7 @@ private:
     void setControlInput();
 
 private:
-    CubicTrajectoryGenerator mCubicTrajectoryGen;
+    CubicTrajectoryGenerator mCubicTrajectoryGen[3];
     QPsolver ForceQPsolver;
 
     Vec3<double> mTorque[4];

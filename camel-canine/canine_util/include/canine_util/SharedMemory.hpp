@@ -13,7 +13,7 @@
 #define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
-#define ESTIMATOR_dT        0.001
+#define ESTIMATOR_dT        0.0005
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
 #define PI                  3.141592
@@ -45,8 +45,10 @@ typedef struct _SHM_
     int motorTemp[MOTOR_NUM];
     double localTime;
     double initPosition[3]; ///todo
-    double basePosition[3]; ///todo
-    double baseVelocity[3]; ///todo
+    Vec3<double> basePosition; ///todo
+    Vec3<double> baseVelocity; ///todo
+    double baseDesiredPosition[3]; ///todo
+    double baseDesiredVelocity[3]; ///todo
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];

@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.5)
 project(canine_simulation LANGUAGES CXX)
 
 find_package(camel-tools-thread REQUIRED)
+find_package(camel-tools-filter REQUIRED)
 
 include_directories(
         include
@@ -33,6 +34,7 @@ add_library(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
         raisim::raisim
         camel-tools-thread
+        camel-tools-filter
         canine_visualizer::canine_gui
         canine_controller::ControlUtils
         canine_controller::PDcontroller

@@ -5,23 +5,29 @@
 #include <canine_util/RobotMath.hpp>
 #include <iostream>
 
-void TransformationBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, Vec4<double> quat, const double& hip,const double& thi,const double& cal)
+const Mat4<double> BaseRotationMat(const Vec4<double>& quat)
 {
     Mat4<double> BaseRot;
-    Mat4<double> Bas2Hip;
-    Mat4<double> Hip2Thi;
-    Mat4<double> Thi2Cal;
-    Mat4<double> Cal2Foo;
-    double kee = -(thi+cal);
-    double w = quat[0];
-    double x = quat[1];
-    double y = quat[2];
-    double z = quat[3];
+    const double w = quat[0];
+    const double x = quat[1];
+    const double y = quat[2];
+    const double z = quat[3];
 
     BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y, 0,
                                      2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x, 0,
                                      2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2), 0,
                                                0,                                 0,                                 0, 1;
+    return BaseRot;
+}
+
+void TransMatBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const Vec4<double>& quat, const double& hip,const double& thi,const double& cal)
+{
+    Mat4<double> Bas2Hip;
+    Mat4<double> Hip2Thi;
+    Mat4<double> Thi2Cal;
+    Mat4<double> Cal2Foo;
+    double kee = -(thi+cal);
+
     switch (legIndex)
     {
         case(R_FRON):
@@ -110,7 +116,7 @@ void TransformationBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, Vec4<d
             break;
         }
     }
-    *Base2Foot = BaseRot*Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
+    *Base2Foot = BaseRotationMat(quat)*Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
 }
 
 template <class T>

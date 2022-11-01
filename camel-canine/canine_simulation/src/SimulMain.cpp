@@ -45,7 +45,10 @@ void *RTControllerThread(void *arg)
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
 
-        ControlPanel.ControllerFunction();
+        if (sharedMemory->visualState != STATE_VISUAL_STOP)
+        {
+            ControlPanel.ControllerFunction();
+        }
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
@@ -66,7 +69,10 @@ void* RTStateEstimator(void* arg)
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
-        StateEstimator.StateEstimatorFunction();
+        if (sharedMemory->visualState != STATE_VISUAL_STOP)
+        {
+            StateEstimator.StateEstimatorFunction();
+        }
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
@@ -104,6 +110,7 @@ void clearSharedMemory()
         sharedMemory->baseVelocity[index] = 0;
         sharedMemory->baseEulerPosition[index] = 0;
         sharedMemory->baseEulerVelocity[index] = 0;
+        sharedMemory->initPosition[index] = 0;
     }
 
     sharedMemory->baseQuartPosition[0] = 1.0;

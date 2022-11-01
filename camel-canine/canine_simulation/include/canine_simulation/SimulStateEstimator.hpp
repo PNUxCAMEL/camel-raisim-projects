@@ -32,9 +32,13 @@ private:
     Vec4<double> mQuaternion;
     Mat4<double> mTransMat[4];
     Vec3<double> mTempPosPrev;
-    Vec3<double> mTempPos;
+    Vec3<double> mTempPos[4];
+    Vec3<double> mTempPosMean;
     Vec3<double> mTempVel;
+
+    Vec3<double> mInitPosition[4];
     bool bIsFirstRun;
+    int mStandCount;
 
 };
 

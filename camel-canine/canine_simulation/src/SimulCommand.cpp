@@ -18,20 +18,22 @@ void SimulCommand::commandFunction()
         {
             case CAN_ON:
             {
+                std::cout << "=====Gait is changed=====" << std::endl;
+                sharedMemory->gaitState = TROT;
                 break;
             }
             case VISUAL_ON:
             {
-                sharedMemory->visualState = STATE_OPEN_RAISIM;
                 break;
             }
             case MOTOR_ON:
             {
-                sharedMemory->visualState = STATE_VISUAL_STOP;
+                sharedMemory->visualState = STATE_OPEN_RAISIM;
                 break;
             }
             case MOTOR_OFF:
             {
+                sharedMemory->visualState = STATE_VISUAL_STOP;
                 break;
             }
             case HOME:

@@ -104,13 +104,12 @@ void clearSharedMemory()
         sharedMemory->motorDesiredTorque[index] = 0;
         sharedMemory->motorVoltage[index] = 0;
     }
+    sharedMemory->basePosition.setZero();
+    sharedMemory->baseVelocity.setZero();
     for (int index = 0; index < 3; index++)
     {
-        sharedMemory->basePosition[index] = 0;
-        sharedMemory->baseVelocity[index] = 0;
         sharedMemory->baseEulerPosition[index] = 0;
         sharedMemory->baseEulerVelocity[index] = 0;
-        sharedMemory->initPosition[index] = 0;
     }
 
     sharedMemory->baseQuartPosition[0] = 1.0;

@@ -44,7 +44,6 @@ typedef struct _SHM_
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
-    double initPosition[3]; ///todo
     Vec3<double> basePosition; ///todo
     Vec3<double> baseVelocity; ///todo
     double baseDesiredPosition[3]; ///todo

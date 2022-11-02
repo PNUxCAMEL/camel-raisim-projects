@@ -7,10 +7,11 @@
 extern pSHM sharedMemory;
 
 WBC::WBC()
+    : SwingLegTrajectory(0.5)
 {
     for(auto & idx : mTorqueLimit)
     {
-        idx << 50.0, 50.0, 50.0;
+        idx << 11.0, 11.0, 11.0;
     }
     mTorque->setZero();
     mTorqueJacobian->setZero();
@@ -39,6 +40,8 @@ void WBC::DoWBControl()
     setTrajectory();
     ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
     ForceQPsolver.GetGRF(mGRF);
+
+//    setLegcontrol();
     computeControlInput();
     setControlInput();
 }
@@ -87,6 +90,52 @@ void WBC::setTrajectory()
     sharedMemory->baseDesiredVelocity[1] = mDesiredState(10,0);
     sharedMemory->baseDesiredVelocity[2] = mDesiredState(11,0);
 }
+
+/*void WBC::setLegcontrol()
+{
+    SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
+
+    double d = sqrt(pow(mDesiredPosition[0],2)+pow(mDesiredPosition[1],2));
+    double phi = acos(abs(mDesiredPosition[0])/ d);
+    double psi = acos(pow(d,2)/(2*0.23*d));
+
+    double jointPos[3];
+    double jointVel[3] = {0,0,0};
+
+    jointPos[0] = 0.f;
+    if (mDesiredPosition[0] < 0)
+        jointPos[1] = 1.57 - phi + psi;
+    else if(mDesiredPosition[0] == 0)
+        jointPos[1] = psi;
+    else
+        jointPos[1] = phi + psi - 1.57;
+    jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
+
+    double Pgain[3] = {20,20,30};
+    double Dgain[3] = {0.5,1,1};
+
+    double posError[3];
+    double velError[3];
+    for (int i = 0; i < 4; i++)
+    {
+        if (sharedMemory->gaitTable[i] == 0)
+        {
+            for(int j=0; j<3; j++)
+            {
+                posError[j] = jointPos[j] - mMotorPosition[i*3+j];
+                velError[j] = jointVel[j] - mMotorVelocity[i*3+j];
+                swingtorque[i][j] = Pgain[j] * posError[j] + Dgain[j] * velError[j];
+            }
+        }
+        else
+        {
+            for(int j=0; j<3; j++)
+            {
+                swingtorque[i][j] = 0.f;
+            }
+        }
+    }
+}*/
 
 void WBC::computeControlInput()
 {

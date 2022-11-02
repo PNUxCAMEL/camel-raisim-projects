@@ -19,7 +19,7 @@ void SimulCommand::commandFunction()
             case CAN_ON:
             {
                 std::cout << "=====Gait is changed=====" << std::endl;
-                sharedMemory->gaitState = TROT;
+                sharedMemory->gaitState = TEST;
                 sharedMemory->gaitIteration = 0;
                 break;
             }

@@ -115,7 +115,8 @@ enum VISUAL_STATE
 enum GAIT_TYPE
 {
     STAND = 0,
-    TROT
+    TROT,
+    TEST
 };
 
 

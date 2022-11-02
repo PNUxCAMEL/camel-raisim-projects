@@ -13,6 +13,7 @@
 #include <canine_util/RobotMath.hpp>
 
 #include <camel-tools/CubicTrajectoryGenerator.hpp>
+#include <ControlUtils/SwingLeg.hpp>
 
 #include <WBController/QPsolver.hpp>
 
@@ -27,10 +28,12 @@ private:
     void setTrajectory();
     void computeControlInput();
     void setControlInput();
+    void setLegcontrol();
 
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[3];
     QPsolver ForceQPsolver;
+    SwingLeg SwingLegTrajectory;
 
     Vec3<double> mTorque[4];
     Vec3<double> mTorqueJacobian[4];
@@ -48,6 +51,8 @@ private:
     double mBaseEulerPosition[3];
     double mBaseEulerVelocity[3];
     double mFootPosition[4][3];
+
+    double mDesiredPosition[2];
 
 };
 #endif //RAISIM_WBC_HPP

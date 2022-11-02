@@ -8,7 +8,8 @@
 #include <canine-leg-left_util/SharedMemory.hpp>
 #include <canine-leg-left_util/RobotDescription.hpp>
 
-class SimulCommand {
+class SimulCommand
+{
 public:
     void commandFunction();
 };

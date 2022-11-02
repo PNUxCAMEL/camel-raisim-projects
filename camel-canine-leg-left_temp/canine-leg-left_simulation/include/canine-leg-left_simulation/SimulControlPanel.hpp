@@ -15,7 +15,8 @@
 #include <PDcontroller/JointPDController.hpp>
 #include <ControlUtils/GRFEstimator.hpp>
 
-class SimulControlPanel{
+class SimulControlPanel
+{
 public:
     SimulControlPanel(raisim::World* world, raisim::ArticulatedSystem* robot);
 

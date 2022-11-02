@@ -7,11 +7,11 @@
 extern pSHM sharedMemory;
 
 SimulVisualizer::SimulVisualizer(raisim::World* world, raisim::ArticulatedSystem* robot, raisim::RaisimServer* server)
-        : mWorld(world)
-        , mRobot(robot)
-        , mServer(server)
+    : mWorld(world)
+    , mRobot(robot)
+    , mServer(server)
 {
-    mWorld->setGravity({0.0, 0.0, -9.81});
+    mWorld->setGravity({ 0.0, 0.0, -9.81 });
     mWorld->setTimeStep(CONTROL_dT);
     mWorld->addGround();
     mRobot->setName("Canine-leg-left");

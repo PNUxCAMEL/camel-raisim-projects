@@ -4,7 +4,8 @@
 #include "RobotDescription.hpp"
 #include "SharedMemory.hpp"
 
-class Command {
+class Command
+{
 public:
     Command();
 

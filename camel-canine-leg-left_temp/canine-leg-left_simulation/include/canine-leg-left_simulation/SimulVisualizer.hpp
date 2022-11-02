@@ -11,11 +11,12 @@
 #include <canine-leg-left_util/SharedMemory.hpp>
 #include <canine-leg-left_util/RobotDescription.hpp>
 
-class SimulVisualizer {
+class SimulVisualizer
+{
 public:
     SimulVisualizer(raisim::World* world,
-                       raisim::ArticulatedSystem* robot,
-                       raisim::RaisimServer* server);
+                    raisim::ArticulatedSystem* robot,
+                    raisim::RaisimServer* server);
     ~SimulVisualizer();
 
 private:

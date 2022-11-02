@@ -8,9 +8,9 @@ extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
 SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSystem* robot)
-        : mWorld(world)
-        , mRobot(robot)
-        , mIteration(0)
+    : mWorld(world)
+    , mRobot(robot)
+    , mIteration(0)
 {
     mTorque.setZero();
 }
@@ -21,53 +21,53 @@ void SimulControlPanel::ControllerFunction()
     mIteration++;
     switch (sharedMemory->controlState)
     {
-        case STATE_CONTROL_STOP:
-        {
-            break;
-        }
-        case STATE_READY:
-        {
-            break;
-        }
-        case STATE_HOME_STAND_UP_READY:
-        {
-            updateStates();
-            PDcontrol.InitHomeStandUpTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_HOME_STAND_DOWN_READY:
-        {
-            updateStates();
-            PDcontrol.InitHomeStandDownTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_HOME_CONTROL:
-        {
-            PDcontrol.DoHomeControl();
-            break;
-        }
-        case STATE_PD_READY:
-        {
-            break;
-        }
-        case STATE_PD_CONTROL:
-        {
-            break;
-        }
-        case STATE_TROT_REDAY:
-        {
-            break;
-        }
-        case STATE_TROT_CONTROL:
-        {
-            break;
-        }
-        default:
-            break;
+    case STATE_CONTROL_STOP:
+    {
+        break;
+    }
+    case STATE_READY:
+    {
+        break;
+    }
+    case STATE_HOME_STAND_UP_READY:
+    {
+        updateStates();
+        PDcontrol.InitHomeStandUpTrajectory();
+        sharedMemory->controlState = STATE_HOME_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
+        break;
+    }
+    case STATE_HOME_STAND_DOWN_READY:
+    {
+        updateStates();
+        PDcontrol.InitHomeStandDownTrajectory();
+        sharedMemory->controlState = STATE_HOME_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
+        break;
+    }
+    case STATE_HOME_CONTROL:
+    {
+        PDcontrol.DoHomeControl();
+        break;
+    }
+    case STATE_PD_READY:
+    {
+        break;
+    }
+    case STATE_PD_CONTROL:
+    {
+        break;
+    }
+    case STATE_TROT_REDAY:
+    {
+        break;
+    }
+    case STATE_TROT_CONTROL:
+    {
+        break;
+    }
+    default:
+        break;
     }
     //TODO: curious
     if (sharedMemory->visualState == STATE_UPDATE_VISUAL)
@@ -79,7 +79,7 @@ void SimulControlPanel::ControllerFunction()
 
 void SimulControlPanel::integrateSimul()
 {
-    for (int idx=0; idx<MOTOR_NUM; idx++)
+    for (int idx = 0; idx < MOTOR_NUM; idx++)
     {
         mTorque[idx + 1] = sharedMemory->motorDesiredTorque[idx];
     }
@@ -87,15 +87,15 @@ void SimulControlPanel::integrateSimul()
     mWorld->integrate();
     updateStates();
 
-    for(int idx = 0; idx <BUF_SIZE-1; idx++)
+    for (int idx = 0; idx < BUF_SIZE - 1; idx++)
     {
-        for(int motorIdx = 0 ; motorIdx < MOTOR_NUM ; motorIdx++)
+        for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
         {
-            sharedMemory->bufMotorPosition[motorIdx][idx+1] = sharedMemory->bufMotorPosition[motorIdx][idx];
-            sharedMemory->bufMotorVelocity[motorIdx][idx+1] = sharedMemory->bufMotorVelocity[motorIdx][idx];
+            sharedMemory->bufMotorPosition[motorIdx][idx + 1] = sharedMemory->bufMotorPosition[motorIdx][idx];
+            sharedMemory->bufMotorVelocity[motorIdx][idx + 1] = sharedMemory->bufMotorVelocity[motorIdx][idx];
         }
     }
-    for(int motorIdx = 0 ; motorIdx < MOTOR_NUM ; motorIdx++)
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
         sharedMemory->bufMotorPosition[motorIdx][0] = sharedMemory->motorPosition[motorIdx];
         sharedMemory->bufMotorVelocity[motorIdx][0] = sharedMemory->motorVelocity[motorIdx];
@@ -110,8 +110,8 @@ void SimulControlPanel::updateStates()
     sharedMemory->hipVerticalVelocity = mRobot->getGeneralizedVelocity()[0];
     sharedMemory->motorVelocity[0] = mRobot->getGeneralizedVelocity()[1];
     sharedMemory->motorVelocity[1] = mRobot->getGeneralizedVelocity()[2];
-    if(&(mRobot->getContacts()[0]) != nullptr)
+    if (&(mRobot->getContacts()[0]) != nullptr)
     {
-        sharedMemory->measuredGRF = mRobot->getContacts()[0].getImpulse()[2]/CONTROL_dT;
+        sharedMemory->measuredGRF = mRobot->getContacts()[0].getImpulse()[2] / CONTROL_dT;
     }
 }

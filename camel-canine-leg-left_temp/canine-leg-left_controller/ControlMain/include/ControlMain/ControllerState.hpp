@@ -14,7 +14,8 @@
 
 #include <PDcontroller/JointPDController.hpp>
 
-class ControllerState{
+class ControllerState
+{
 public:
     ControllerState();
 

@@ -5,7 +5,7 @@
 #include <canine-leg-left_gui/mainwindow.h>
 #include <canine-leg-left_simulation/SimulMain.hpp>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
     MainWindow w;

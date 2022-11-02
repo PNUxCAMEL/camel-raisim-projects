@@ -9,6 +9,7 @@ include_directories(
         ${canine-leg-left_gui_SOURCE_DIR}/include
         ${canine-leg-left_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
+        ${ControlUtils_SOURCE_DIR}/include
 )
 
 add_library(${PROJECT_NAME}
@@ -25,5 +26,6 @@ target_link_libraries(${PROJECT_NAME}
         PRIVATE
         canine-leg-left_visualizer::canine-leg-left_gui
         canine-leg-left_controller::PDcontroller
+        canine-leg-left_controller::ControlUtils
         pthread
 )

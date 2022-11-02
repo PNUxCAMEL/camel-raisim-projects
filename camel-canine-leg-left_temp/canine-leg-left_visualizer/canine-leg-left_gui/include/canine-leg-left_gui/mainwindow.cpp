@@ -352,8 +352,8 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_3->graph(1)->setName("des_tau LBHP");
     ui->PLOT_CUSTOM_5->legend->setVisible(true);
     ui->PLOT_CUSTOM_5->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_CUSTOM_5->graph(0)->setName("tau LBKP");
-    ui->PLOT_CUSTOM_5->graph(1)->setName("des_tau LBKP");
+    ui->PLOT_CUSTOM_5->graph(0)->setName("measured GRF");
+    ui->PLOT_CUSTOM_5->graph(1)->setName("estimated GRF");
 
     ui->PLOT_POS_BASE_X->xAxis->setTicker(timeTicker);
     ui->PLOT_POS_BASE_Y->xAxis->setTicker(timeTicker);
@@ -449,11 +449,11 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_RBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[KNEE_IDX]);
 
     ui->PLOT_CUSTOM_1->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[HIP_IDX]);
-    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[HIP_IDX]);
-    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[HIP_IDX]);
-    ui->PLOT_CUSTOM_1->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
+    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[KNEE_IDX]);
+    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
+    ui->PLOT_CUSTOM_1->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[HIP_IDX]);
     ui->PLOT_CUSTOM_3->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
-    ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
+    ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->estimatedGRF);
 
     ui->PLOT_POS_BASE_X->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
     ui->PLOT_POS_BASE_Y->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);

@@ -32,7 +32,7 @@ void SimulVisualizer::initRobotPose()
 
     initialJointPosition[0] = 0.09167;
     initialJointPosition[1] = 80 * D2R;
-    initialJointPosition[2] = -157 * D2R;
+    initialJointPosition[2] = -160 * D2R;
 
     mRobot->setGeneralizedCoordinate(initialJointPosition);
     mRobot->setGeneralizedForce(Eigen::VectorXd::Zero(mRobot->getDOF()));

@@ -8,14 +8,14 @@
 #include "RobotDescription.hpp"
 
 #define CMD_dT              0.001
-#define CONTROL_dT          0.0025
+#define CONTROL_dT          0.005
 #define VISUAL_dT           0.01
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
 #define PI                  3.141592
 #define R2D                 57.2957802
 #define D2R                 0.0174533
-
+#define BUF_SIZE            9
 
 typedef struct _UI_COMMAND_
 {
@@ -51,6 +51,12 @@ typedef struct _SHM_
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
+
+    double bufMotorPosition[MOTOR_NUM][BUF_SIZE];
+    double bufMotorVelocity[MOTOR_NUM][BUF_SIZE];
+    float GRFNetInputs[14];
+    float estimatedGRF;
+    float measuredGRF;
 } SHM, * pSHM;
 
 typedef struct _CUSTOM_DATA_

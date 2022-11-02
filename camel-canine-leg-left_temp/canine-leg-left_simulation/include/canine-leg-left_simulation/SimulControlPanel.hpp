@@ -13,6 +13,7 @@
 #include <canine-leg-left_util/RobotDescription.hpp>
 
 #include <PDcontroller/JointPDController.hpp>
+#include <ControlUtils/GRFEstimator.hpp>
 
 class SimulControlPanel{
 public:
@@ -22,6 +23,7 @@ public:
 
 private:
     void integrateSimul();
+    void updateStates();
 
 private:
     raisim::World* mWorld;
@@ -32,6 +34,7 @@ private:
     raisim::VecDyn mTorque = raisim::VecDyn(3);
 
     JointPDController PDcontrol;
+    GRFEstimator GRFNet;
 };
 
 #endif //RAISIM_SIMULCONTROLPANEL_HPP

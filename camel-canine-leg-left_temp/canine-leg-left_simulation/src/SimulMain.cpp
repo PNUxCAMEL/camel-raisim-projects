@@ -12,7 +12,7 @@ pSHM sharedMemory;
 
 raisim::World world;
 raisim::RaisimServer server(&world);
-raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/camel_single_leg_left/camel_single_leg.urdf");
+raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR) + "/camel_single_leg_left/camel_single_leg.urdf");
 
 SimulCommand userCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
@@ -28,7 +28,7 @@ void* NRTCommandThread(void* arg)
     }
 }
 
-void *RTControllerThread(void *arg)
+void* RTControllerThread(void* arg)
 {
     std::cout << "entered #rt_controller_thread" << std::endl;
     struct timespec TIME_NEXT;
@@ -39,16 +39,18 @@ void *RTControllerThread(void *arg)
     std::cout << "bf #while" << std::endl;
     std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << std::endl;
 
-    while (true) {
+    while (true)
+    {
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
 
         ControlPanel.ControllerFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
+        {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
             std::cout << "RT Deadline Miss, Controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                      << " ms" << std::endl;
+                << " ms" << std::endl;
         }
 
     }
@@ -68,6 +70,8 @@ void clearSharedMemory()
     sharedMemory->localTime = 0;
     sharedMemory->hipVerticalPosition = 0;
     sharedMemory->hipVerticalVelocity = 0;
+    sharedMemory->estimatedGRF = 0;
+    sharedMemory->measuredGRF = 0;
     for (int index = 0; index < MOTOR_NUM; index++)
     {
         sharedMemory->motorErrorStatus[index] = 0;
@@ -90,6 +94,20 @@ void clearSharedMemory()
     sharedMemory->baseQuartPosition[1] = 0.0;
     sharedMemory->baseQuartPosition[2] = 0.0;
     sharedMemory->baseQuartPosition[3] = 0.0;
+
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
+    {
+        for (int idx = 0; idx < BUF_SIZE; idx++)
+        {
+            sharedMemory->bufMotorPosition[motorIdx][BUF_SIZE] = 0;
+            sharedMemory->bufMotorVelocity[motorIdx][BUF_SIZE] = 0;
+        }
+    }
+
+    for (int idx = 0; idx < 13; idx++)
+    {
+        sharedMemory->GRFNetInputs[idx] = 0;
+    }
 }
 
 void StartSimulation()

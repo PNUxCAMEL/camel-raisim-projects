@@ -23,23 +23,19 @@ private:
     void getRobotLinearState();
     void getRobotFootPosition();
 private:
-    CanineFilter::Vec3LPF mPosFilter;
     CanineFilter::Vec3LPF mVelFilter;
+    CanineFilter::Vec3LPF mPosFilter;
 
     raisim::ArticulatedSystem* mRobot;
     raisim::VecDyn mPosition;
     raisim::VecDyn mVelocity;
     Vec4<double> mQuaternion;
     Mat4<double> mTransMat[4];
-    Vec3<double> mTempPosPrev;
-    Vec3<double> mTempPos[4];
-    Vec3<double> mTempPosMean;
-    Vec3<double> mTempVel;
-
-    Vec3<double> mInitPosition[4];
+    Vec3<double> mBodyPrev[4];
+    Vec3<double> mBodyPosDiff;
     bool bIsFirstRun;
-    int mStandCount;
-
+    bool bIsRightFirst;
+    bool bIsLeftFirst;
 };
 
 #endif //RAISIM_SIMULSTATEESTIMATOR_HPP

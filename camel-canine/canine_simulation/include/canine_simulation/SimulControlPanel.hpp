@@ -32,7 +32,6 @@ private:
     raisim::ArticulatedSystem* mRobot;
 
     uint16_t mIteration;
-    uint16_t mGaitCounter;
     uint8_t mGaitLength;
 
     raisim::VecDyn mTorque = raisim::VecDyn(18);

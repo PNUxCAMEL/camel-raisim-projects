@@ -10,7 +10,7 @@ WBC::WBC()
 {
     for(auto & idx : mTorqueLimit)
     {
-        idx << 11.0, 11.0, 11.0;
+        idx << 50.0, 50.0, 50.0;
     }
     mTorque->setZero();
     mTorqueJacobian->setZero();

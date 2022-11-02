@@ -13,7 +13,7 @@ QPsolver::QPsolver()
     , mForceMax(240)
     , mMu(0.6)
 {
-    mWeightMat << 0.5, 0.5, 50, 20, 20, 80, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
+    mWeightMat << 100, 100, 100, 500, 500, 500, 0.1, 0, 10, 0.05, 0.05, 0.5, 0.f;
     mYaw.setZero();
     mBodyInertia << 0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107;
     mBodyInertiaInverse.setZero();
@@ -75,12 +75,15 @@ void QPsolver::SolveQP(const Vec13<double>& x0, const Vec13<double>& xd, const d
 
 void QPsolver::GetGRF(Vec3<double>* f)
 {
+//    std::cout << "====GRF====" << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
             f[leg][axis] = q_soln[leg*3 + axis];
+//            std::cout << f[leg][axis] << "\t";
         }
+//        std::cout << std::endl;
     }
 }
 

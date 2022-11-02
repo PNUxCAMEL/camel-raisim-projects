@@ -11,7 +11,6 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         : mWorld(world)
         , mRobot(robot)
         , mIteration(0)
-        , mGaitCounter(0)
         , mGaitLength(1)
         , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
         , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
@@ -24,17 +23,18 @@ void SimulControlPanel::ControllerFunction()
 {
     sharedMemory->localTime = mIteration * CONTROL_dT;
     mIteration++;
+    sharedMemory->gaitIteration++;
     switch (sharedMemory->gaitState)
     {
         case STAND:
         {
-            stand.setIterations(mIteration);
+            stand.setIterations(sharedMemory->gaitIteration);
             sharedMemory->gaitTable = stand.getGaitTable();
             break;
         }
         case TROT:
         {
-            trot.setIterations(mIteration);
+            trot.setIterations(sharedMemory->gaitIteration);
             sharedMemory->gaitTable = trot.getGaitTable();
             break;
         }
@@ -91,7 +91,6 @@ void SimulControlPanel::ControllerFunction()
             MPCcontrol.InitSwingLegTrajectory();
             sharedMemory->controlState = STATE_MPC_CONTROL;
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = TROT;
             break;
         }
         case STATE_MPC_CONTROL:

@@ -20,6 +20,7 @@ void SimulCommand::commandFunction()
             {
                 std::cout << "=====Gait is changed=====" << std::endl;
                 sharedMemory->gaitState = TROT;
+                sharedMemory->gaitIteration = 0;
                 break;
             }
             case VISUAL_ON:

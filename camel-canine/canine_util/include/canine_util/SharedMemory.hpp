@@ -46,8 +46,8 @@ typedef struct _SHM_
     double localTime;
     Vec3<double> basePosition; ///todo
     Vec3<double> baseVelocity; ///todo
-    double baseDesiredPosition[3]; ///todo
-    double baseDesiredVelocity[3]; ///todo
+    Vec3<double> baseDesiredPosition; ///todo
+    Vec3<double> baseDesiredVelocity; ///todo
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];
@@ -57,6 +57,7 @@ typedef struct _SHM_
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
+    uint32_t gaitIteration;
 
 } SHM, * pSHM;
 

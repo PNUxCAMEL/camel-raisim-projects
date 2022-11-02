@@ -116,6 +116,8 @@ void clearSharedMemory()
     sharedMemory->baseQuartPosition[1] = 0.0;
     sharedMemory->baseQuartPosition[2] = 0.0;
     sharedMemory->baseQuartPosition[3] = 0.0;
+
+    sharedMemory->gaitIteration = 0;
 }
 
 void StartSimulation()

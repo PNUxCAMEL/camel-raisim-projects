@@ -13,6 +13,8 @@ SimulStateEstimator::SimulStateEstimator(raisim::ArticulatedSystem* robot)
         , bIsFirstRun(true)
         , mPosFilter(ESTIMATOR_dT, 100)
         , mVelFilter(ESTIMATOR_dT, 10)
+        , bIsRightFirst(true)
+        , bIsLeftFirst(true)
 {
 }
 
@@ -85,44 +87,31 @@ void SimulStateEstimator::getRobotLinearState()
 {
     if (bIsFirstRun)
     {
-        for(int leg=0; leg<4; leg++)
-        {
-            mInitPosition[leg][0] = -mTransMat[leg](0,3);
-            mInitPosition[leg][1] = -mTransMat[leg](1,3);
-            mInitPosition[leg][2] = 0;
-        }
         sharedMemory->basePosition[0] = 0;
         sharedMemory->basePosition[1] = 0;
-        sharedMemory->basePosition[2] = -(mTransMat[0](2,3)+mTransMat[1](2,3)+mTransMat[2](2,3)+mTransMat[3](2,3))/4;
-
+        sharedMemory->basePosition[2] = -mTransMat[2](2,3);
         bIsFirstRun = false;
     }
     else
     {
-        mStandCount = 0;
-        mTempPosMean.setZero();
-        mTempPosPrev = sharedMemory->basePosition;
-
-        for (int i=0; i<4; i++)
+        if (sharedMemory->gaitTable[2] == 1)
         {
-            std::cout << sharedMemory->gaitTable[i] << "\t";
+            mBodyPosDiff = -mTransMat[2].block(0,3,3,1)-mBodyPrev[2];
         }
-        std::cout << std::endl;
-        for (int leg=0; leg<4; leg++)
+        else
         {
-            if (sharedMemory->gaitTable[leg] == 1)
-            {
-                mTempPos[leg][0] = -mTransMat[leg](0,3)-mInitPosition[leg][0];
-                mTempPos[leg][1] = -mTransMat[leg](1,3)-mInitPosition[leg][1];
-                mTempPos[leg][2] = -mTransMat[leg](2,3)-mInitPosition[leg][2];
-                mTempPosMean += mTempPos[leg];
-                mStandCount++;
-            }
+            mBodyPosDiff = -mTransMat[3].block(0,3,3,1)-mBodyPrev[3];
         }
-        mTempPosMean /= mStandCount;
-        sharedMemory->basePosition = mPosFilter.GetFilteredVar(mTempPosMean);
-
-        mTempVel = (sharedMemory->basePosition-mTempPosPrev)/ESTIMATOR_dT;
-        sharedMemory->baseVelocity = mVelFilter.GetFilteredVar(mTempVel);
+        sharedMemory->basePosition += mBodyPosDiff;
+        sharedMemory->baseVelocity = mVelFilter.GetFilteredVar(mBodyPosDiff/ESTIMATOR_dT);
     }
+
+    mBodyPrev[2] = -mTransMat[2].block(0,3,3,1);
+    mBodyPrev[3] = -mTransMat[3].block(0,3,3,1);
+
+/*    for(int idx=0; idx<3; idx++)
+    {
+        sharedMemory->basePosition[idx] = mPosition[idx];
+        sharedMemory->baseVelocity[idx] = mVelocity[idx];
+    }*/
 }

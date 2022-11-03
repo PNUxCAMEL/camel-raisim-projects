@@ -2,11 +2,11 @@
 // Created by jh on 22. 11. 3.
 //
 
-#include <ControlUtils/GRFEstimator.hpp>
+#include <ControlUtils/GRFEstimatorMLP.hpp>
 
 extern pSHM sharedMemory;
 
-GRFEstimator::GRFEstimator()
+GRFEstimatorMLP::GRFEstimatorMLP()
 {
     mRunOption = TF_NewBufferFromString("", 0);
     mSessionOptions = TF_NewSessionOptions();
@@ -74,7 +74,7 @@ GRFEstimator::GRFEstimator()
 //    std::cout << "output: " << outputs[0][0] << '\n';
 }
 
-void GRFEstimator::Estimate()
+void GRFEstimatorMLP::Estimate()
 {
     //pos hip, knee /vel hip, knee
     sharedMemory->GRFNetInputs[0] = sharedMemory->bufMotorPosition[0][0];

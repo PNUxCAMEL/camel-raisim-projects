@@ -2,8 +2,8 @@
 // Created by jh on 22. 11. 3.
 //
 
-#ifndef RAISIM_GRFESTIMATOR_HPP
-#define RAISIM_GRFESTIMATOR_HPP
+#ifndef RAISIM_GRFESTIMATORMLP_HPP
+#define RAISIM_GRFESTIMATORMLP_HPP
 
 #include <array>
 #include <vector>
@@ -13,10 +13,10 @@
 #include <camel-tools/ThreadGenerator.hpp>
 #include <canine-leg-left_util/SharedMemory.hpp>
 
-class GRFEstimator
+class GRFEstimatorMLP
 {
 public:
-    GRFEstimator();
+    GRFEstimatorMLP();
     void Estimate();
 
 private:
@@ -33,4 +33,4 @@ private:
 };
 
 
-#endif //RAISIM_GRFESTIMATOR_HPP
+#endif //RAISIM_GRFESTIMATORMLP_HPP

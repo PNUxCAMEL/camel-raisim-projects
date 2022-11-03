@@ -3,9 +3,7 @@
 //
 
 #include <PDcontroller/JointPDController.hpp>
-#include <iostream>
 
-extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
 JointPDController::JointPDController()
@@ -72,7 +70,7 @@ void JointPDController::updateHomeTrajectory()
         break;
     case HOME_STAND_UP_PHASE1:
     {
-        double homeHip = 60;
+        double homeHip = 50;
         double homeKnee = -120;
         double timeDuration = 1.0;
         mRefTime = sharedMemory->localTime + timeDuration;
@@ -90,8 +88,8 @@ void JointPDController::updateHomeTrajectory()
         break;
     case HOME_STAND_UP_PHASE3:
     {
-        double homeHip = 45;
-        double homeKnee = -90;
+        double homeHip = 65;
+        double homeKnee = -80;
         double timeDuration = 2.0;
         mRefTime = sharedMemory->localTime + timeDuration;
         mCubicTrajectoryGen[0].updateTrajectory(mDesiredPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);

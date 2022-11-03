@@ -70,8 +70,6 @@ GRFEstimatorMLP::GRFEstimatorMLP()
     }
     auto* output_tensor = static_cast<std::array<float, 1>*>(TF_TensorData(output_values[0]));
     std::vector<std::array<float, 1>> outputs{ output_tensor, output_tensor + inputs.size() };
-
-//    std::cout << "output: " << outputs[0][0] << '\n';
 }
 
 void GRFEstimatorMLP::Estimate()
@@ -124,5 +122,5 @@ void GRFEstimatorMLP::Estimate()
     }
     auto* output_tensor = static_cast<std::array<float, 1>*>(TF_TensorData(output_values[0]));
     std::vector<std::array<float, 1>> outputs{ output_tensor, output_tensor + inputs.size() };
-    sharedMemory->estimatedGRF = outputs[0][0];
+    sharedMemory->estimatedGRFMLP = outputs[0][0];
 }

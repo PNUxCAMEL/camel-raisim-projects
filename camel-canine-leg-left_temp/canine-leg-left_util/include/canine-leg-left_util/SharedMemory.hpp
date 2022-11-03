@@ -15,6 +15,7 @@
 #define PI                  3.141592
 #define R2D                 57.2957802
 #define D2R                 0.0174533
+#define GRAVITY             -9.81
 #define BUF_SIZE            9
 
 typedef struct _UI_COMMAND_
@@ -46,6 +47,7 @@ typedef struct _SHM_
     double baseEulerVelocity[3];
     double hipVerticalPosition;
     double hipVerticalVelocity;
+    double hipVerticalAcceleration;
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];
@@ -55,7 +57,8 @@ typedef struct _SHM_
     double bufMotorPosition[MOTOR_NUM][BUF_SIZE];
     double bufMotorVelocity[MOTOR_NUM][BUF_SIZE];
     float GRFNetInputs[14];
-    float estimatedGRF;
+    float estimatedGRFMLP;
+    float estimatedGRFSMO;
     float measuredGRF;
 } SHM, * pSHM;
 

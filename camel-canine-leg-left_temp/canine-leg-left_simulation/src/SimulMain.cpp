@@ -70,7 +70,8 @@ void clearSharedMemory()
     sharedMemory->localTime = 0;
     sharedMemory->hipVerticalPosition = 0;
     sharedMemory->hipVerticalVelocity = 0;
-    sharedMemory->estimatedGRF = 0;
+    sharedMemory->estimatedGRFMLP = 0;
+    sharedMemory->estimatedGRFSMO = 0;
     sharedMemory->measuredGRF = 0;
     for (int index = 0; index < MOTOR_NUM; index++)
     {

@@ -13,7 +13,9 @@
 #include <canine-leg-left_util/RobotDescription.hpp>
 
 #include <PDcontroller/JointPDController.hpp>
-#include <ControlUtils/GRFEstimator.hpp>
+#include <IDcontroller/IDController.hpp>
+#include <ControlUtils/GRFEstimatorMLP.hpp>
+#include <ControlUtils/GRFEstimatorSMO.hpp>
 
 class SimulControlPanel
 {
@@ -35,7 +37,9 @@ private:
     raisim::VecDyn mTorque = raisim::VecDyn(3);
 
     JointPDController PDcontrol;
-    GRFEstimator GRFNet;
+    IDController IDcontrol;
+    GRFEstimatorMLP GRFNet;
+    GRFEstimatorSMO GRFSMO;
 };
 
 #endif //RAISIM_SIMULCONTROLPANEL_HPP

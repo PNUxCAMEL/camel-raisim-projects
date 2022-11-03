@@ -52,10 +52,14 @@ void SimulControlPanel::ControllerFunction()
     }
     case STATE_PD_READY:
     {
+        IDcontrol.InitQuinticTrajectory();
+        sharedMemory->controlState = STATE_PD_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
     }
     case STATE_PD_CONTROL:
     {
+        IDcontrol.DoControl();
         break;
     }
     case STATE_TROT_REDAY:
@@ -74,6 +78,7 @@ void SimulControlPanel::ControllerFunction()
     {
         integrateSimul();
         GRFNet.Estimate();
+        GRFSMO.Estimate();
     }
 }
 
@@ -104,10 +109,13 @@ void SimulControlPanel::integrateSimul()
 
 void SimulControlPanel::updateStates()
 {
+    double pastHipVerticalVelocity;
+    pastHipVerticalVelocity = sharedMemory->hipVerticalVelocity;
     sharedMemory->hipVerticalPosition = mRobot->getGeneralizedCoordinate()[0];
     sharedMemory->motorPosition[0] = mRobot->getGeneralizedCoordinate()[1];
     sharedMemory->motorPosition[1] = mRobot->getGeneralizedCoordinate()[2];
     sharedMemory->hipVerticalVelocity = mRobot->getGeneralizedVelocity()[0];
+    sharedMemory->hipVerticalAcceleration = (sharedMemory->hipVerticalVelocity - pastHipVerticalVelocity) / CONTROL_dT;
     sharedMemory->motorVelocity[0] = mRobot->getGeneralizedVelocity()[1];
     sharedMemory->motorVelocity[1] = mRobot->getGeneralizedVelocity()[2];
     if (&(mRobot->getContacts()[0]) != nullptr)

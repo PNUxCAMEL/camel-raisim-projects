@@ -73,7 +73,7 @@ void* NRTImuThread(void* arg)
 
         baseAngularPosition = IMUBase.GetEulerAngle();
         baseAngularVelocity = IMUBase.GetAngularVelocity();
-//
+
         sharedMemory->baseEulerPosition[0] = baseAngularPosition[0];
         sharedMemory->baseEulerPosition[1] = -baseAngularPosition[1];
         sharedMemory->baseEulerPosition[2] = -baseAngularPosition[2];
@@ -81,15 +81,7 @@ void* NRTImuThread(void* arg)
         sharedMemory->baseEulerVelocity[0] = baseAngularVelocity[0];
         sharedMemory->baseEulerVelocity[1] = -baseAngularVelocity[1];
         sharedMemory->baseEulerVelocity[2] = -baseAngularVelocity[2];
-//
-//        sharedMemory->basePosition[0] = baseLinearPosition[0];
-//        sharedMemory->basePosition[1] = baseLinearPosition[1];
-//        sharedMemory->basePosition[2] = baseLinearPosition[2];
-//
-//        sharedMemory->baseVelocity[0] = baseLinearVelocity[0];
-//        sharedMemory->baseVelocity[1] = baseLinearVelocity[1];
-//        sharedMemory->baseVelocity[2] = baseLinearVelocity[2];
-//
+
         double cy = cos(sharedMemory->baseEulerPosition[2] * 0.5);
         double sy = sin(sharedMemory->baseEulerPosition[2] * 0.5);
         double cp = cos(sharedMemory->baseEulerPosition[1] * 0.5);

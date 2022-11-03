@@ -15,7 +15,7 @@ constexpr int MOTOR_KNEE_ID = 0x141;
 constexpr double HIP_POS_OFFSET = 0.8300;
 constexpr double KNEE_POS_OFFSET = -3.2021;
 
-//constexpr double LUMPED_MASS = 0.0;
+constexpr double LUMPED_MASS = 2.009;
 
 enum MOTOR_INDEX
 {

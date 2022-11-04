@@ -52,8 +52,6 @@ void SimulStateEstimator::getRobotAngulerState()
     }
 
     TransformQuat2Euler(mQuaternion, sharedMemory->baseEulerPosition);
-    std::cout << sharedMemory->baseEulerPosition[0]<< ", " << sharedMemory->baseEulerPosition[1]<< ", " << sharedMemory->baseEulerPosition[2] << std::endl;
-
 }
 
 void SimulStateEstimator::getRobotFootPosition()

@@ -76,7 +76,6 @@ void* NRTImuThread(void* arg)
         sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
         sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
 
-
         usleep(IMU_dT * 1e6);
     }
 }

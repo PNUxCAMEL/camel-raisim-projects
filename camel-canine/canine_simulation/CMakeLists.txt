@@ -17,10 +17,14 @@ include_directories(
         ${PDcontroller_SOURCE_DIR}/include
         ${convexMPC_SOURCE_DIR}/include
         ${WBController_SOURCE_DIR}/include
+        /usr/share/c++-mscl/source /usr/share/c++-mscl/Boost/include
 )
 link_directories(
         ${qpOASES_SOURCE_DIR}/bin
+        /usr/share/c++-mscl
 )
+
+link_libraries(mscl stdc++ pthread)
 
 add_library(${PROJECT_NAME}
         STATIC
@@ -35,6 +39,7 @@ target_link_libraries(${PROJECT_NAME}
         raisim::raisim
         camel-tools-thread
         camel-tools-filter
+        camel-tools-sensor
         canine_visualizer::canine_gui
         canine_controller::ControlUtils
         canine_controller::PDcontroller

@@ -25,7 +25,10 @@ void StateEstimator::getJointState()
 
 void StateEstimator::getRobotAngulerState()
 {
-    //TODO: Get angular velocity, orientation from IMU
+    for(int idx=0; idx<4; idx++)
+    {
+        mQuaternion[idx] = sharedMemory->baseQuartPosition[idx];
+    }
 }
 
 void StateEstimator::getRobotLinearState()

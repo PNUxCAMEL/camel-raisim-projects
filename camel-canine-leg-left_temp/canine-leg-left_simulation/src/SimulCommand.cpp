@@ -49,11 +49,62 @@ void SimulCommand::commandFunction()
         }
         case CUSTOM_2:
         {
-            sharedMemory->controlState = STATE_TROT_REDAY;
+            writeToCSVfile();
             break;
         }
         default:
             break;
         }
     }
+}
+
+void SimulCommand::writeToCSVfile()
+{
+    for(int i = 0 ; i < 2 ; i++)
+    {
+        for(int j = 0 ; j < 2500 ; j++)
+        {
+            positionTrackingData(i,j) = sharedMemory->positionTrackingData[i][j];
+        }
+    }
+    std::string name1 = "positionTrackingData.csv";
+    std::ofstream file1(name1.c_str());
+    for(int  i = 0; i < positionTrackingData.rows(); i++)
+    {
+        for(int j = 0; j < positionTrackingData.cols(); j++)
+        {
+            std::string str = std::to_string(positionTrackingData(i,j));
+            if(j+1 == positionTrackingData.cols()){
+                file1<<str;
+            }else{
+                file1<<str<<',';
+            }
+        }
+        file1<<'\n';
+    }
+
+    for(int i = 0 ; i < 3 ; i++)
+    {
+        for(int j = 0 ; j < 2500 ; j++)
+        {
+            GRFEstimatorData(i,j) = sharedMemory->GRFEstimatorData[i][j];
+        }
+    }
+
+    std::string name2 = "GRFEstimatorData.csv";
+    std::ofstream file2(name2.c_str());
+    for(int  i = 0; i < GRFEstimatorData.rows(); i++)
+    {
+        for(int j = 0; j < GRFEstimatorData.cols(); j++)
+        {
+            std::string str = std::to_string(GRFEstimatorData(i,j));
+            if(j+1 == GRFEstimatorData.cols()){
+                file2<<str;
+            }else{
+                file2<<str<<',';
+            }
+        }
+        file2<<'\n';
+    }
+    std::cout<<"Data is saved."<<std::endl;
 }

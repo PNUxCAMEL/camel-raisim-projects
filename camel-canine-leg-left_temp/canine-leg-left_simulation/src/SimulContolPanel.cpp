@@ -68,8 +68,8 @@ void SimulControlPanel::ControllerFunction()
         {
             MPCcontrol.DoControl();
         }
-        GRFcontrol.DoControl();
-//        MPCcontrol.SetControlInput();
+//        GRFcontrol.DoControl();
+        MPCcontrol.SetControlInput();
 
         sumedSquaredPositionError += pow(sharedMemory->desiredHipVerticalPosition - sharedMemory->hipVerticalPosition, 2);
         sumedSquaredVelocityError += pow(sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity, 2);
@@ -77,6 +77,11 @@ void SimulControlPanel::ControllerFunction()
         velocityRMSE = pow(sumedSquaredVelocityError / (mIteration - mRefMPCIteration), 0.5);
         std::cout << "RMSE position : " << positionRMSE << std::endl;
         std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
+        sharedMemory->GRFEstimatorData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->measuredGRF;
+        sharedMemory->GRFEstimatorData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFMLP;
+        sharedMemory->GRFEstimatorData[2][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFSMO;
+        sharedMemory->positionTrackingData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->desiredHipVerticalPosition;
+        sharedMemory->positionTrackingData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->hipVerticalPosition;
         break;
     }
     case STATE_TROT_REDAY:

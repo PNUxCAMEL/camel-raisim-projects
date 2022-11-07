@@ -35,16 +35,16 @@ MPCcontroller::MPCcontroller()
 
 void MPCcontroller::DoControl()
 {
+    resetMPCVariables();
     setSineTrajectory();
     solve();
     computeControlInput();
 //    SetControlInput();
-    resetMPCVariables();
 }
 
 void MPCcontroller::InitSineTrajectory()
 {
-    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.1, 1.0);
+    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.05, 0.5);
 }
 
 void MPCcontroller::SetControlInput()

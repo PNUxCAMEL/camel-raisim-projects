@@ -37,6 +37,7 @@ void GRFcontroller::computeControlInput()
     mJacobian << 0.0, 0.0, dz_dth1, dz_dth2;
 //    errorGRF = sharedMemory->desiredGRF - sharedMemory->measuredGRF;
     errorGRF = sharedMemory->desiredGRF - sharedMemory->estimatedGRFMLP;
+//    errorGRF = sharedMemory->desiredGRF - sharedMemory->estimatedGRFSMO;
     mIntegratedError += errorGRF * MPC_dT;
     calculatedGRF = sharedMemory->desiredGRF + 0.5*errorGRF + 2.0*mIntegratedError;
     calculatedForce << 0.0, calculatedGRF;

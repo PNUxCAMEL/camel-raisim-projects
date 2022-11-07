@@ -15,6 +15,7 @@
 #include <PDcontroller/JointPDController.hpp>
 #include <IDcontroller/IDController.hpp>
 #include <MPCcontroller/MPCcontroller.hpp>
+#include <GRFcontroller/GRFcontroller.hpp>
 #include <ControlUtils/GRFEstimatorMLP.hpp>
 #include <ControlUtils/GRFEstimatorSMO.hpp>
 
@@ -33,15 +34,22 @@ private:
     raisim::World* mWorld;
     raisim::ArticulatedSystem* mRobot;
 
-    uint16_t mIteration;
+    uint64_t mIteration;
+    uint64_t mRefMPCIteration;
 
     raisim::VecDyn mTorque = raisim::VecDyn(3);
 
     JointPDController PDcontrol;
     IDController IDcontrol;
     MPCcontroller MPCcontrol;
+    GRFcontroller GRFcontrol;
     GRFEstimatorMLP GRFNet;
     GRFEstimatorSMO GRFSMO;
+
+    double sumedSquaredPositionError;
+    double sumedSquaredVelocityError;
+    double positionRMSE;
+    double velocityRMSE;
 };
 
 #endif //RAISIM_SIMULCONTROLPANEL_HPP

@@ -11,6 +11,8 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
     : mWorld(world)
     , mRobot(robot)
     , mIteration(0)
+    , sumedSquaredPositionError(0)
+    , sumedSquaredVelocityError(0)
 {
     mTorque.setZero();
 }
@@ -54,6 +56,7 @@ void SimulControlPanel::ControllerFunction()
     {
 //        IDcontrol.InitQuinticTrajectory();
         MPCcontrol.InitSineTrajectory();
+        mRefMPCIteration = mIteration;
         sharedMemory->controlState = STATE_PD_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
@@ -61,7 +64,19 @@ void SimulControlPanel::ControllerFunction()
     case STATE_PD_CONTROL:
     {
 //        IDcontrol.DoControl();
-        MPCcontrol.DoControl();
+        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
+        {
+            MPCcontrol.DoControl();
+        }
+        GRFcontrol.DoControl();
+//        MPCcontrol.SetControlInput();
+
+        sumedSquaredPositionError += pow(sharedMemory->desiredHipVerticalPosition - sharedMemory->hipVerticalPosition, 2);
+        sumedSquaredVelocityError += pow(sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity, 2);
+        positionRMSE = pow(sumedSquaredPositionError / (mIteration - mRefMPCIteration), 0.5);
+        velocityRMSE = pow(sumedSquaredVelocityError / (mIteration - mRefMPCIteration), 0.5);
+        std::cout << "RMSE position : " << positionRMSE << std::endl;
+        std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
         break;
     }
     case STATE_TROT_REDAY:

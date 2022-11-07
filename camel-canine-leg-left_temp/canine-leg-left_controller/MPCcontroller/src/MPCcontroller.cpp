@@ -38,7 +38,7 @@ void MPCcontroller::DoControl()
     setSineTrajectory();
     solve();
     computeControlInput();
-    SetControlInput();
+//    SetControlInput();
     resetMPCVariables();
 }
 
@@ -109,9 +109,9 @@ void MPCcontroller::solve()
 
         if (isTerminateCondition())
         {
-            std::cout << "iteration : " << mIteration << std::endl;
-            std::cout << "mTrajectorySequence : \n" << mTrajectorySequence << std::endl;
-            std::cout << "mNextStates : \n" << mNextStates << "\n\n" << std::endl;
+//            std::cout << "iteration : " << mIteration << std::endl;
+//            std::cout << "mTrajectorySequence : \n" << mTrajectorySequence << std::endl;
+//            std::cout << "mNextStates : \n" << mNextStates << "\n\n" << std::endl;
             break;
         }
     }
@@ -193,12 +193,12 @@ bool MPCcontroller::isTerminateCondition()
 {
     if (mIteration > mMaximumIteration)
     {
-        std::cout << "maximum iteration" << std::endl;
+//        std::cout << "maximum iteration" << std::endl;
         return true;
     }
     else if (mRMSGradient < mTerminateCondition)
     {
-        std::cout << "terminate condition" << std::endl;
+//        std::cout << "terminate condition" << std::endl;
         return true;
     }
     else

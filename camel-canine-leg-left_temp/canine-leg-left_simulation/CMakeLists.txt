@@ -11,6 +11,7 @@ include_directories(
         ${PDcontroller_SOURCE_DIR}/include
         ${IDcontroller_SOURCE_DIR}/include
         ${MPCcontroller_SOURCE_DIR}/include
+        ${GRFcontroller_SOURCE_DIR}/include
         ${ControlUtils_SOURCE_DIR}/include
 )
 
@@ -30,6 +31,7 @@ target_link_libraries(${PROJECT_NAME}
         canine-leg-left_controller::PDcontroller
         canine-leg-left_controller::IDcontroller
         canine-leg-left_controller::MPCcontroller
+        canine-leg-left_controller::GRFcontroller
         canine-leg-left_controller::ControlUtils
         pthread
 )

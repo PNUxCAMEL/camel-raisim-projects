@@ -12,6 +12,7 @@ add_subdirectory(canine-leg-left_controller/ControlUtils)
 add_subdirectory(canine-leg-left_controller/PDcontroller)
 add_subdirectory(canine-leg-left_controller/IDcontroller)
 add_subdirectory(canine-leg-left_controller/MPCcontroller)
+add_subdirectory(canine-leg-left_controller/GRFcontroller)
 
 add_subdirectory(canine-leg-left_simulation)
 add_subdirectory(canine-leg-left_util)
@@ -22,6 +23,7 @@ include_directories(
         ${PDcontroller_SOURCE_DIR}/include
         ${IDcontroller_SOURCE_DIR}/include
         ${MPCcontroller_SOURCE_DIR}/include
+        ${GRFcontroller_SOURCE_DIR}/include
         ${ControlMain_SOURCE_DIR}/include
         ${ControlUtils_SOURCE_DIR}/include
         ${canine-leg-left_gui_SOURCE_DIR}/include

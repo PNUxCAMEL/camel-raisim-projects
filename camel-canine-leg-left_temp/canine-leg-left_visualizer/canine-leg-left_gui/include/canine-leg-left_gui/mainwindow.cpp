@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(graphTimer, SIGNAL(timeout()), this, SLOT(GraphUpdate()));
     graphTimer->start(2);
 
-    graphOffset = 15.0;
+    graphOffset = 10.0;
 }
 
 MainWindow::~MainWindow()
@@ -173,7 +173,13 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_POS_BASE_Z->addGraph();
     ui->PLOT_POS_BASE_Z->graph(0)->setPen(myPen);
     ui->PLOT_POS_BASE_Z->graph(0)->setName("position z");
+    myPen.setColor(Qt::red);
+    ui->PLOT_POS_BASE_Z->addGraph();
+    ui->PLOT_POS_BASE_Z->graph(1)->setPen(myPen);
+    ui->PLOT_POS_BASE_Z->graph(1)->setName("desired position z");
 
+
+    myPen.setColor(Qt::blue);
     ui->PLOT_VEL_BASE_X->legend->setVisible(true);
     ui->PLOT_VEL_BASE_X->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_VEL_BASE_X->addGraph();
@@ -191,7 +197,13 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_VEL_BASE_Z->addGraph();
     ui->PLOT_VEL_BASE_Z->graph(0)->setPen(myPen);
     ui->PLOT_VEL_BASE_Z->graph(0)->setName("velocity z");
+    myPen.setColor(Qt::red);
+    ui->PLOT_VEL_BASE_Z->addGraph();
+    ui->PLOT_VEL_BASE_Z->graph(1)->setPen(myPen);
+    ui->PLOT_VEL_BASE_Z->graph(1)->setName("desired velocity z");
 
+
+    myPen.setColor(Qt::blue);
     ui->PLOT_POS_BASE_ROLL->legend->setVisible(true);
     ui->PLOT_POS_BASE_ROLL->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_POS_BASE_ROLL->addGraph();
@@ -314,19 +326,13 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_2->addGraph();
     ui->PLOT_CUSTOM_2->graph(1)->setPen(myPen);
 
-    myPen.setColor(Qt::blue);
+    myPen.setColor(Qt::darkGray);
     ui->PLOT_CUSTOM_3->addGraph();
     ui->PLOT_CUSTOM_3->graph(0)->setPen(myPen);
-    myPen.setColor(Qt::red);
-    ui->PLOT_CUSTOM_3->addGraph();
-    ui->PLOT_CUSTOM_3->graph(1)->setPen(myPen);
 
-    myPen.setColor(Qt::blue);
+    myPen.setColor(Qt::darkGray);
     ui->PLOT_CUSTOM_4->addGraph();
     ui->PLOT_CUSTOM_4->graph(0)->setPen(myPen);
-    myPen.setColor(Qt::red);
-    ui->PLOT_CUSTOM_4->addGraph();
-    ui->PLOT_CUSTOM_4->graph(1)->setPen(myPen);
 
     myPen.setColor(Qt::blue);
     ui->PLOT_CUSTOM_5->addGraph();
@@ -347,17 +353,27 @@ void MainWindow::GraphInitialize(){
 
     ui->PLOT_CUSTOM_1->legend->setVisible(true);
     ui->PLOT_CUSTOM_1->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_CUSTOM_1->graph(0)->setName("tau LBHR");
-    ui->PLOT_CUSTOM_1->graph(1)->setName("des_tau LBHR");
+    ui->PLOT_CUSTOM_1->graph(0)->setName("tau Hip");
+    ui->PLOT_CUSTOM_1->graph(1)->setName("des_tau Hip");
+    ui->PLOT_CUSTOM_2->legend->setVisible(true);
+    ui->PLOT_CUSTOM_2->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_CUSTOM_2->graph(0)->setName("tau Knee");
+    ui->PLOT_CUSTOM_2->graph(1)->setName("des_tau Knee");
     ui->PLOT_CUSTOM_3->legend->setVisible(true);
     ui->PLOT_CUSTOM_3->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_CUSTOM_3->graph(0)->setName("tau LBHP");
-    ui->PLOT_CUSTOM_3->graph(1)->setName("des_tau LBHP");
+    ui->PLOT_CUSTOM_3->graph(0)->setName("position error");
+    ui->PLOT_CUSTOM_4->legend->setVisible(true);
+    ui->PLOT_CUSTOM_4->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_CUSTOM_4->graph(0)->setName("velocity error");
     ui->PLOT_CUSTOM_5->legend->setVisible(true);
     ui->PLOT_CUSTOM_5->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_CUSTOM_5->graph(0)->setName("GRF-true");
     ui->PLOT_CUSTOM_5->graph(1)->setName("GRF-MLP");
     ui->PLOT_CUSTOM_5->graph(2)->setName("GRF-SMO");
+    ui->PLOT_CUSTOM_6->legend->setVisible(true);
+    ui->PLOT_CUSTOM_6->legend->setFont(QFont("Helvetica", 9));
+    ui->PLOT_CUSTOM_6->graph(0)->setName("GRF-true");
+    ui->PLOT_CUSTOM_6->graph(1)->setName("GRF-desired");
 
     ui->PLOT_POS_BASE_X->xAxis->setTicker(timeTicker);
     ui->PLOT_POS_BASE_Y->xAxis->setTicker(timeTicker);
@@ -427,9 +443,11 @@ void MainWindow::GraphUpdate()
     ui->PLOT_POS_BASE_X->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[0]);
     ui->PLOT_POS_BASE_Y->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorPosition[1]);
     ui->PLOT_POS_BASE_Z->graph(0)->addData(sharedMemory->localTime, sharedMemory->hipVerticalPosition);
+    ui->PLOT_POS_BASE_Z->graph(1)->addData(sharedMemory->localTime, sharedMemory->desiredHipVerticalPosition);
     ui->PLOT_VEL_BASE_X->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[0]);
     ui->PLOT_VEL_BASE_Y->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[1]);
     ui->PLOT_VEL_BASE_Z->graph(0)->addData(sharedMemory->localTime, sharedMemory->hipVerticalVelocity);
+    ui->PLOT_VEL_BASE_Z->graph(1)->addData(sharedMemory->localTime, sharedMemory->desiredHipVerticalVelocity);
 
     ui->PLOT_POS_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[0]);
     ui->PLOT_POS_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[1]);
@@ -453,12 +471,17 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_RBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[KNEE_IDX]);
 
     ui->PLOT_CUSTOM_1->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[HIP_IDX]);
-    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[KNEE_IDX]);
-    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
     ui->PLOT_CUSTOM_1->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[HIP_IDX]);
-    ui->PLOT_CUSTOM_3->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
+    ui->PLOT_CUSTOM_2->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[KNEE_IDX]);
+    ui->PLOT_CUSTOM_2->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[KNEE_IDX]);
+    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->desiredHipVerticalPosition - sharedMemory->hipVerticalPosition);
+    ui->PLOT_CUSTOM_4->graph(0)->addData(sharedMemory->localTime, sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity);
+    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
     ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->estimatedGRFMLP);
     ui->PLOT_CUSTOM_5->graph(2)->addData(sharedMemory->localTime, sharedMemory->estimatedGRFSMO);
+    ui->PLOT_CUSTOM_6->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
+    ui->PLOT_CUSTOM_6->graph(1)->addData(sharedMemory->localTime, sharedMemory->desiredGRF);
+
 
     ui->PLOT_POS_BASE_X->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
     ui->PLOT_POS_BASE_Y->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
@@ -489,8 +512,12 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_RBKP->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
 
     ui->PLOT_CUSTOM_1->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_CUSTOM_2->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
     ui->PLOT_CUSTOM_3->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_CUSTOM_4->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
     ui->PLOT_CUSTOM_5->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+    ui->PLOT_CUSTOM_6->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
+
 
     ui->PLOT_POS_BASE_X->replot();
     ui->PLOT_POS_BASE_Y->replot();
@@ -521,8 +548,11 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_RBKP->replot();
 
     ui->PLOT_CUSTOM_1->replot();
+    ui->PLOT_CUSTOM_2->replot();
     ui->PLOT_CUSTOM_3->replot();
+    ui->PLOT_CUSTOM_4->replot();
     ui->PLOT_CUSTOM_5->replot();
+    ui->PLOT_CUSTOM_6->replot();
 }
 
 void MainWindow::DisplayUpdate()

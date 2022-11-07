@@ -10,10 +10,10 @@ void SineTrajectoryGenerator::updateTrajectory(double currentPosition, double cu
 
 double SineTrajectoryGenerator::getPositionTrajectory(double currentTime) {
     double time = (currentTime - mReferenceTime);
-    return mAmplitude*sin(2*PI*mFrequency*time)+mReferencePose;
+    return mAmplitude*sin(2*PI*mFrequency*time + PI/2)+mReferencePose-mAmplitude;
 }
 
 double SineTrajectoryGenerator::getVelocityTrajectory(double currentTime) {
     double time = (currentTime - mReferenceTime);
-    return 2*PI*mFrequency*mAmplitude*cos(2*PI*mFrequency*time);
+    return 2*PI*mFrequency*mAmplitude*cos(2*PI*mFrequency*time + PI/2);
 }

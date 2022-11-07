@@ -19,7 +19,7 @@
 #define BUF_SIZE            9
 
 constexpr int       MPC_HORIZON     = 5;
-constexpr double    MPC_dT          = 0.005;
+constexpr double    MPC_dT          = 0.02;
 
 
 typedef struct _UI_COMMAND_
@@ -66,6 +66,7 @@ typedef struct _SHM_
     float estimatedGRFMLP;
     float estimatedGRFSMO;
     float measuredGRF;
+    float desiredGRF;
 } SHM, * pSHM;
 
 typedef struct _CUSTOM_DATA_

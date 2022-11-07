@@ -68,11 +68,15 @@ void clearSharedMemory()
     sharedMemory->can1State = CAN_NO_ACT;
     sharedMemory->can2State = CAN_NO_ACT;
     sharedMemory->localTime = 0;
+    sharedMemory->desiredHipVerticalPosition = 0;
+    sharedMemory->desiredHipVerticalVelocity = 0;
     sharedMemory->hipVerticalPosition = 0;
     sharedMemory->hipVerticalVelocity = 0;
+    sharedMemory->hipVerticalAcceleration = 0;
     sharedMemory->estimatedGRFMLP = 0;
     sharedMemory->estimatedGRFSMO = 0;
     sharedMemory->measuredGRF = 0;
+    sharedMemory->desiredGRF = 0;
     for (int index = 0; index < MOTOR_NUM; index++)
     {
         sharedMemory->motorErrorStatus[index] = 0;

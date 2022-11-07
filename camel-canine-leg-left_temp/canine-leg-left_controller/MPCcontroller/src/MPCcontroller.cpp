@@ -13,7 +13,7 @@ MPCcontroller::MPCcontroller()
     , mMaximumIteration(100)
     , mTerminateCondition(1e-7)
     , mDelta(1e-3)
-    , mStepSize(100.0 / MPC_dT / MPC_dT)
+    , mStepSize(1000.0 / MPC_dT)
     , mInitialPosition(0.0)
     , mInitialVelocity(0.0)
 {
@@ -44,7 +44,7 @@ void MPCcontroller::DoControl()
 
 void MPCcontroller::InitSineTrajectory()
 {
-    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.1, 0.5);
+    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.1, 1.0);
 }
 
 void MPCcontroller::SetControlInput()
@@ -93,6 +93,7 @@ void MPCcontroller::computeControlInput()
     dz_dth2 = -0.23 * sin(sharedMemory->motorPosition[0] + sharedMemory->motorPosition[1]);
     mJacobian << 0.0, 0.0, dz_dth1, dz_dth2;
     mTorque = mJacobian.transpose() * calculatedForce;
+    sharedMemory->desiredGRF = Fz;
 }
 
 void MPCcontroller::solve()
@@ -128,12 +129,12 @@ void MPCcontroller::updateMPCStates()
         else if (i == 1)
         {
             mNextStates(0, i) = mNextStates(0, i - 1) + MPC_dT * mInitialVelocity + MPC_dT * MPC_dT * (mForce(i - 1) / LUMPED_MASS + GRAVITY);
-            mNextStates(1, i) = mInitialVelocity + MPC_dT * (mForce(i) / LUMPED_MASS + GRAVITY);
+            mNextStates(1, i) = mNextStates(1, i - 1) + MPC_dT * (mForce(i) / LUMPED_MASS + GRAVITY);
         }
         else
         {
             mNextStates(0, i) = mNextStates(0, i - 1) + MPC_dT * mNextStates(1, i - 2) + MPC_dT * MPC_dT * (mForce(i - 1) / LUMPED_MASS + GRAVITY);
-            mNextStates(1, i) = mInitialVelocity + MPC_dT * (mForce(i) / LUMPED_MASS + GRAVITY);
+            mNextStates(1, i) = mNextStates(1, i - 1) + MPC_dT * (mForce(i) / LUMPED_MASS + GRAVITY);
         }
     }
 }
@@ -150,12 +151,12 @@ void MPCcontroller::updateMPCStatesTemp(const Eigen::VectorXd force)
         else if (i == 1)
         {
             mNextStatesTemp(0, i) = mNextStatesTemp(0, i - 1) + MPC_dT * mInitialVelocity + MPC_dT * MPC_dT * (force(i - 1) / LUMPED_MASS + GRAVITY);
-            mNextStatesTemp(1, i) = mInitialVelocity + MPC_dT * (force(i) / LUMPED_MASS + GRAVITY);
+            mNextStatesTemp(1, i) = mNextStatesTemp(1, i - 1) + MPC_dT * (force(i) / LUMPED_MASS + GRAVITY);
         }
         else
         {
             mNextStatesTemp(0, i) = mNextStatesTemp(0, i - 1) + MPC_dT * mNextStatesTemp(1, i - 2) + MPC_dT * MPC_dT * (force(i - 1) / LUMPED_MASS + GRAVITY);
-            mNextStatesTemp(1, i) = mInitialVelocity + MPC_dT * (force(i) / LUMPED_MASS + GRAVITY);
+            mNextStatesTemp(1, i) = mNextStatesTemp(1, i - 1) + MPC_dT * (force(i) / LUMPED_MASS + GRAVITY);
         }
     }
 }

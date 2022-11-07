@@ -16,4 +16,5 @@ add_library(${PROJECT_NAME} STATIC
 
 add_library(canine-leg-left_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
-        tensorflow)
+        tensorflow
+        canine-leg-left_util)

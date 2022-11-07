@@ -6,16 +6,16 @@
     <color rgba="0.0 0.0 0.0 1.0"/>
   </material>
 
-  <material name="light_gray">
-     <color rgba="0.75 0.75 0.75 1.0"/>
+  <material name="white">
+     <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
 
   <material name="black1">
-      <color rgba="0.25 0.25 0.25 0.90"/>
+      <color rgba="0.2 0.2 0.2 1.0"/>
   </material>
 
   <material name="black2">
-      <color rgba="0.35 0.35 0.35 0.90"/>
+      <color rgba="0.5 0.5 0.5 1.0"/>
   </material>
   <link name="world"/>
   <joint name="fixed" type="fixed">
@@ -29,7 +29,7 @@
       <geometry>
         <box size="0.025 0.025 1.0"/>
       </geometry>
-      <material name="light_gray"/>
+      <material name="white"/>
     </visual>
 
     <collision>

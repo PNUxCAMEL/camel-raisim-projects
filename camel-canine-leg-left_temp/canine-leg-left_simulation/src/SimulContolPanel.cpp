@@ -52,14 +52,16 @@ void SimulControlPanel::ControllerFunction()
     }
     case STATE_PD_READY:
     {
-        IDcontrol.InitQuinticTrajectory();
+//        IDcontrol.InitQuinticTrajectory();
+        MPCcontrol.InitSineTrajectory();
         sharedMemory->controlState = STATE_PD_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
     }
     case STATE_PD_CONTROL:
     {
-        IDcontrol.DoControl();
+//        IDcontrol.DoControl();
+        MPCcontrol.DoControl();
         break;
     }
     case STATE_TROT_REDAY:

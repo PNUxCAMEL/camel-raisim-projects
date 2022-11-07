@@ -10,6 +10,7 @@ include_directories(
         ${canine-leg-left_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${IDcontroller_SOURCE_DIR}/include
+        ${MPCcontroller_SOURCE_DIR}/include
         ${ControlUtils_SOURCE_DIR}/include
 )
 
@@ -28,6 +29,7 @@ target_link_libraries(${PROJECT_NAME}
         canine-leg-left_visualizer::canine-leg-left_gui
         canine-leg-left_controller::PDcontroller
         canine-leg-left_controller::IDcontroller
+        canine-leg-left_controller::MPCcontroller
         canine-leg-left_controller::ControlUtils
         pthread
 )

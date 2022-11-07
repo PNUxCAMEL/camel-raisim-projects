@@ -18,6 +18,10 @@
 #define GRAVITY             -9.81
 #define BUF_SIZE            9
 
+constexpr int       MPC_HORIZON     = 5;
+constexpr double    MPC_dT          = 0.005;
+
+
 typedef struct _UI_COMMAND_
 {
     int userCommand;
@@ -45,6 +49,8 @@ typedef struct _SHM_
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];
+    double desiredHipVerticalPosition;
+    double desiredHipVerticalVelocity;
     double hipVerticalPosition;
     double hipVerticalVelocity;
     double hipVerticalAcceleration;

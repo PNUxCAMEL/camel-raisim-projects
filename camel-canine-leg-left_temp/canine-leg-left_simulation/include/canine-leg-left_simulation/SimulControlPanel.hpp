@@ -14,6 +14,7 @@
 
 #include <PDcontroller/JointPDController.hpp>
 #include <IDcontroller/IDController.hpp>
+#include <MPCcontroller/MPCcontroller.hpp>
 #include <ControlUtils/GRFEstimatorMLP.hpp>
 #include <ControlUtils/GRFEstimatorSMO.hpp>
 
@@ -38,6 +39,7 @@ private:
 
     JointPDController PDcontrol;
     IDController IDcontrol;
+    MPCcontroller MPCcontrol;
     GRFEstimatorMLP GRFNet;
     GRFEstimatorSMO GRFSMO;
 };

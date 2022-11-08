@@ -13,7 +13,7 @@
 #define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
-#define ESTIMATOR_dT        0.0005
+#define ESTIMATOR_dT        0.001
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
 #define PI                  3.141592

@@ -53,9 +53,15 @@ void ControllerState::ControllerFunction()
             PDcontrol.SetControlInput();
             break;
         }
-        case STATE_HOME_READY:
+        case STATE_HOME_STAND_UP_READY:
         {
-            PDcontrol.InitHomeTrajectory();
+            PDcontrol.InitHomeStandUpTrajectory();
+            sharedMemory->controlState = STATE_HOME_CONTROL;
+            break;
+        }
+        case STATE_HOME_STAND_DOWN_READY:
+        {
+            PDcontrol.InitHomeStandDownTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
             break;
         }

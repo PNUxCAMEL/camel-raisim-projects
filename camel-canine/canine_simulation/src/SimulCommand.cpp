@@ -39,7 +39,7 @@ void SimulCommand::commandFunction()
             }
             case HOME:
             {
-                sharedMemory->controlState = STATE_HOME_READY;
+                sharedMemory->controlState = STATE_HOME_STAND_UP_READY;
                 break;
             }
             case PD_CMD:
@@ -49,12 +49,12 @@ void SimulCommand::commandFunction()
             }
             case CUSTOM_1:
             {
-                sharedMemory->controlState = STATE_WBC_READY;
+                sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
                 break;
             }
             case CUSTOM_2:
             {
-                sharedMemory->controlState = STATE_MPC_REDAY;
+                sharedMemory->controlState = STATE_WBC_READY;
                 break;
             }
             default:

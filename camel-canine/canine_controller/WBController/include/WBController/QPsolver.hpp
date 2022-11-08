@@ -38,6 +38,7 @@ private:
     const double mBigNum;
     const double mForceMax;
     const double mMu;
+    const double mMass;
 
     Vec13<double> mWeightMat;
     Mat3<double> mYaw;

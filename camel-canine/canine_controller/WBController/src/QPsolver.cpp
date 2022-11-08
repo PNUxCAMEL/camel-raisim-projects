@@ -8,14 +8,17 @@ extern pSHM sharedMemory;
 
 QPsolver::QPsolver()
     : mDt(CONTROL_dT)
-    , mAlpha(1e-10)
+    , mAlpha(1e-7)
     , mBigNum(5e10)
-    , mForceMax(240)
+    , mForceMax(120)
     , mMu(0.6)
+    , mMass(14.2)
 {
-    mWeightMat << 0.5, 0.5, 50, 20, 20, 80, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
+//    mWeightMat << 0.5, 0.5, 50, 20, 20, 80, 0, 0, 0.2, 0.05, 0.05, 0.05, 0.f;
+    mWeightMat << 10, 10, 10, 10, 10, 100, 1, 1, 1, 1, 1, 1, 0.f;
     mYaw.setZero();
-    mBodyInertia << 0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107;
+//    mBodyInertia << 0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107;
+    mBodyInertia << 0.11548, 0, 0, 0, 0.085609,0, 0,0,0.17193;
     mBodyInertiaInverse.setZero();
 
     Ac.setZero();
@@ -75,15 +78,15 @@ void QPsolver::SolveQP(const Vec13<double>& x0, const Vec13<double>& xd, const d
 
 void QPsolver::GetGRF(Vec3<double>* f)
 {
-//    std::cout << "====GRF====" << std::endl;
+    std::cout << "====GRF====" << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
             f[leg][axis] = q_soln[leg*3 + axis];
-//            std::cout << f[leg][axis] << "\t";
+            std::cout << f[leg][axis] << "\t";
         }
-//        std::cout << std::endl;
+        std::cout << std::endl;
     }
 }
 
@@ -119,7 +122,7 @@ void QPsolver::setStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4
     for(int n=0; n<4; n++)
     {
         Bc.block(6,n*3,3,3) = mBodyInertiaInverse*GetSkew(R_feet.row(n));
-        Bc.block(9,n*3,3,3) = Eigen::Matrix3d::Identity() / 10.0;
+        Bc.block(9,n*3,3,3) = Eigen::Matrix3d::Identity() / mMass;
     }
 }
 

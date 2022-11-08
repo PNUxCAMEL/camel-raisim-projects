@@ -21,15 +21,15 @@ WBC::WBC()
 
 void WBC::InitTrajectory()
 {
-    double timeDuration = 2.0;
+    double timeDuration = 4.0;
     mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->basePosition[0],
-                                            -0.1,
+                                            0.0,
                                             sharedMemory->localTime, timeDuration);
     mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->basePosition[1],
-                                            -0.1,
+                                            0.0,
                                             sharedMemory->localTime, timeDuration);
     mCubicTrajectoryGen[2].updateTrajectory(sharedMemory->basePosition[2],
-                                            0.34,
+                                            0.3,
                                             sharedMemory->localTime, timeDuration);
 }
 
@@ -39,7 +39,6 @@ void WBC::DoWBControl()
     setTrajectory();
     ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
     ForceQPsolver.GetGRF(mGRF);
-
 
     computeControlInput();
     setControlInput();
@@ -74,11 +73,11 @@ void WBC::updateState()
 void WBC::setTrajectory()
 {
     mDesiredState.setZero();
-    mDesiredState(3,0) = 0.0;
-    mDesiredState(4,0) = 0.0;
+    mDesiredState(3,0) = mCubicTrajectoryGen[0].getPositionTrajectory(sharedMemory->localTime);
+    mDesiredState(4,0) = mCubicTrajectoryGen[1].getPositionTrajectory(sharedMemory->localTime);
     mDesiredState(5,0) = mCubicTrajectoryGen[2].getPositionTrajectory(sharedMemory->localTime);
-    mDesiredState(9,0) = 0.0;
-    mDesiredState(10,0) = 0.0;
+    mDesiredState(9,0) = mCubicTrajectoryGen[0].getVelocityTrajectory(sharedMemory->localTime);
+    mDesiredState(10,0) = mCubicTrajectoryGen[1].getVelocityTrajectory(sharedMemory->localTime);
     mDesiredState(11,0) = mCubicTrajectoryGen[2].getVelocityTrajectory(sharedMemory->localTime);
 
     sharedMemory->baseDesiredPosition[0] = mDesiredState(3,0);
@@ -121,7 +120,9 @@ void WBC::setControlInput()
             {
                 mTorque[leg][motor] = -mTorqueLimit[leg][motor];
             }
+            std::cout << mTorque[leg][motor] << "\t";
             sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
         }
     }
+    std::cout << std::endl << std::endl;
 }

@@ -31,17 +31,43 @@ void JointPDController::SetPDgain(const double& kp, const double& kd)
 
 void JointPDController::DoHomeControl()
 {
+    updateState();
     updateHomeTrajectory();
     setHomeTrajectory();
+    ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
+    ForceQPsolver.GetGRF(mGRF);
+
     computeControlInput();
     SetControlInput();
 }
 
-void JointPDController::DoPDControl()
+void JointPDController::updateState()
 {
-    setTrajectory();
-    computeControlInput();
-    SetControlInput();
+    for (int idx=0; idx<3; idx++)
+    {
+        mBasePosition[idx] = sharedMemory->basePosition[idx];
+        mBaseVelocity[idx] = sharedMemory->baseVelocity[idx];
+        mBaseEulerPosition[idx] = sharedMemory->baseEulerPosition[idx];
+        mBaseEulerVelocity[idx] = sharedMemory->baseEulerVelocity[idx];
+    }
+
+    for (int leg=0; leg<4; leg++)
+    {
+        for (int mt=0; mt<3; mt++)
+        {
+            mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
+            mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
+            mMotorVelocity[leg][mt] = sharedMemory->motorVelocity[leg*3+mt];
+        }
+    }
+
+    mInitState << mBaseEulerPosition[0], mBaseEulerPosition[1], mBaseEulerPosition[2],
+        mBasePosition[0], mBasePosition[1], mBasePosition[2],
+        mBaseEulerVelocity[0], mBaseEulerVelocity[1], mBaseEulerVelocity[2],
+        mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], -9.81;
+
+    mDesiredState.setZero();
+    mDesiredState[5] = 0.3;
 }
 
 void JointPDController::InitHomeStandUpTrajectory()
@@ -52,60 +78,6 @@ void JointPDController::InitHomeStandUpTrajectory()
 void JointPDController::InitHomeStandDownTrajectory()
 {
     mHomeState = HOME_STAND_DOWN_PHASE1;
-}
-
-void JointPDController::InitSwingTrajectory()
-{
-/*
-    mBezierTrajectoryGen.InitTrajectorySet(sharedMemory->localTime, 1);
-*/
-}
-
-void JointPDController::setTrajectory()
-{
-/*    double d = 0.0;
-    double phi = 0.0;
-    double psi = 0.0;
-
-    mBezierTrajectoryGen.SetCurrentTime(sharedMemory->localTime);
-    for (int idx=0; idx<4; idx++)
-    {
-        if (sharedMemory->gaitTable[idx] == 0)
-        {
-            mBezierTrajectoryGen.SwingTrajectory(mDesiredP);
-        }
-        else
-        {
-            mBezierTrajectoryGen.StandTrajectory(mDesiredP);
-        }
-
-        d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
-        phi = acos(abs(mDesiredP[0]) / d);
-        psi = acos(pow(d, 2) / (2 * 0.23 * d));
-
-        mDesiredPosition[idx*3+0] = 0.0;
-
-        if (mDesiredP[0] < 0)
-        {
-            mDesiredPosition[idx*3+1] = 1.57 - phi + psi;
-        }
-        else if (mDesiredP[0] == 0)
-        {
-            mDesiredPosition[idx*3+1] = psi;
-        }
-        else
-        {
-            mDesiredPosition[idx*3+1] = phi + psi - 1.57;
-        }
-
-        mDesiredPosition[idx*3+2] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
-
-    }
-
-    for (int index = 0 ; index < MOTOR_NUM ; index++)
-    {
-        mDesiredVelocity[index] = 0.0;
-    }*/
 }
 
 void JointPDController::computeControlInput()

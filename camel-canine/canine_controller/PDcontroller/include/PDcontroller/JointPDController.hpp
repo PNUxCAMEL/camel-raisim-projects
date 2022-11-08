@@ -10,6 +10,7 @@
 
 #include <camel-tools/CubicTrajectoryGenerator.hpp>
 
+#include <WBController/QPsolver.hpp>
 
 class JointPDController
 {
@@ -18,15 +19,12 @@ public:
 
     void SetPDgain(const double& kp, const double& kd);
     void DoHomeControl();
-    void DoPDControl();
     void InitHomeStandUpTrajectory();
     void InitHomeStandDownTrajectory();
-    void InitSwingTrajectory();
-
     void SetControlInput();
 
 private:
-    void setTrajectory();
+    void updateState();
     void computeControlInput();
     void updateHomeTrajectory();
     void setHomeTrajectory();
@@ -34,9 +32,9 @@ private:
 
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
+    QPsolver ForceQPsolver;
     int mHomeState;
     double mRefTime;
-    double mDesiredP[MOTOR_NUM] = {-0.125, -0.37};
     double mDesiredPosition[MOTOR_NUM];
     double mDesiredVelocity[MOTOR_NUM];
     double Kp[MOTOR_NUM];
@@ -54,6 +52,17 @@ private:
         HOME_STAND_DOWN_PHASE2,
         HOME_STAND_DOWN_PHASE3,
     };
+
+    Vec13<double> mInitState;
+    Vec13<double> mDesiredState;
+    Vec3<double> mMotorPosition[4];
+    Vec3<double> mMotorVelocity[4];
+    double mBasePosition[3];
+    double mBaseVelocity[3];
+    double mBaseEulerPosition[3];
+    double mBaseEulerVelocity[3];
+    double mFootPosition[4][3];
+    Vec3<double> mGRF[4];
 };
 
 

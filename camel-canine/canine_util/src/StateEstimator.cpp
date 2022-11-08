@@ -10,16 +10,17 @@ StateEstimator::StateEstimator()
     : mPosFilter(ESTIMATOR_dT, 100)
     , mVelFilter(ESTIMATOR_dT, 10)
     , bIsFirstRun(true)
-    , bIsRightFirst(true)
-    , bIsLeftFirst(true)
 {
 }
 
 void StateEstimator::StateEstimatorFunction()
 {
-    updateState();
-    getRobotLinearState();
-    getRobotFootPosition();
+    if (sharedMemory->motorForeState && sharedMemory->motorBackState)
+    {
+        updateState();
+        getRobotLinearState();
+        getRobotFootPosition();
+    }
 }
 
 void StateEstimator::updateState()

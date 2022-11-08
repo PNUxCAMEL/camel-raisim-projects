@@ -196,6 +196,11 @@ void clearSharedMemory()
     sharedMemory->baseQuartPosition[1] = 0.0;
     sharedMemory->baseQuartPosition[2] = 0.0;
     sharedMemory->baseQuartPosition[3] = 0.0;
+
+    sharedMemory->gaitState = STAND;
+    sharedMemory->gaitIteration = 0;
+    sharedMemory->motorForeState = false;
+    sharedMemory->motorBackState = false;
 }
 
 void StartFSM()

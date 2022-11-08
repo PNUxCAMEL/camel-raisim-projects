@@ -10,6 +10,7 @@
 #include "RobotDescription.hpp"
 #include "SharedMemory.hpp"
 #include "RobotMath.hpp"
+#include "Filter.hpp"
 
 class StateEstimator{
 public:
@@ -17,61 +18,21 @@ public:
 
     void StateEstimatorFunction();
 private:
-    void getJointState();
-    void getRobotAngulerState();
+    void updateState();
     void getRobotLinearState();
     void getRobotFootPosition();
 private:
+    CanineFilter::Vec3LPF mVelFilter;
+    CanineFilter::Vec3LPF mPosFilter;
 
-    double mQuaternion[4];
+    Vec4<double> mQuaternion;
+    Mat4<double> mTransMat[4];
+    Vec3<double> mBodyPrev[4];
+    Vec3<double> mBodyPosDiff;
 
-    double mTempAngleForRightRearFoot;
-    double mTempAngleForLeftRearFoot;
-
-
-    Eigen::Matrix4d mTransMatBase2LeftRearGround;
-    Eigen::Matrix4d mTransMatBase2LeftRearHip;
-    Eigen::Matrix4d mTransMatBase2RightRearGround;
-    Eigen::Matrix4d mTransMatBase2RightRearHip;
-
-    Eigen::Matrix4d mTransMatLeftRearHip2Thigh;
-    Eigen::Matrix4d mTransMatLeftRearThigh2Knee;
-    Eigen::Matrix4d mTransMatLeftRearKnee2Foot;
-    Eigen::Matrix4d mTransMatLeftRearFoot2Ground;
-    Eigen::Matrix4d mTransMatLeftRearHip2Base;
-    Eigen::Matrix4d mTransMatLeftRearThigh2Hip;
-    Eigen::Matrix4d mTransMatLeftRearKnee2Thigh;
-    Eigen::Matrix4d mTransMatLeftRearFoot2Knee;
-    Eigen::Matrix4d mTransMatLeftRearGround2Foot;
-    Eigen::Matrix4d mTransMatLeftRearGround2Base;
-
-
-    Eigen::Matrix4d mTransMatRightRearHip2Thigh;
-    Eigen::Matrix4d mTransMatRightRearThigh2Knee;
-    Eigen::Matrix4d mTransMatRightRearKnee2Foot;
-    Eigen::Matrix4d mTransMatRightRearFoot2Ground;
-    Eigen::Matrix4d mTransMatRightRearHip2Base;
-    Eigen::Matrix4d mTransMatRightRearThigh2Hip;
-    Eigen::Matrix4d mTransMatRightRearKnee2Thigh;
-    Eigen::Matrix4d mTransMatRightRearFoot2Knee;
-    Eigen::Matrix4d mTransMatRightRearGround2Foot;
-    Eigen::Matrix4d mTransMatRightRearGround2Base;
-
-    Eigen::Vector4d mBodyPosition;
-    Eigen::Vector4d mBodyPositionPrev;
-    Eigen::Vector4d mRightRearFootPosition;
-    Eigen::Vector4d mLeftRearFootPosition;
-    Eigen::Vector4d mStartBodyPosision;
-    Eigen::Vector4d mWorldBodyPosition;
-    Eigen::Vector4d mWorldBodyPositionPrev;
-    Eigen::Vector4d mBodyVelocity;
-
-    bool bIsRightRearFirst; /// is it the first iteration of the right rear leg touching the floor.
-    bool bIsLeftRearFirst; /// is it the first iteration of the left rear leg touching the floor.
     bool bIsFirstRun;
-
-
-
+    bool bIsRightFirst;
+    bool bIsLeftFirst;
 };
 
 #endif //RAISIM_STATEESTIMATOR_HPP

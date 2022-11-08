@@ -7,14 +7,14 @@
 extern pSHM sharedMemory;
 
 SimulStateEstimator::SimulStateEstimator(raisim::ArticulatedSystem* robot)
-        : mRobot(robot)
-        , mPosition(raisim::VecDyn(19))
-        , mVelocity(raisim::VecDyn(18))
-        , bIsFirstRun(true)
-        , mPosFilter(ESTIMATOR_dT, 100)
-        , mVelFilter(ESTIMATOR_dT, 10)
-        , bIsRightFirst(true)
-        , bIsLeftFirst(true)
+    : mRobot(robot)
+    , mPosition(raisim::VecDyn(19))
+    , mVelocity(raisim::VecDyn(18))
+    , bIsFirstRun(true)
+    , mPosFilter(ESTIMATOR_dT, 100)
+    , mVelFilter(ESTIMATOR_dT, 10)
+    , bIsRightFirst(true)
+    , bIsLeftFirst(true)
 {
 }
 
@@ -86,7 +86,6 @@ void SimulStateEstimator::getRobotFootPosition()
 
 void SimulStateEstimator::getRobotLinearState()
 {
-/*
     if (bIsFirstRun)
     {
         sharedMemory->basePosition[0] = 0;
@@ -110,11 +109,10 @@ void SimulStateEstimator::getRobotLinearState()
 
     mBodyPrev[2] = -mTransMat[2].block(0,3,3,1);
     mBodyPrev[3] = -mTransMat[3].block(0,3,3,1);
-*/
 
-    for(int idx=0; idx<3; idx++)
+/*    for(int idx=0; idx<3; idx++)
     {
         sharedMemory->basePosition[idx] = mPosition[idx];
         sharedMemory->baseVelocity[idx] = mVelocity[idx];
-    }
+    }*/
 }

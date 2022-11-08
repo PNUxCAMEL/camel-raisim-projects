@@ -65,8 +65,8 @@ void Command::commandFunction()
             case CUSTOM_2:
             {
                 sharedMemory->controlState = STATE_WBC_READY;
-//                sharedMemory->can1State = CAN_SET_TORQUE;
-//                sharedMemory->can2State = CAN_SET_TORQUE;
+                sharedMemory->can1State = CAN_SET_TORQUE;
+                sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             default:

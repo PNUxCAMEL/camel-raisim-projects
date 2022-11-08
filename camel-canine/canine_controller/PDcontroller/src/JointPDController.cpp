@@ -20,6 +20,15 @@ JointPDController::JointPDController()
     }
 }
 
+void JointPDController::SetPDgain(const double& kp, const double& kd)
+{
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
+    {
+        Kp[motorIdx] = kp;
+        Kd[motorIdx] = kd;
+    }
+}
+
 void JointPDController::DoHomeControl()
 {
     updateHomeTrajectory();

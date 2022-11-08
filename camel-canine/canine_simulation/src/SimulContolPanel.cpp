@@ -17,6 +17,7 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         , test(mGaitLength, Vec4<int>(100,100,50,0), Vec4<int>(100,100,50,50), 100)
         , MPCcontrol(mGaitLength)
 {
+    PDcontrol.SetPDgain(80.0,1.5);
     mTorque.setZero();
 }
 

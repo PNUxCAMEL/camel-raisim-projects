@@ -16,6 +16,7 @@ class JointPDController
 public:
     JointPDController();
 
+    void SetPDgain(const double& kp, const double& kd);
     void DoHomeControl();
     void DoPDControl();
     void InitHomeStandUpTrajectory();

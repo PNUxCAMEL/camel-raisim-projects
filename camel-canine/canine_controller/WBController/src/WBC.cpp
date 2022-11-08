@@ -40,6 +40,7 @@ void WBC::DoWBControl()
     ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
     ForceQPsolver.GetGRF(mGRF);
 
+
     computeControlInput();
     setControlInput();
 }

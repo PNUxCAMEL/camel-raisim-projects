@@ -22,6 +22,26 @@ void ControllerState::ControllerFunction()
 {
     sharedMemory->localTime = mIteration * CONTROL_dT;
     mIteration++;
+    sharedMemory->gaitIteration++;
+    switch (sharedMemory->gaitState)
+    {
+        case STAND:
+        {
+            stand.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = stand.getGaitTable();
+            break;
+        }
+        case TROT:
+        {
+            trot.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = trot.getGaitTable();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
     switch (sharedMemory->controlState)
     {
         case STATE_CONTROL_STOP:
@@ -56,31 +76,22 @@ void ControllerState::ControllerFunction()
         {
             WBControl.InitTrajectory();
             sharedMemory->controlState = STATE_WBC_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = STAND;
             break;
         }
         case STATE_WBC_CONTROL:
         {
-            stand.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = stand.getGaitTable();
             WBControl.DoWBControl();
-            mGaitCounter++;
             break;
         }
-        case STATE_TROT_REDAY:
+        case STATE_MPC_REDAY:
         {
             MPCcontrol.InitSwingLegTrajectory();
-            sharedMemory->controlState = STATE_TROT_CONTROL;
-            sharedMemory->gaitState = STAND;
+            sharedMemory->controlState = STATE_MPC_CONTROL;
             break;
         }
-        case STATE_TROT_CONTROL:
+        case STATE_MPC_CONTROL:
         {
-            stand.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = stand.getGaitTable();
             MPCcontrol.DoControl();
-            mGaitCounter++;
             break;
         }
         default:

@@ -8,8 +8,6 @@ pthread_t RTThreadController;
 pthread_t RTThreadStateEstimator;
 pthread_t NRTThreadCommand;
 
-pthread_t NRTThreadIMU;
-
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
@@ -22,11 +20,6 @@ SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
 
-const std::string mComPort = "/dev/ttyACM0";
-const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
-mscl::InertialNode node(mConnection);
-LordImu3DmGx5Ahrs IMUBase(&node);
-
 void* NRTCommandThread(void* arg)
 {
     std::cout << "entered #Command_NRT_thread" << std::endl;
@@ -34,49 +27,6 @@ void* NRTCommandThread(void* arg)
     {
         userCommand.commandFunction();
         usleep(CMD_dT * 1e6);
-    }
-}
-
-void* NRTImuThread(void* arg)
-{
-    std::cout << "entered #nrt_IMU_thread" << std::endl;
-    IMUBase.SetConfig(250);
-    double* baseAngularPosition;
-    double* baseAngularVelocity;
-    double* baseLinearPosition;
-    double* baseLinearVelocity;
-
-    mscl::EulerAngles IMUAngularPositionOffset(3.141592, 0, 0);
-    node.setSensorToVehicleRotation_eulerAngles(IMUAngularPositionOffset);
-
-    while (true)
-    {
-        IMUBase.ParseData();
-
-        baseAngularPosition = IMUBase.GetEulerAngle();
-        baseAngularVelocity = IMUBase.GetAngularVelocity();
-
-        sharedMemory->baseEulerPosition[0] = baseAngularPosition[0];
-        sharedMemory->baseEulerPosition[1] = -baseAngularPosition[1];
-        sharedMemory->baseEulerPosition[2] = -baseAngularPosition[2];
-
-        sharedMemory->baseEulerVelocity[0] = baseAngularVelocity[0];
-        sharedMemory->baseEulerVelocity[1] = -baseAngularVelocity[1];
-        sharedMemory->baseEulerVelocity[2] = -baseAngularVelocity[2];
-
-        double cy = cos(sharedMemory->baseEulerPosition[2] * 0.5);
-        double sy = sin(sharedMemory->baseEulerPosition[2] * 0.5);
-        double cp = cos(sharedMemory->baseEulerPosition[1] * 0.5);
-        double sp = sin(sharedMemory->baseEulerPosition[1] * 0.5);
-        double cr = cos(sharedMemory->baseEulerPosition[0] * 0.5);
-        double sr = sin(sharedMemory->baseEulerPosition[0] * 0.5);
-
-        sharedMemory->baseQuartPosition[0] = cr * cp * cy + sr * sp * sy;
-        sharedMemory->baseQuartPosition[1] = sr * cp * cy - cr * sp * sy;
-        sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
-        sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
-
-        usleep(IMU_dT * 1e6);
     }
 }
 
@@ -182,6 +132,4 @@ void StartSimulation()
     int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 7, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
-    int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);
-
 }

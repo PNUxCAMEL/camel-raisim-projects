@@ -28,12 +28,10 @@ private:
     void setTrajectory();
     void computeControlInput();
     void setControlInput();
-    void setLegcontrol();
 
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[3];
     QPsolver ForceQPsolver;
-    SwingLeg SwingLegTrajectory;
 
     Vec3<double> mTorque[4];
     Vec3<double> mTorqueJacobian[4];

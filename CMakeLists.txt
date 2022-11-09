@@ -4,7 +4,7 @@ PROJECT(camel-raisim-projects)
 ADD_COMPILE_DEFINITIONS (URDF_RSC_DIR="${CMAKE_CURRENT_SOURCE_DIR}/camel-urdf/")
 
 set(CAMEL_CANINE FALSE)
-set(CAMEL_CANINE_LEG_LEFT FALSE)
+set(CAMEL_CANINE_LEG_LEFT TRUE)
 set(CAMEL_THIRDPARTY_QPOASES FALSE)
 
 if(${CAMEL_CANINE})
@@ -18,5 +18,3 @@ endif()
 if(${CAMEL_THIRDPARTY_QPOASES})
     add_subdirectory(camel-thirdparty/qpOASES)
 endif()
-
-add_subdirectory(camel-canine-leg-left_temp)

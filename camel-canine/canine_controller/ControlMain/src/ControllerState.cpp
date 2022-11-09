@@ -69,9 +69,15 @@ void ControllerState::ControllerFunction()
             PDcontrol.DoHomeControl();
             break;
         }
-        case STATE_PD_READY:
+        case STATE_PD_UP_READY:
         {
             PDQPcontrol.InitHomeStandUpTrajectory();
+            sharedMemory->controlState = STATE_PD_CONTROL;
+            break;
+        }
+        case STATE_PD_DOWN_READY:
+        {
+            PDQPcontrol.InitHomeStandDownTrajectory();
             sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }

@@ -50,7 +50,7 @@ void Command::commandFunction()
             }
             case PD_CMD:
             {
-                sharedMemory->controlState = STATE_PD_READY;
+                sharedMemory->controlState = STATE_PD_UP_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
@@ -64,7 +64,7 @@ void Command::commandFunction()
             }
             case CUSTOM_2:
             {
-                sharedMemory->controlState = STATE_WBC_READY;
+                sharedMemory->controlState = STATE_PD_DOWN_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
                 break;

@@ -14,7 +14,8 @@ GRFEstimatorMLP::GRFEstimatorMLP()
     mStatus = TF_NewStatus();
 
     std::array<char const*, 1> tags{ "serve" };
-    const char* modelPath = "/home/jh/AnacondaWorkspace/tensorflow260/DynamicBehaviorIdentification/RITA_models/model15";
+//    const char* modelPath = "/home/jh/AnacondaWorkspace/tensorflow260/DynamicBehaviorIdentification/RITA_models/model15";
+    const char* modelPath = "/home/jh/AnacondaWorkspace/tensorflow260/DynamicBehaviorIdentification/RITA_models/model_v2";
     mSession = TF_LoadSessionFromSavedModel(mSessionOptions, mRunOption,
         modelPath,
         tags.data(),
@@ -26,6 +27,8 @@ GRFEstimatorMLP::GRFEstimatorMLP()
     }
 
     mInputOperation = TF_GraphOperationByName(mGraph, "serving_default_dense_input");
+//    mInputOperation = TF_GraphOperationByName(mGraph, "serving_default_dense_10_input");
+
     if (mInputOperation == nullptr)
     {
         std::cout << "Failed to find graph operation\n";
@@ -75,18 +78,33 @@ GRFEstimatorMLP::GRFEstimatorMLP()
 void GRFEstimatorMLP::Estimate()
 {
     //pos hip, knee /vel hip, knee
+//    sharedMemory->GRFNetInputs[0] = sharedMemory->bufMotorPosition[0][0];
+//    sharedMemory->GRFNetInputs[1] = sharedMemory->bufMotorPosition[0][4];
+//    sharedMemory->GRFNetInputs[2] = sharedMemory->bufMotorPosition[0][8];
+//    sharedMemory->GRFNetInputs[3] = sharedMemory->bufMotorPosition[1][0];
+//    sharedMemory->GRFNetInputs[4] = sharedMemory->bufMotorPosition[1][4];
+//    sharedMemory->GRFNetInputs[5] = sharedMemory->bufMotorPosition[1][8];
+//    sharedMemory->GRFNetInputs[6] = sharedMemory->bufMotorVelocity[0][0];
+//    sharedMemory->GRFNetInputs[7] = sharedMemory->bufMotorVelocity[0][4];
+//    sharedMemory->GRFNetInputs[8] = sharedMemory->bufMotorVelocity[0][8];
+//    sharedMemory->GRFNetInputs[9] = sharedMemory->bufMotorVelocity[1][0];
+//    sharedMemory->GRFNetInputs[10] = sharedMemory->bufMotorVelocity[1][4];
+//    sharedMemory->GRFNetInputs[11] = sharedMemory->bufMotorVelocity[1][8];
+//    sharedMemory->GRFNetInputs[12] = sharedMemory->motorDesiredTorque[0];
+//    sharedMemory->GRFNetInputs[13] = sharedMemory->motorDesiredTorque[1];
+
     sharedMemory->GRFNetInputs[0] = sharedMemory->bufMotorPosition[0][0];
-    sharedMemory->GRFNetInputs[1] = sharedMemory->bufMotorPosition[0][4];
-    sharedMemory->GRFNetInputs[2] = sharedMemory->bufMotorPosition[0][8];
+    sharedMemory->GRFNetInputs[1] = sharedMemory->bufMotorPosition[0][20];
+    sharedMemory->GRFNetInputs[2] = sharedMemory->bufMotorPosition[0][40];
     sharedMemory->GRFNetInputs[3] = sharedMemory->bufMotorPosition[1][0];
-    sharedMemory->GRFNetInputs[4] = sharedMemory->bufMotorPosition[1][4];
-    sharedMemory->GRFNetInputs[5] = sharedMemory->bufMotorPosition[1][8];
+    sharedMemory->GRFNetInputs[4] = sharedMemory->bufMotorPosition[1][20];
+    sharedMemory->GRFNetInputs[5] = sharedMemory->bufMotorPosition[1][40];
     sharedMemory->GRFNetInputs[6] = sharedMemory->bufMotorVelocity[0][0];
-    sharedMemory->GRFNetInputs[7] = sharedMemory->bufMotorVelocity[0][4];
-    sharedMemory->GRFNetInputs[8] = sharedMemory->bufMotorVelocity[0][8];
+    sharedMemory->GRFNetInputs[7] = sharedMemory->bufMotorVelocity[0][20];
+    sharedMemory->GRFNetInputs[8] = sharedMemory->bufMotorVelocity[0][40];
     sharedMemory->GRFNetInputs[9] = sharedMemory->bufMotorVelocity[1][0];
-    sharedMemory->GRFNetInputs[10] = sharedMemory->bufMotorVelocity[1][4];
-    sharedMemory->GRFNetInputs[11] = sharedMemory->bufMotorVelocity[1][8];
+    sharedMemory->GRFNetInputs[10] = sharedMemory->bufMotorVelocity[1][20];
+    sharedMemory->GRFNetInputs[11] = sharedMemory->bufMotorVelocity[1][40];
     sharedMemory->GRFNetInputs[12] = sharedMemory->motorDesiredTorque[0];
     sharedMemory->GRFNetInputs[13] = sharedMemory->motorDesiredTorque[1];
 

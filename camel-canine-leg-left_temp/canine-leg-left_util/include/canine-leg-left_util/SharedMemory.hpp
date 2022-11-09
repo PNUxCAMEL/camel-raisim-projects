@@ -8,7 +8,7 @@
 #include "RobotDescription.hpp"
 
 #define CMD_dT              0.001
-#define CONTROL_dT          0.005
+#define CONTROL_dT          0.001
 #define VISUAL_dT           0.01
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
@@ -16,7 +16,7 @@
 #define R2D                 57.2957802
 #define D2R                 0.0174533
 #define GRAVITY             -9.81
-#define BUF_SIZE            9
+#define BUF_SIZE            41
 
 constexpr int       MPC_HORIZON     = 5;
 constexpr double    MPC_dT          = 0.02;

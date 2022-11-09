@@ -17,6 +17,7 @@
 #include <convexMPC/MPCController.hpp>
 #include <WBController/WBC.hpp>
 #include <ControlUtils/Gait.hpp>
+#include <PDQPcontrol/PDQPcontroller.hpp>
 
 class SimulControlPanel{
 public:
@@ -38,6 +39,7 @@ private:
 
     JointPDController PDcontrol;
     MPCController MPCcontrol;
+    PDQPController PDQPcontrol;
     WBC WBControl;
     OffsetGait stand, trot, test;
 };

@@ -44,13 +44,13 @@
   <link name="trunk">
     <inertial>
       <origin xyz="0.146 0.0 0.0555" rpy="0 0 -1.57079632679" />
-      <mass value="10" />
-      <inertia ixx="0.060288"
+      <mass value="14.2" />
+      <inertia ixx="0.085609"
                ixy="0"
                ixz="0"
-               iyy="0.081321"
+               iyy="0.11548"
                iyz="0"
-               izz="0.12107" />
+               izz="0.17193" />
     </inertial>
     <visual>
       <origin xyz="0.146 0 0.0555" rpy="0 0 -1.57079632679" />

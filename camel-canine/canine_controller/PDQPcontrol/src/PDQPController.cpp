@@ -2,13 +2,13 @@
 // Created by camel on 22. 9. 21.
 //
 
-#include <PDcontroller/JointPDController.hpp>
+#include <PDQPcontrol/PDQPcontroller.hpp>
 #include <iostream>
 
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
-JointPDController::JointPDController()
+PDQPController::PDQPController()
     : mRefTime(0.0)
     , mHomeState(HOME_NO_ACT)
 {
@@ -20,20 +20,13 @@ JointPDController::JointPDController()
     }
 }
 
-void JointPDController::SetPDgain(const double& kp, const double& kd)
-{
-    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
-    {
-        Kp[motorIdx] = kp;
-        Kd[motorIdx] = kd;
-    }
-}
-
-void JointPDController::DoHomeControl()
+void PDQPController::DoHomeControl()
 {
     updateState();
     updateHomeTrajectory();
     setHomeTrajectory();
+
+    setTrajectory();
     ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
     ForceQPsolver.GetGRF(mGRF);
 
@@ -41,7 +34,7 @@ void JointPDController::DoHomeControl()
     SetControlInput();
 }
 
-void JointPDController::updateState()
+void PDQPController::updateState()
 {
     for (int idx=0; idx<3; idx++)
     {
@@ -65,31 +58,75 @@ void JointPDController::updateState()
         mBasePosition[0], mBasePosition[1], mBasePosition[2],
         mBaseEulerVelocity[0], mBaseEulerVelocity[1], mBaseEulerVelocity[2],
         mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], -9.81;
-
-    mDesiredState.setZero();
-    mDesiredState[5] = 0.3;
 }
 
-void JointPDController::InitHomeStandUpTrajectory()
+void PDQPController::setTrajectory()
+{
+    mDesiredState.setZero();
+    mDesiredState(5,0) = mBasePosition[2];
+
+    sharedMemory->baseDesiredPosition[0] = mDesiredState(3,0);
+    sharedMemory->baseDesiredPosition[1] = mDesiredState(4,0);
+    sharedMemory->baseDesiredPosition[2] = mDesiredState(5,0);
+
+    sharedMemory->baseDesiredVelocity[0] = mDesiredState(9,0);
+    sharedMemory->baseDesiredVelocity[1] = mDesiredState(10,0);
+    sharedMemory->baseDesiredVelocity[2] = mDesiredState(11,0);
+}
+
+void PDQPController::InitTrajectory()
+{
+    double timeDuration = 3.5;
+    mBodyTrajectory[0].updateTrajectory(sharedMemory->basePosition[0],
+                                        0.0,
+                                        sharedMemory->localTime, timeDuration);
+    mBodyTrajectory[1].updateTrajectory(sharedMemory->basePosition[1],
+                                        0.0,
+                                        sharedMemory->localTime, timeDuration);
+    mBodyTrajectory[2].updateTrajectory(sharedMemory->basePosition[2],
+                                        0.3,
+                                        sharedMemory->localTime, timeDuration);
+}
+
+void PDQPController::InitHomeStandUpTrajectory()
 {
     mHomeState = HOME_STAND_UP_PHASE1;
 }
 
-void JointPDController::InitHomeStandDownTrajectory()
+void PDQPController::InitHomeStandDownTrajectory()
 {
     mHomeState = HOME_STAND_DOWN_PHASE1;
 }
 
-void JointPDController::computeControlInput()
+void PDQPController::computeControlInput()
 {
     for (int index = 0; index < MOTOR_NUM; index++)
     {
         mTorque[index] = Kp[index] * (mDesiredPosition[index] - sharedMemory->motorPosition[index])
             + Kd[index] * (mDesiredVelocity[index] - sharedMemory->motorVelocity[index]);
     }
+
+    GetJacobian(mJacobian[0], mMotorPosition[0],1);
+    GetJacobian(mJacobian[1], mMotorPosition[1],-1);
+    GetJacobian(mJacobian[2], mMotorPosition[2],1);
+    GetJacobian(mJacobian[3], mMotorPosition[3],-1);
+
+    for(int idx=0; idx<4; idx++)
+    {
+        mJacobian[idx].transposeInPlace();
+        mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
+    }
+
+    double coef = 0.3;
+
+    for(int idx=0; idx<MOTOR_NUM; idx++)
+    {
+//        mTorque[idx] = coef*mTorque[idx]+(1-coef)*mTorqueJacobian[idx%4][idx/4];
+        mTorque[idx] += coef*mTorqueJacobian[idx%4][idx/4];
+    }
 }
 
-void JointPDController::updateHomeTrajectory()
+void PDQPController::updateHomeTrajectory()
 {
     switch(mHomeState)
     {
@@ -164,7 +201,7 @@ void JointPDController::updateHomeTrajectory()
     }
 }
 
-void JointPDController::setHomeTrajectory()
+void PDQPController::setHomeTrajectory()
 {
     for (int index = 0; index < MOTOR_NUM; index++)
     {
@@ -173,7 +210,7 @@ void JointPDController::setHomeTrajectory()
     }
 }
 
-void JointPDController::SetControlInput()
+void PDQPController::SetControlInput()
 {
     for (int index = 0; index < MOTOR_NUM; index++)
     {
@@ -193,5 +230,15 @@ void JointPDController::SetControlInput()
             }
         }
         sharedMemory->motorDesiredTorque[index] = mTorque[index];
+    }
+}
+
+
+void PDQPController::SetPDgain(const double& kp, const double& kd)
+{
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
+    {
+        Kp[motorIdx] = kp;
+        Kd[motorIdx] = kd;
     }
 }

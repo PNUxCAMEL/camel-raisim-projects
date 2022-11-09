@@ -17,7 +17,8 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         , test(mGaitLength, Vec4<int>(100,100,50,0), Vec4<int>(100,100,50,50), 100)
         , MPCcontrol(mGaitLength)
 {
-    PDcontrol.SetPDgain(80.0,1.5);
+    PDcontrol.SetPDgain(150.0,2.0);
+    PDQPcontrol.SetPDgain(150.0,2.0);
     mTorque.setZero();
 }
 
@@ -83,10 +84,14 @@ void SimulControlPanel::ControllerFunction()
         }
         case STATE_PD_READY:
         {
+            PDQPcontrol.InitHomeStandUpTrajectory();
+            sharedMemory->controlState = STATE_PD_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_PD_CONTROL:
         {
+            PDQPcontrol.DoHomeControl();
             break;
         }
         case STATE_WBC_READY:

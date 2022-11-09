@@ -10,7 +10,7 @@ WBC::WBC()
 {
     for(auto & idx : mTorqueLimit)
     {
-        idx << 11.0, 11.0, 11.0;
+        idx << 15.0, 15.0, 15.0;
     }
     mTorque->setZero();
     mTorqueJacobian->setZero();
@@ -120,9 +120,9 @@ void WBC::setControlInput()
             {
                 mTorque[leg][motor] = -mTorqueLimit[leg][motor];
             }
-            std::cout << mTorque[leg][motor] << "\t";
+//            std::cout << mTorque[leg][motor] << "\t";
             sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
         }
     }
-    std::cout << std::endl << std::endl;
+//    std::cout << std::endl << std::endl;
 }

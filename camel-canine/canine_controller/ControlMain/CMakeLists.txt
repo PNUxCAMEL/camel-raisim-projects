@@ -10,6 +10,7 @@ include_directories(
         ${ControlUtils_SOURCE_DIR}/include
         ${WBController_SOURCE_DIR}/include
         ${qpOASES_SOURCE_DIR}/include
+        ${PDQPcontrol_SOURCE_DIR}/include
 )
 link_directories(
         ${qpOASES_SOURCE_DIR}/bin
@@ -20,7 +21,3 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME}
-        canine_controller::convexMPC
-        canine_controller::WBController
-        raisim::raisim)

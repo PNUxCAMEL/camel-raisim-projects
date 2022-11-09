@@ -20,6 +20,7 @@ link_directories(
 
 add_library(${PROJECT_NAME} STATIC
         src/PDQPController.cpp
+        src/QPsolver.cpp
         )
 
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})

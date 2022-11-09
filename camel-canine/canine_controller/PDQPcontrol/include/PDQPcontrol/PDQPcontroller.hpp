@@ -10,7 +10,8 @@
 
 #include <camel-tools/CubicTrajectoryGenerator.hpp>
 
-#include <WBController/QPsolver.hpp>
+//#include <WBController/QPsolver.hpp>
+#include "QPsolver.hpp"
 
 class PDQPController
 {
@@ -34,7 +35,8 @@ private:
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
     CubicTrajectoryGenerator mBodyTrajectory[3];
-    QPsolver ForceQPsolver;
+    PDQPsolver ForceQPsolver;
+
     int mHomeState;
     double mRefTime;
     double mDesiredPosition[MOTOR_NUM];

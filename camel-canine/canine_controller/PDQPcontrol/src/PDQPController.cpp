@@ -3,7 +3,6 @@
 //
 
 #include <PDQPcontrol/PDQPcontroller.hpp>
-#include <iostream>
 
 extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
@@ -12,11 +11,16 @@ PDQPController::PDQPController()
     : mRefTime(0.0)
     , mHomeState(HOME_NO_ACT)
 {
+    mTorqueJacobian->setZero();
+    mGRF->setZero();
+    mMotorPosition->setZero();
+    mJacobian->setZero();
+
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
         Kp[motorIdx] = 150.0;
         Kd[motorIdx] = 4.0;
-        mTorqueLimit[motorIdx] = 12.0;
+        mTorqueLimit[motorIdx] = 13.0;
     }
 }
 
@@ -63,6 +67,9 @@ void PDQPController::updateState()
 void PDQPController::setTrajectory()
 {
     mDesiredState.setZero();
+/*    mDesiredState(5,0) = mBodyTrajectory[2].getPositionTrajectory(sharedMemory->localTime);
+    mDesiredState(11,0) = mBodyTrajectory[2].getVelocityTrajectory(sharedMemory->localTime);*/
+
     mDesiredState(5,0) = mBasePosition[2];
     mDesiredState(11,0) = mBaseVelocity[2];
 
@@ -75,28 +82,24 @@ void PDQPController::setTrajectory()
     sharedMemory->baseDesiredVelocity[2] = mDesiredState(11,0);
 }
 
-void PDQPController::InitTrajectory()
-{
-    double timeDuration = 3.5;
-    mBodyTrajectory[0].updateTrajectory(sharedMemory->basePosition[0],
-                                        0.0,
-                                        sharedMemory->localTime, timeDuration);
-    mBodyTrajectory[1].updateTrajectory(sharedMemory->basePosition[1],
-                                        0.0,
-                                        sharedMemory->localTime, timeDuration);
-    mBodyTrajectory[2].updateTrajectory(sharedMemory->basePosition[2],
-                                        0.3,
-                                        sharedMemory->localTime, timeDuration);
-}
-
 void PDQPController::InitHomeStandUpTrajectory()
 {
     mHomeState = HOME_STAND_UP_PHASE1;
+
+    double timeDuration = 3.5;
+    mBodyTrajectory[0].updateTrajectory(mBasePosition[0], 0.0, sharedMemory->localTime, timeDuration);
+    mBodyTrajectory[1].updateTrajectory(mBasePosition[1], 0.0, sharedMemory->localTime, timeDuration);
+    mBodyTrajectory[2].updateTrajectory(mBasePosition[2], 0.3, sharedMemory->localTime, timeDuration);
 }
 
 void PDQPController::InitHomeStandDownTrajectory()
 {
     mHomeState = HOME_STAND_DOWN_PHASE1;
+
+    double timeDuration = 3.5;
+    mBodyTrajectory[0].updateTrajectory(mBasePosition[0], 0.0, sharedMemory->localTime, timeDuration);
+    mBodyTrajectory[1].updateTrajectory(mBasePosition[1], 0.0, sharedMemory->localTime, timeDuration);
+    mBodyTrajectory[2].updateTrajectory(mBasePosition[2], 0.0, sharedMemory->localTime, timeDuration);
 }
 
 void PDQPController::computeControlInput()
@@ -118,11 +121,11 @@ void PDQPController::computeControlInput()
         mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
     }
 
-    double coef = 0.0;
+    double coef = 1.0;
 
     for(int idx=0; idx<MOTOR_NUM; idx++)
     {
-//        mTorque[idx] = mTorqueJacobian[idx%4][idx/4] + coef*mTorque[idx];
+//        mTorque[idx] = (1-coef)*mTorqueJacobian[idx%4][idx/4] + coef*mTorque[idx];
         mTorque[idx] += coef*mTorqueJacobian[idx%4][idx/4];
     }
 }

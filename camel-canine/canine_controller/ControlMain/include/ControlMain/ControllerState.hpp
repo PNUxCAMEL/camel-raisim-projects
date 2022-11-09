@@ -7,8 +7,6 @@
 
 #include <stdint.h>
 
-#include <raisim/World.hpp>
-
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/EigenTypes.hpp>
@@ -17,6 +15,7 @@
 #include <PDcontroller/JointPDController.hpp>
 #include <convexMPC/MPCController.hpp>
 #include <ControlUtils/Gait.hpp>
+#include <PDQPcontrol/PDQPcontroller.hpp>
 
 class ControllerState{
 public:
@@ -29,10 +28,9 @@ private:
     uint16_t mGaitCounter;
     uint8_t mGaitLength;
 
-    raisim::VecDyn mTorque = raisim::VecDyn(18);
-
     JointPDController PDcontrol;
     MPCController MPCcontrol;
+    PDQPController PDQPcontrol;
     WBC WBControl;
 
     OffsetGait stand, trot;

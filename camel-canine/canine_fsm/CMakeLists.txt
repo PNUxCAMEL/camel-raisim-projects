@@ -58,7 +58,6 @@ SET(CANINE_LIBS
 target_link_libraries(canine_fsm
         PUBLIC
         ${PUBLIC_LIBS}
-        PRIVATE
         ${CAMEL_LIBS}
         ${CANINE_LIBS}
 )

@@ -15,7 +15,6 @@ ControllerState::ControllerState()
     , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
     , MPCcontrol(mGaitLength)
 {
-    mTorque.setZero();
 }
 
 void ControllerState::ControllerFunction()
@@ -72,10 +71,13 @@ void ControllerState::ControllerFunction()
         }
         case STATE_PD_READY:
         {
+            PDQPcontrol.InitHomeStandUpTrajectory();
+            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_CONTROL:
         {
+            PDQPcontrol.DoHomeControl();
             break;
         }
         case STATE_WBC_READY:

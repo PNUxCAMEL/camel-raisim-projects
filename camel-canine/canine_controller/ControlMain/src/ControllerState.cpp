@@ -52,14 +52,14 @@ void ControllerState::ControllerFunction()
         {
             break;
         }
-        case STATE_TROT_REDAY:
+        case STATE_MPC_REDAY:
         {
             MPCcontrol.InitSwingLegTrajectory();
-            sharedMemory->controlState = STATE_TROT_CONTROL;
+            sharedMemory->controlState = STATE_MPC_CONTROL;
             sharedMemory->gaitState = TROT;
             break;
         }
-        case STATE_TROT_CONTROL:
+        case STATE_MPC_CONTROL:
         {
             trot.setIterations(mGaitCounter);
             sharedMemory->gaitTable = trot.getGaitTable();

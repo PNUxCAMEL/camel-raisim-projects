@@ -80,18 +80,18 @@ void MainWindow::InitTable(QTableWidget *table){
         table->verticalHeaderItem(i)->setTextAlignment(Qt::AlignHCenter|Qt::AlignVCenter|Qt::AlignCenter);
         table->verticalHeaderItem(i)->setFont(tableFont);
     }
-    table->verticalHeaderItem(0)->setText("LFHR");
-    table->verticalHeaderItem(1)->setText("LFHP");
-    table->verticalHeaderItem(2)->setText("LFKP");
-    table->verticalHeaderItem(3)->setText("RFHR");
-    table->verticalHeaderItem(4)->setText("RFHP");
-    table->verticalHeaderItem(5)->setText("RFKP");
-    table->verticalHeaderItem(6)->setText("LBHR");
-    table->verticalHeaderItem(7)->setText("LBHP");
-    table->verticalHeaderItem(8)->setText("LBKP");
-    table->verticalHeaderItem(9)->setText("RBHR");
-    table->verticalHeaderItem(10)->setText("RBHP");
-    table->verticalHeaderItem(11)->setText("RBKP");
+    table->verticalHeaderItem(RFHR_IDX)->setText("RFHR");
+    table->verticalHeaderItem(RFHP_IDX)->setText("RFHP");
+    table->verticalHeaderItem(RFKP_IDX)->setText("RFKP");
+    table->verticalHeaderItem(LFHR_IDX)->setText("LFHR");
+    table->verticalHeaderItem(LFHP_IDX)->setText("LFHP");
+    table->verticalHeaderItem(LFKP_IDX)->setText("LFKP");
+    table->verticalHeaderItem(RBHR_IDX)->setText("RBHR");
+    table->verticalHeaderItem(RBHP_IDX)->setText("RBHP");
+    table->verticalHeaderItem(RBKP_IDX)->setText("RBKP");
+    table->verticalHeaderItem(LBHR_IDX)->setText("LBHR");
+    table->verticalHeaderItem(LBHP_IDX)->setText("LBHP");
+    table->verticalHeaderItem(LBKP_IDX)->setText("LBKP");
 
 
     for(int i=0; i<row_num; i++){

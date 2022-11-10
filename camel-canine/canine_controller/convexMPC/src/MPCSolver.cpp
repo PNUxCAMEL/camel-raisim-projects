@@ -40,7 +40,7 @@ void MPCSolver::SetTrajectory(const double* mP)
 {
     for(int i = 0; i < mHorizon ; i++)
     {
-        xd(i*13+5,0) = 0.37;
+        xd(i*13+5,0) = 0.3;
 
 
 /*        if(sharedMemory->gaitState == STAND)

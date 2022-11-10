@@ -19,7 +19,7 @@ void SimulCommand::commandFunction()
             case CAN_ON:
             {
                 std::cout << "=====Gait is changed=====" << std::endl;
-                sharedMemory->gaitState = TEST;
+                sharedMemory->gaitState = TROT;
                 sharedMemory->gaitIteration = 0;
                 break;
             }
@@ -44,17 +44,17 @@ void SimulCommand::commandFunction()
             }
             case PD_CMD:
             {
-                sharedMemory->controlState = STATE_PD_UP_READY;
+                sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
                 break;
             }
             case CUSTOM_1:
             {
-                sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
+                sharedMemory->controlState = STATE_WBC_READY;
                 break;
             }
             case CUSTOM_2:
             {
-                sharedMemory->controlState = STATE_PD_DOWN_READY;
+                sharedMemory->controlState = STATE_MPC_REDAY;
                 break;
             }
             default:

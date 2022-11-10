@@ -22,16 +22,19 @@ MPCController::MPCController(const uint8_t& horizon)
     swingtorque->setZero();
 }
 
-void MPCController::InitSwingLegTrajectory()
+void MPCController::InitTrajectory()
 {
     SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
+    double timeDuration = 2.0;
+    mBaseTrajectory.updateTrajectory(sharedMemory->basePosition[2], 0.3,
+                                        sharedMemory->localTime, timeDuration);
 }
 
 void MPCController::DoControl()
 {
     //TODO: Make structure for robot states
     updateState();
-    ConvexMPCSolver.SetTrajectory(mBasePosition);
+    ConvexMPCSolver.SetTrajectory(mBaseTrajectory);
     ConvexMPCSolver.GetMetrices(mBaseEulerPosition, mBasePosition,
                                 mBaseEulerVelocity, mBaseVelocity,
                                 mFootPosition);

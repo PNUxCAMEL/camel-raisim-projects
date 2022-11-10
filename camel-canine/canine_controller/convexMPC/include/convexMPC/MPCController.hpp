@@ -5,10 +5,10 @@
 #ifndef RAISIM_MPCCONTROLLER_H
 #define RAISIM_MPCCONTROLLER_H
 
-#include <canine_util/SharedMemory.hpp>
+#include <ControlUtils/SwingLeg.hpp>
 
 #include "MPCSolver.hpp"
-#include <ControlUtils/SwingLeg.hpp>
+
 
 using Eigen::Dynamic;
 
@@ -16,7 +16,7 @@ class MPCController{
 public:
     MPCController(const uint8_t& horizon);
     void DoControl();
-    void InitSwingLegTrajectory();
+    void InitTrajectory();
 private:
     void updateState();
     void computeControlInput();
@@ -27,6 +27,7 @@ private:
     const uint8_t mHorizon;
     MPCSolver ConvexMPCSolver;
     SwingLeg SwingLegTrajectory;
+    CubicTrajectoryGenerator mBaseTrajectory;
 
     double mDesiredPosition[2];
     double mBasePosition[3];

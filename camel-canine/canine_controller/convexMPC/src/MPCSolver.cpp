@@ -14,8 +14,12 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
     , mMu(0.6)
     , mWeightMat(WEIGHT)
     , mHorizon(horizon)
-    , mBodyInertia(BODY_INERTIA)
 {
+    mBodyInertia.setZero();
+    for (int idx=0; idx<3; idx++)
+    {
+        mBodyInertia(idx,idx) = BODY_INERTIA[idx];
+    }
     initMatrix();
     resizeMatrix();
 }
@@ -36,23 +40,11 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory(const double* mP)
+void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory)
 {
-    for(int i = 0; i < mHorizon ; i++)
+    for(int horizon = 0; horizon < mHorizon ; horizon++)
     {
-        xd(i*13+5,0) = 0.3;
-
-
-/*        if(sharedMemory->gaitState == STAND)
-        {
-            xd(i*13+3,0) = mStopPosX;
-            xd(i*13+9,0) = 0.0;
-        }
-        else
-        {
-            xd(i*13+3,0) = mP[0]+0.3*(mDt*i);
-            xd(i*13+9,0) = 0.3;
-        }*/
+        xd[horizon*13+5] = Trajectory.getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
     }
 }
 

@@ -15,6 +15,5 @@ const double WEIGHT[13] = {1, 1, 50,
                            0, 0, 0.2,
                            0.05, 0.05, 0.05,
                            0.f};
-const double BODY_INERTIA[9] = {0.081321, 0, 0, 0, 0.060288,0, 0,0,0.12107};
 
 #endif //RAISIM_MPCDESCRIPTION_HPP

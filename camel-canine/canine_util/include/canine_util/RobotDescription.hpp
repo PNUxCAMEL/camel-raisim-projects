@@ -9,7 +9,8 @@ constexpr int MOTOR_NUM = 12;
 constexpr int MOTOR_NUM_PER_CAN = 6;
 
 constexpr double GRAVITY = -9.81;
-constexpr double BODYMASS = 10.0;
+constexpr double BODYMASS = 14.2;
+constexpr double BODY_INERTIA[3] = {0.085609, 0.11548, 0.17193};
 constexpr double LEN_HIP = 0.085;
 constexpr double LEN_THI = 0.23;
 constexpr double LEN_CAL = 0.23;

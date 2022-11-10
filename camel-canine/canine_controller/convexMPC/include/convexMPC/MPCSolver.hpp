@@ -10,6 +10,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <qpOASES.hpp>
 
+#include <camel-tools/trajectory.hpp>
 #include <canine_util/EigenTypes.hpp>
 #include <canine_util/SharedMemory.hpp>
 
@@ -22,7 +23,7 @@ public:
     MPCSolver(const uint8_t& horizon);
     ~MPCSolver();
 
-    void SetTrajectory(const double* mP);
+    void SetTrajectory(CubicTrajectoryGenerator Trajectory);
     void GetMetrices(const double* mQ, const double* mP,
                      const double* mW, const double* mV,
                      const double mFoot[4][3]);

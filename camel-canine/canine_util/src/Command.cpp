@@ -43,28 +43,30 @@ void Command::commandFunction()
             }
             case HOME:
             {
-                sharedMemory->controlState = STATE_HOME_READY;
+                sharedMemory->controlState = STATE_HOME_STAND_UP_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             case PD_CMD:
             {
-                sharedMemory->controlState = STATE_PD_READY;
+                sharedMemory->controlState = STATE_PD_UP_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
-
                 break;
             }
             case CUSTOM_1:
             {
-                sharedMemory->controlState = STATE_READY;
+                sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             case CUSTOM_2:
             {
+                sharedMemory->controlState = STATE_PD_DOWN_READY;
+                sharedMemory->can1State = CAN_SET_TORQUE;
+                sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             default:

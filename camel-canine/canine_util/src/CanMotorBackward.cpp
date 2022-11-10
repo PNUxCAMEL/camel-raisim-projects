@@ -69,6 +69,7 @@ void CanMotorBackward::CanFunction()
         turnOnMotor();
         sharedMemory->can2State = CAN_NO_ACT;
         readEncoder();
+        sharedMemory->motorBackState = true;
         break;
     }
     case CAN_INIT:

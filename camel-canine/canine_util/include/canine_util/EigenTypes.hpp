@@ -17,6 +17,9 @@ template <typename T>
 using Vec13 = typename Eigen::Matrix<T, 13, 1>;
 
 template <typename T>
-using Mat3x3 = typename Eigen::Matrix<T, 3, 3>;
+using Mat3 = typename Eigen::Matrix<T, 3, 3>;
+
+template <typename T>
+using Mat4 = typename Eigen::Matrix<T, 4, 4>;
 
 #endif //RAISIM_EIGENTYPES_H

@@ -10,6 +10,7 @@
 #include "RobotDescription.hpp"
 #include "SharedMemory.hpp"
 #include "RobotMath.hpp"
+#include "Filter.hpp"
 
 class StateEstimator{
 public:
@@ -17,13 +18,21 @@ public:
 
     void StateEstimatorFunction();
 private:
-    void getJointState();
-    void getRobotAngulerState();
+    void updateState();
     void getRobotLinearState();
     void getRobotFootPosition();
 private:
+    CanineFilter::Vec3LPF mVelFilter;
+    CanineFilter::Vec3LPF mPosFilter;
 
-    double mQuaternion[4];
+    Vec4<double> mQuaternion;
+    Mat4<double> mTransMat[4];
+    Vec3<double> mBodyPrev[4];
+    Vec3<double> mBodyPosDiff;
+
+    bool bIsFirstRun;
+    bool bIsRightFirst;
+    bool bIsLeftFirst;
 };
 
 #endif //RAISIM_STATEESTIMATOR_HPP

@@ -6,6 +6,7 @@
 #define RAISIM_SHAREDMEMORY_H
 
 #include "RobotDescription.hpp"
+#include "EigenTypes.hpp"
 
 #define CMD_dT              0.001
 #define CONTROL_dT          0.005
@@ -35,6 +36,8 @@ typedef struct _SHM_
     bool can1Status;
     bool can2Status;
     bool motorStatus;
+    bool motorBackState;
+    bool motorForeState;
     int controlState;
     int visualState;
     int gaitState;
@@ -43,17 +46,21 @@ typedef struct _SHM_
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
-    double basePosition[3];
-    double baseVelocity[3];
+    Vec3<double> basePosition; ///todo
+    Vec3<double> baseVelocity; ///todo
+    Vec3<double> baseDesiredPosition; ///todo
+    Vec3<double> baseDesiredVelocity; ///todo
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];
-    double footPosition[4][3];
+    double footPosition[4][3];  ///todo
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
+    uint32_t gaitIteration;
+
 } SHM, * pSHM;
 
 typedef struct _CUSTOM_DATA_

@@ -22,7 +22,7 @@ SimulStateEstimator StateEstimator(robot);
 
 void* NRTCommandThread(void* arg)
 {
-    std::cout << "entered #nrt_command_thread" << std::endl;
+    std::cout << "entered #Command_NRT_thread" << std::endl;
     while (true)
     {
         userCommand.commandFunction();
@@ -32,7 +32,7 @@ void* NRTCommandThread(void* arg)
 
 void *RTControllerThread(void *arg)
 {
-    std::cout << "entered #rt_time_checker_thread" << std::endl;
+    std::cout << "entered #Controller_RT_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(CONTROL_dT * 1e6); // 200Hz 짜리 쓰레드
@@ -45,12 +45,14 @@ void *RTControllerThread(void *arg)
         clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
         timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
 
-        ControlPanel.ControllerFunction();
+        if (sharedMemory->visualState != STATE_VISUAL_STOP)
+        {
+            ControlPanel.ControllerFunction();
+        }
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
-            std::cout << "RT Deadline Miss, Time Checker thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001
-                      << " ms" << std::endl;
+            std::cout << "RT Deadline Miss, Controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
 
     }
@@ -58,7 +60,7 @@ void *RTControllerThread(void *arg)
 
 void* RTStateEstimator(void* arg)
 {
-    std::cout << "entered #rt_State_Estimator_thread" << std::endl;
+    std::cout << "entered #StateEsitimator_RT_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(ESTIMATOR_dT * 1e6);
@@ -67,12 +69,15 @@ void* RTStateEstimator(void* arg)
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
-        StateEstimator.StateEstimatorFunction();
+        if (sharedMemory->visualState != STATE_VISUAL_STOP)
+        {
+            StateEstimator.StateEstimatorFunction();
+        }
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
         {
-            std::cout << "RT Deadline Miss, can forward thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+            std::cout << "RT Deadline Miss, State estimator thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
         }
     }
 }
@@ -85,6 +90,7 @@ void clearSharedMemory()
     sharedMemory->motorStatus = false;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
+    sharedMemory->gaitState = STAND;
     sharedMemory->can1State = CAN_NO_ACT;
     sharedMemory->can2State = CAN_NO_ACT;
     sharedMemory->localTime = 0;
@@ -98,10 +104,10 @@ void clearSharedMemory()
         sharedMemory->motorDesiredTorque[index] = 0;
         sharedMemory->motorVoltage[index] = 0;
     }
+    sharedMemory->basePosition.setZero();
+    sharedMemory->baseVelocity.setZero();
     for (int index = 0; index < 3; index++)
     {
-        sharedMemory->basePosition[index] = 0;
-        sharedMemory->baseVelocity[index] = 0;
         sharedMemory->baseEulerPosition[index] = 0;
         sharedMemory->baseEulerVelocity[index] = 0;
     }
@@ -110,6 +116,8 @@ void clearSharedMemory()
     sharedMemory->baseQuartPosition[1] = 0.0;
     sharedMemory->baseQuartPosition[2] = 0.0;
     sharedMemory->baseQuartPosition[3] = 0.0;
+
+    sharedMemory->gaitIteration = 0;
 }
 
 void StartSimulation()
@@ -120,8 +128,8 @@ void StartSimulation()
 
     server.launchServer(8080);
 
-    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 5, 99, NULL);
-    int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 6, 99,NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99, NULL);
+    int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 7, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
 }

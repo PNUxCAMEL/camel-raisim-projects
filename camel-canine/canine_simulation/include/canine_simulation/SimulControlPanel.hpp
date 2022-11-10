@@ -15,7 +15,9 @@
 
 #include <PDcontroller/JointPDController.hpp>
 #include <convexMPC/MPCController.hpp>
+#include <WBController/WBC.hpp>
 #include <ControlUtils/Gait.hpp>
+#include <PDQPcontrol/PDQPcontroller.hpp>
 
 class SimulControlPanel{
 public:
@@ -31,14 +33,15 @@ private:
     raisim::ArticulatedSystem* mRobot;
 
     uint16_t mIteration;
-    uint16_t mGaitCounter;
     uint8_t mGaitLength;
 
     raisim::VecDyn mTorque = raisim::VecDyn(18);
 
     JointPDController PDcontrol;
     MPCController MPCcontrol;
-    OffsetGait stand, trot;
+    PDQPController PDQPcontrol;
+    WBC WBControl;
+    OffsetGait stand, trot, test;
 };
 
 #endif //RAISIM_SIMULCONTROLPANEL_HPP

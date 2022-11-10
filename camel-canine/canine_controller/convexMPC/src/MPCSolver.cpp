@@ -4,8 +4,6 @@
 
 #include "convexMPC/MPCSolver.hpp"
 
-char var_elim[2000];
-char con_elim[2000];
 
 extern pSHM sharedMemory;
 
@@ -412,7 +410,7 @@ void MPCSolver::getStateSpaceMatrix(const double* mP, const double* mQ, const do
     {
         for (int col=0; col<3; col++)
         {
-            R_feet(row, col) = mFoot[row][col] - mP[col];
+            R_feet(row, col) = mFoot[row][col];
         }
     }
     Bc.setZero();

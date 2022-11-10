@@ -23,6 +23,8 @@
 #include <canine_simulation/SimulCommand.hpp>
 
 void StartSimulation();
+void* NRTCommandThread(void* arg);
+void *RTControllerThread(void *arg);
 void* RTStateEstimator(void* arg);
 
 #endif //RAISIM_SIMULMAIN_HPP

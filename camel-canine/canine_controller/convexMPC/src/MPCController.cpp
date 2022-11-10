@@ -9,7 +9,7 @@ extern pSHM sharedMemory;
 MPCController::MPCController(const uint8_t& horizon)
     : mHorizon(horizon)
     , ConvexMPCSolver(mHorizon)
-    , SwingLegTrajectory(0.25)
+    , SwingLegTrajectory(0.5)
 {
     for(double & motorIdx : mTorqueLimit)
     {

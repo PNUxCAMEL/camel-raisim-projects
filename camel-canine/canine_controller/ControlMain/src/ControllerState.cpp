@@ -15,13 +15,32 @@ ControllerState::ControllerState()
     , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
     , MPCcontrol(mGaitLength)
 {
-    mTorque.setZero();
 }
 
 void ControllerState::ControllerFunction()
 {
     sharedMemory->localTime = mIteration * CONTROL_dT;
     mIteration++;
+    sharedMemory->gaitIteration++;
+    switch (sharedMemory->gaitState)
+    {
+        case STAND:
+        {
+            stand.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = stand.getGaitTable();
+            break;
+        }
+        case TROT:
+        {
+            trot.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = trot.getGaitTable();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
     switch (sharedMemory->controlState)
     {
         case STATE_CONTROL_STOP:
@@ -33,9 +52,15 @@ void ControllerState::ControllerFunction()
             PDcontrol.SetControlInput();
             break;
         }
-        case STATE_HOME_READY:
+        case STATE_HOME_STAND_UP_READY:
         {
-            PDcontrol.InitHomeTrajectory();
+            PDcontrol.InitHomeStandUpTrajectory();
+            sharedMemory->controlState = STATE_HOME_CONTROL;
+            break;
+        }
+        case STATE_HOME_STAND_DOWN_READY:
+        {
+            PDcontrol.InitHomeStandDownTrajectory();
             sharedMemory->controlState = STATE_HOME_CONTROL;
             break;
         }
@@ -44,27 +69,43 @@ void ControllerState::ControllerFunction()
             PDcontrol.DoHomeControl();
             break;
         }
-        case STATE_PD_READY:
+        case STATE_PD_UP_READY:
         {
+            PDQPcontrol.InitHomeStandUpTrajectory();
+            sharedMemory->controlState = STATE_PD_CONTROL;
+            break;
+        }
+        case STATE_PD_DOWN_READY:
+        {
+            PDQPcontrol.InitHomeStandDownTrajectory();
+            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_CONTROL:
         {
+            PDQPcontrol.DoHomeControl();
+            break;
+        }
+        case STATE_WBC_READY:
+        {
+            WBControl.InitTrajectory();
+            sharedMemory->controlState = STATE_WBC_CONTROL;
+            break;
+        }
+        case STATE_WBC_CONTROL:
+        {
+            WBControl.DoWBControl();
             break;
         }
         case STATE_MPC_REDAY:
         {
             MPCcontrol.InitSwingLegTrajectory();
             sharedMemory->controlState = STATE_MPC_CONTROL;
-            sharedMemory->gaitState = TROT;
             break;
         }
         case STATE_MPC_CONTROL:
         {
-            trot.setIterations(mGaitCounter);
-            sharedMemory->gaitTable = trot.getGaitTable();
             MPCcontrol.DoControl();
-            mGaitCounter++;
             break;
         }
         default:

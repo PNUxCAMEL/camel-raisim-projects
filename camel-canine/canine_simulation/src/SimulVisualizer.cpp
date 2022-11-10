@@ -36,7 +36,7 @@ void SimulVisualizer::initRobotPose()
     for (int idx=0; idx<4; idx++)
     {
         initialJointPosition[idx*3+7] = 0.0;
-        initialJointPosition[idx*3+8] = 2.5;
+        initialJointPosition[idx*3+8] = 2.1;
         initialJointPosition[idx*3+9] = -2.9;
     }
 

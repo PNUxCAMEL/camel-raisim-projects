@@ -44,6 +44,8 @@ private:
     const double mMu;
     const int mFmax;
     double mStopPosX = 0.0;
+    char var_elim[2000];
+    char con_elim[2000];
 
     Vec13<double> mWeightMat;
     const uint8_t mHorizon;

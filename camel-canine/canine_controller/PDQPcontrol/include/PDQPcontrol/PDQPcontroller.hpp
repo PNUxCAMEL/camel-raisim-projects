@@ -2,37 +2,41 @@
 // Created by camel on 22. 9. 21.
 //
 
-#ifndef RAISIM_JOINTPDCONTROLLER_H
-#define RAISIM_JOINTPDCONTROLLER_H
+#ifndef RAISIM_PDQPCONTROLLER_HPP
+#define RAISIM_PDQPCONTROLLER_HPP
 
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
 
 #include <camel-tools/CubicTrajectoryGenerator.hpp>
 
-#include <WBController/QPsolver.hpp>
+//#include <WBController/QPsolver.hpp>
+#include "QPsolver.hpp"
 
-class JointPDController
+class PDQPController
 {
 public:
-    JointPDController();
+    PDQPController();
 
     void SetPDgain(const double& kp, const double& kd);
     void DoHomeControl();
     void InitHomeStandUpTrajectory();
     void InitHomeStandDownTrajectory();
     void SetControlInput();
+    void InitTrajectory();
 
 private:
     void updateState();
     void computeControlInput();
     void updateHomeTrajectory();
     void setHomeTrajectory();
-
+    void setTrajectory();
 
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
-    QPsolver ForceQPsolver;
+    CubicTrajectoryGenerator mBodyTrajectory[3];
+    PDQPsolver ForceQPsolver;
+
     int mHomeState;
     double mRefTime;
     double mDesiredPosition[MOTOR_NUM];
@@ -63,8 +67,10 @@ private:
     double mBaseEulerVelocity[3];
     double mFootPosition[4][3];
     Vec3<double> mGRF[4];
+    Mat3<double> mJacobian[4];
+    Vec3<double> mTorqueJacobian[4];
 };
 
 
 
-#endif //RAISIM_JOINTPDCONTROLLER_H
+#endif //RAISIM_PDQPCONTROLLER_HPP

@@ -12,7 +12,6 @@ add_subdirectory(canine_controller/PDcontroller)
 add_subdirectory(canine_controller/WBController)
 add_subdirectory(canine_controller/ControlUtils)
 add_subdirectory(canine_controller/ControlMain)
-add_subdirectory(canine_controller/PDQPcontrol)
 
 add_subdirectory(canine_visualizer/canine_gui)
 add_subdirectory(canine_visualizer/canine_raisim)

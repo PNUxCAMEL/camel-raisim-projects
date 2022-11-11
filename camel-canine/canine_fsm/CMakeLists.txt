@@ -14,7 +14,6 @@ include_directories(
         ${ControlUtils_SOURCE_DIR}/include
         ${convexMPC_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
-        ${PDQPcontrol_SOURCE_DIR}/include
 
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
@@ -48,7 +47,6 @@ SET(CANINE_LIBS
         canine_controller::PDcontroller
         canine_controller::WBController
         canine_controller::convexMPC
-        canine_controller::PDQPcontrol
 
         canine_visualizer::canine_gui
         canine_visualizer::canine_raisim

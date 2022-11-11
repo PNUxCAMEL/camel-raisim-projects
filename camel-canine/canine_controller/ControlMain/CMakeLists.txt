@@ -10,7 +10,6 @@ include_directories(
         ${ControlUtils_SOURCE_DIR}/include
         ${WBController_SOURCE_DIR}/include
         ${qpOASES_SOURCE_DIR}/include
-        ${PDQPcontrol_SOURCE_DIR}/include
 )
 link_directories(
         ${qpOASES_SOURCE_DIR}/bin

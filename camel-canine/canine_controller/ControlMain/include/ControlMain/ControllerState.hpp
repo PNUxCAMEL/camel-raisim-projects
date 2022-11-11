@@ -15,7 +15,6 @@
 #include <PDcontroller/JointPDController.hpp>
 #include <convexMPC/MPCController.hpp>
 #include <ControlUtils/Gait.hpp>
-#include <PDQPcontrol/PDQPcontroller.hpp>
 
 class ControllerState{
 public:
@@ -25,12 +24,10 @@ public:
 
 private:
     uint16_t mIteration;
-    uint16_t mGaitCounter;
     uint8_t mGaitLength;
 
     JointPDController PDcontrol;
     MPCController MPCcontrol;
-    PDQPController PDQPcontrol;
     WBC WBControl;
 
     OffsetGait stand, trot;

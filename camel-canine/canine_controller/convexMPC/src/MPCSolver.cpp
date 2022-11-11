@@ -45,8 +45,6 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory)
     for(int horizon = 0; horizon < mHorizon ; horizon++)
     {
         xd[horizon*13+5] = Trajectory.getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
-//        xd[horizon*13+3] = -0.01;
-//        xd[horizon*13+5] = 0.3;
     }
 }
 
@@ -240,17 +238,13 @@ void MPCSolver::SolveQP()
 }
 
 void MPCSolver::GetGRF(Vec3<double> _f[4]){
-    std::cout << "========GRF========" << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
             _f[leg][axis] = q_soln[leg*3 + axis];
-            std::cout << _f[leg][axis] << "\t";
         }
-        std::cout << std::endl;
     }
-    std::cout << std::endl;
 }
 
 void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side)

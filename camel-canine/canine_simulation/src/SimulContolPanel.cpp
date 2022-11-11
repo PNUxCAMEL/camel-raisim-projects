@@ -11,14 +11,13 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         : mWorld(world)
         , mRobot(robot)
         , mIteration(0)
-        , mGaitLength(2)
+        , mGaitLength(3)
+        , mCtrlFreq(100)
         , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
         , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
-        , test(mGaitLength, Vec4<int>(100,100,50,0), Vec4<int>(100,100,50,50), 100)
         , MPCcontrol(mGaitLength)
 {
     PDcontrol.SetPDgain(150.0,2.0);
-    PDQPcontrol.SetPDgain(150.0,2.0);
     mTorque.setZero();
 }
 
@@ -39,12 +38,6 @@ void SimulControlPanel::ControllerFunction()
         {
             trot.setIterations(sharedMemory->gaitIteration);
             sharedMemory->gaitTable = trot.getGaitTable();
-            break;
-        }
-        case TEST:
-        {
-            test.setIterations(sharedMemory->gaitIteration);
-            sharedMemory->gaitTable = test.getGaitTable();
             break;
         }
         default:
@@ -84,21 +77,14 @@ void SimulControlPanel::ControllerFunction()
         }
         case STATE_PD_UP_READY:
         {
-            PDQPcontrol.InitHomeStandUpTrajectory();
-            sharedMemory->controlState = STATE_PD_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_PD_DOWN_READY:
         {
-            PDQPcontrol.InitHomeStandDownTrajectory();
-            sharedMemory->controlState = STATE_PD_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;
         }
         case STATE_PD_CONTROL:
         {
-            PDQPcontrol.DoHomeControl();
             break;
         }
         case STATE_WBC_READY:

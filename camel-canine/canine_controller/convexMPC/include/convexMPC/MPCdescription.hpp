@@ -9,18 +9,24 @@
 #include <Eigen/Eigen>
 
 
-const double ALPHA = 1e-6;
-const double WEIGHT[13] = {1, 1, 1,
-                           10, 10, 25,
-                           0.001, 0.001, 0.2,
-                           0.05, 0.05, 0.05,
-                           0.f};
+/* In real world
+ * Horizon = 3 / Frequency = 100Hz
+ * */
+//const double ALPHA = 1e-6;
+//const double WEIGHT[13] = {1, 1, 1,
+//                           10, 10, 25,
+//                           0.001, 0.001, 0.2,
+//                           0.05, 0.05, 0.05,
+//                           0.f};
 
-/*const double ALPHA = 1e-7;
+/* In Simul
+ * Horizon = 3 / Frequency = 100Hz
+ * */
+const double ALPHA = 1e-7;
 const double WEIGHT[13] = {1, 1, 50,
                            20, 20, 80,
                            0, 0, 0.2,
                            0.05, 0.05, 0.05,
-                           0.f};*/
+                           0.f};
 
 #endif //RAISIM_MPCDESCRIPTION_HPP

@@ -9,7 +9,6 @@ extern pSHM sharedMemory;
 
 ControllerState::ControllerState()
     : mIteration(0)
-    , mGaitCounter(0)
     , mGaitLength(3)
     , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
     , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
@@ -71,19 +70,14 @@ void ControllerState::ControllerFunction()
         }
         case STATE_PD_UP_READY:
         {
-            PDQPcontrol.InitHomeStandUpTrajectory();
-            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_DOWN_READY:
         {
-            PDQPcontrol.InitHomeStandDownTrajectory();
-            sharedMemory->controlState = STATE_PD_CONTROL;
             break;
         }
         case STATE_PD_CONTROL:
         {
-            PDQPcontrol.DoHomeControl();
             break;
         }
         case STATE_WBC_READY:

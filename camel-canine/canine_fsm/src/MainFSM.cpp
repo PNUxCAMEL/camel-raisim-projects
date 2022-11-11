@@ -57,15 +57,26 @@ void* NRTVisualThread(void* arg)
 //TODO: Cha is gonna implemet "GetLinearVelocity" and "GetEulerVelocity" from T265 tracking camera.
 void* NRTImuThread(void* arg)
 {
+    double Offset[3]={0.0,0.0,0.0};
     std::cout << "entered #nrt_IMU_thread" << std::endl;
     IMUBase.SetConfig(250);
     double* baseAngularPosition;
     double* baseAngularVelocity;
-    double* baseLinearPosition;
-    double* baseLinearVelocity;
 
     mscl::EulerAngles IMUAngularPositionOffset(3.141592, 0, 0);
     node.setSensorToVehicleRotation_eulerAngles(IMUAngularPositionOffset);
+
+    for (int idx=0; idx<100; idx++)
+    {
+        IMUBase.ParseData();
+        baseAngularPosition = IMUBase.GetEulerAngle();
+        Offset[0] += baseAngularPosition[0];
+        Offset[1] += baseAngularPosition[1];
+        Offset[2] += baseAngularPosition[2];
+    }
+    Offset[0] /= 100;
+    Offset[1] /= 100;
+    Offset[2] /= 100;
 
     while (true)
     {
@@ -74,9 +85,9 @@ void* NRTImuThread(void* arg)
         baseAngularPosition = IMUBase.GetEulerAngle();
         baseAngularVelocity = IMUBase.GetAngularVelocity();
 
-        sharedMemory->baseEulerPosition[0] = baseAngularPosition[0];
-        sharedMemory->baseEulerPosition[1] = -baseAngularPosition[1];
-        sharedMemory->baseEulerPosition[2] = -baseAngularPosition[2];
+        sharedMemory->baseEulerPosition[0] =   baseAngularPosition[0]-Offset[0];
+        sharedMemory->baseEulerPosition[1] = -(baseAngularPosition[1]-Offset[1]);
+        sharedMemory->baseEulerPosition[2] = -(baseAngularPosition[2]-Offset[2]);
 
         sharedMemory->baseEulerVelocity[0] = baseAngularVelocity[0];
         sharedMemory->baseEulerVelocity[1] = -baseAngularVelocity[1];

@@ -10,7 +10,7 @@ extern pSHM sharedMemory;
 MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(CONTROL_dT)
     , mAlpha(ALPHA)
-    , mFmax(240)
+    , mFmax(50)
     , mMu(0.6)
     , mWeightMat(WEIGHT)
     , mHorizon(horizon)

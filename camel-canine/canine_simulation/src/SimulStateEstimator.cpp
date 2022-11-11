@@ -75,13 +75,17 @@ void SimulStateEstimator::getRobotFootPosition()
                       sharedMemory->motorPosition[10],
                       sharedMemory->motorPosition[11]);
 
+    std::cout << "======Foot Position======" << std::endl;
     for (int leg=0; leg<4; leg++)
     {
         for (int idx=0; idx<3; idx++)
         {
             sharedMemory->footPosition[leg][idx] = mTransMat[leg](idx,3);
+            std::cout << sharedMemory->footPosition[leg][idx] << "\t";
         }
+        std::cout << std::endl;
     }
+    std::cout << std::endl;
 }
 
 void SimulStateEstimator::getRobotLinearState()

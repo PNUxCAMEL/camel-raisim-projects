@@ -6,8 +6,7 @@
 
 extern pSHM sharedMemory;
 
-GRFEstimatorETO::GRFEstimatorETO()
-{
+GRFEstimatorETO::GRFEstimatorETO() {
     mbIsFirstRun = 1;
     mBeta = 0;
     mGain = 50.0;
@@ -29,8 +28,8 @@ void GRFEstimatorETO::UpdateState() {
     this->updateBeta(); ///이전에 계산해놓은 C,M 을 이용함
     this->updateCoriMat();
     this->updateMassMat();
-    mMomentum = mMomentumPrev + sharedMemory->motorTorque[1] * 0.001 - mBeta * 0.001 + mResidual* 0.001;
-    mResidual = mGain * (-mMomentum + mMassMat*sharedMemory->motorVelocity[1]);
+    mMomentum = mMomentumPrev + sharedMemory->motorTorque[1] * 0.001 - mBeta * 0.001 + mResidual * 0.001;
+    mResidual = mGain * (-mMomentum + mMassMat * sharedMemory->motorVelocity[1]);
     mMomentumPrev = mMomentum;
 }
 
@@ -41,14 +40,13 @@ double GRFEstimatorETO::GetResidual() {
 void GRFEstimatorETO::updateBeta() {
     double motorVelPrev;
     double motorPosPrev;
-    if(mbIsFirstRun)
-    {
+    if (mbIsFirstRun) {
         motorVelPrev = 0;
         motorPosPrev = sharedMemory->motorPosition[1];
         mbIsFirstRun = false;
 
     }
-    mBeta = mCoriMat * motorVelPrev - (0.5*mMass2*mLink2*mLink2*sin(motorPosPrev/2.0)) * motorVelPrev;
+    mBeta = mCoriMat * motorVelPrev - (0.5 * mMass2 * mLink2 * mLink2 * sin(motorPosPrev / 2.0)) * motorVelPrev;
     motorPosPrev = sharedMemory->motorPosition[1];
     motorVelPrev = sharedMemory->motorVelocity[1];
 
@@ -59,5 +57,6 @@ void GRFEstimatorETO::updateCoriMat() {
 }
 
 void GRFEstimatorETO::updateMassMat() {
-    mMassMat = 0.5 * mMass1 * mLink1 * mLink1 + mMass2 * mLink2 * mLink2 * sin(sharedMemory->motorPosition[1]/2.0) * sin(sharedMemory->motorPosition[1]/2.0);
+    mMassMat = 0.5 * mMass1 * mLink1 * mLink1 + mMass2 * mLink2 * mLink2 * sin(sharedMemory->motorPosition[1] / 2.0) *
+                                                sin(sharedMemory->motorPosition[1] / 2.0);
 }

@@ -18,6 +18,7 @@
 #include <GRFcontroller/GRFcontroller.hpp>
 #include <ControlUtils/GRFEstimatorMLP.hpp>
 #include <ControlUtils/GRFEstimatorSMO.hpp>
+#include <ControlUtils/GRFEstimatorETO.hpp>
 
 class SimulControlPanel
 {
@@ -45,6 +46,7 @@ private:
     GRFcontroller GRFcontrol;
     GRFEstimatorMLP GRFNet;
     GRFEstimatorSMO GRFSMO;
+    GRFEstimatorETO GRFETO;
 
     double sumedSquaredPositionError;
     double sumedSquaredVelocityError;

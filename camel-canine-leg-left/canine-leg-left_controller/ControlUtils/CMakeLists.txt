@@ -12,7 +12,7 @@ include_directories(
 add_library(${PROJECT_NAME} STATIC
         src/GRFEstimatorMLP.cpp
         src/GRFEstimatorSMO.cpp
-        )
+        src/GRFEstimatorETO.cpp include/ControlUtils/GRFEstimatorETO.hpp)
 
 add_library(canine-leg-left_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}

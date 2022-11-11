@@ -75,6 +75,7 @@ void clearSharedMemory()
     sharedMemory->hipVerticalAcceleration = 0;
     sharedMemory->estimatedGRFMLP = 0;
     sharedMemory->estimatedGRFSMO = 0;
+    sharedMemory->estimatedGRFETO = 0;
     sharedMemory->measuredGRF = 0;
     sharedMemory->desiredGRF = 0;
     for (int index = 0; index < MOTOR_NUM; index++)

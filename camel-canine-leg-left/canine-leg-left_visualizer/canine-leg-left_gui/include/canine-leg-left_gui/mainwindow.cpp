@@ -343,6 +343,9 @@ void MainWindow::GraphInitialize(){
     myPen.setColor(Qt::green);
     ui->PLOT_CUSTOM_5->addGraph();
     ui->PLOT_CUSTOM_5->graph(2)->setPen(myPen);
+    myPen.setColor(Qt::darkYellow);
+    ui->PLOT_CUSTOM_5->addGraph();
+    ui->PLOT_CUSTOM_5->graph(3)->setPen(myPen);
 
     myPen.setColor(Qt::blue);
     ui->PLOT_CUSTOM_6->addGraph();
@@ -370,6 +373,7 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_5->graph(0)->setName("GRF-true");
     ui->PLOT_CUSTOM_5->graph(1)->setName("GRF-MLP");
     ui->PLOT_CUSTOM_5->graph(2)->setName("GRF-SMO");
+    ui->PLOT_CUSTOM_5->graph(3)->setName("GRF-ETO");
     ui->PLOT_CUSTOM_6->legend->setVisible(true);
     ui->PLOT_CUSTOM_6->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_CUSTOM_6->graph(0)->setName("GRF-true");
@@ -479,6 +483,7 @@ void MainWindow::GraphUpdate()
     ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
     ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->estimatedGRFMLP);
     ui->PLOT_CUSTOM_5->graph(2)->addData(sharedMemory->localTime, sharedMemory->estimatedGRFSMO);
+    ui->PLOT_CUSTOM_5->graph(3)->addData(sharedMemory->localTime, sharedMemory->estimatedGRFETO);
     ui->PLOT_CUSTOM_6->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
     ui->PLOT_CUSTOM_6->graph(1)->addData(sharedMemory->localTime, sharedMemory->desiredGRF);
 

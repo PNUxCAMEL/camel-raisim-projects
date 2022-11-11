@@ -65,6 +65,7 @@ typedef struct _SHM_
     float GRFNetInputs[14];
     float estimatedGRFMLP;
     float estimatedGRFSMO;
+    float estimatedGRFETO;
     float measuredGRF;
     float desiredGRF;
 

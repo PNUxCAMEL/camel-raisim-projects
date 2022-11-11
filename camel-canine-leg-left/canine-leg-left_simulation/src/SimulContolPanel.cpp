@@ -101,6 +101,7 @@ void SimulControlPanel::ControllerFunction()
         integrateSimul();
         GRFNet.Estimate();
         GRFSMO.Estimate();
+        GRFETO.Estimate();
     }
 }
 
@@ -140,6 +141,13 @@ void SimulControlPanel::updateStates()
     sharedMemory->hipVerticalAcceleration = (sharedMemory->hipVerticalVelocity - pastHipVerticalVelocity) / CONTROL_dT;
     sharedMemory->motorVelocity[0] = mRobot->getGeneralizedVelocity()[1];
     sharedMemory->motorVelocity[1] = mRobot->getGeneralizedVelocity()[2];
+    sharedMemory->motorTorque[0] = mTorque[1];
+    sharedMemory->motorTorque[1] = mTorque[2];
+
+//    sharedMemory->motorTorque[2] = mRobot->getGeneralizedForce()[2];
+//    sharedMemory->motorTorque[1] = mRobot->getGeneralizedForce()[2];
+
+
     if (&(mRobot->getContacts()[0]) != nullptr)
     {
         sharedMemory->measuredGRF = mRobot->getContacts()[0].getImpulse()[2] / CONTROL_dT;

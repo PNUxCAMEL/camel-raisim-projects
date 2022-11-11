@@ -11,7 +11,7 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         : mWorld(world)
         , mRobot(robot)
         , mIteration(0)
-        , mGaitLength(3)
+        , mGaitLength(2)
         , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
         , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
         , test(mGaitLength, Vec4<int>(100,100,50,0), Vec4<int>(100,100,50,50), 100)

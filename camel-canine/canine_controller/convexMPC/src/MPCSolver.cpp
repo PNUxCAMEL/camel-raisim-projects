@@ -10,7 +10,7 @@ extern pSHM sharedMemory;
 MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(CONTROL_dT)
     , mAlpha(ALPHA)
-    , mFmax(50)
+    , mFmax(80)
     , mMu(0.6)
     , mWeightMat(WEIGHT)
     , mHorizon(horizon)
@@ -44,8 +44,9 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory)
 {
     for(int horizon = 0; horizon < mHorizon ; horizon++)
     {
-//        xd[horizon*13+5] = Trajectory.getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+5] = 0.3;
+        xd[horizon*13+5] = Trajectory.getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+//        xd[horizon*13+3] = -0.01;
+//        xd[horizon*13+5] = 0.3;
     }
 }
 

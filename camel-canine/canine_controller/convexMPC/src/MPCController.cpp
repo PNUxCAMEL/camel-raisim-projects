@@ -13,7 +13,7 @@ MPCController::MPCController(const uint8_t& horizon)
 {
     for(double & motorIdx : mTorqueLimit)
     {
-        motorIdx = 15.0;
+        motorIdx = 17.0;
     }
     mGRF->setZero();
     mTorque.setZero();

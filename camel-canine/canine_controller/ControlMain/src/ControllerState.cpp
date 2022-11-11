@@ -99,7 +99,7 @@ void ControllerState::ControllerFunction()
         }
         case STATE_MPC_REDAY:
         {
-            MPCcontrol.InitSwingLegTrajectory();
+            MPCcontrol.InitTrajectory();
             sharedMemory->controlState = STATE_MPC_CONTROL;
             break;
         }

@@ -9,7 +9,7 @@
 #include <Eigen/Eigen>
 
 
-const double ALPHA = 1e-10;
+const double ALPHA = 1e-7;
 const double WEIGHT[13] = {1, 1, 50,
                            20, 20, 80,
                            0, 0, 0.2,

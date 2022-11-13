@@ -12,7 +12,6 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
         , mRobot(robot)
         , mIteration(0)
         , mGaitLength(3)
-        , mCtrlFreq(100)
         , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
         , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
         , MPCcontrol(mGaitLength)
@@ -73,18 +72,6 @@ void SimulControlPanel::ControllerFunction()
         case STATE_HOME_CONTROL:
         {
             PDcontrol.DoHomeControl();
-            break;
-        }
-        case STATE_PD_UP_READY:
-        {
-            break;
-        }
-        case STATE_PD_DOWN_READY:
-        {
-            break;
-        }
-        case STATE_PD_CONTROL:
-        {
             break;
         }
         case STATE_WBC_READY:

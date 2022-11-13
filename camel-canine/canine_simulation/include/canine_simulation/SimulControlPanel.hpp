@@ -33,7 +33,6 @@ private:
 
     uint16_t mIteration;
     uint8_t mGaitLength;
-    uint8_t mCtrlFreq;
 
     raisim::VecDyn mTorque = raisim::VecDyn(18);
 

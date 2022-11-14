@@ -24,7 +24,7 @@
  * */
 const double ALPHA = 1e-7;
 const double WEIGHT[13] = {1, 1, 50,
-                           30, 30, 80,
+                           50, 50, 80,
                            0, 0, 0.2,
                            1, 1, 1,
                            0.f};

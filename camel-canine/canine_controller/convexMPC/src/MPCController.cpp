@@ -29,7 +29,6 @@ void MPCController::InitTrajectory()
 
 void MPCController::DoControl()
 {
-    //TODO: Make structure for robot states
     updateState();
     ConvexMPCSolver.SetTrajectory(mBaseTrajectory);
     ConvexMPCSolver.GetMetrices(mInitState, mFootPosition);

@@ -21,6 +21,7 @@
 #include <canine_simulation/SimulControlPanel.hpp>
 #include <canine_simulation/SimulVisualizer.hpp>
 #include <canine_simulation/SimulCommand.hpp>
+#include <canine_simulation/SimulXboxCommand.hpp>
 
 void StartSimulation();
 void* NRTCommandThread(void* arg);

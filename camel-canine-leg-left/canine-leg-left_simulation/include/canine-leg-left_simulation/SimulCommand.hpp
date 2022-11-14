@@ -18,8 +18,8 @@ public:
 
 private:
     void writeToCSVfile();
-    Eigen::MatrixXd positionTrackingData = Eigen::MatrixXd(2,2500);
-    Eigen::MatrixXd GRFEstimatorData = Eigen::MatrixXd(3,2500);
+    Eigen::MatrixXd positionTrackingData = Eigen::MatrixXd(2,5000);
+    Eigen::MatrixXd GRFEstimatorData = Eigen::MatrixXd(4,5000);
 };
 
 #endif //RAISIM_SIMULCOMMAND_HPP

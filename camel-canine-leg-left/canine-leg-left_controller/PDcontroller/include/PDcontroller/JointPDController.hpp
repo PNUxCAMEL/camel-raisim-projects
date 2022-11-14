@@ -9,7 +9,8 @@
 #include <canine-leg-left_util/RobotDescription.hpp>
 
 #include <camel-tools/CubicTrajectoryGenerator.hpp>
-
+#include <camel-tools/QuinticTrajectoryGenerator.hpp>
+#include <camel-tools/SineTrajectoryGenerator.hpp>
 
 class JointPDController
 {
@@ -18,9 +19,13 @@ public:
 
     void DoHomeControl();
     void DoPDControl();
+    void DoSineControl();
     void InitHomeStandUpTrajectory();
     void InitHomeStandDownTrajectory();
     void InitSwingTrajectory();
+    void InitSineTrajectory();
+    void InitCubicTrajectory();
+    void InitCubicTrajectory2();
 
     void SetControlInput();
 
@@ -29,10 +34,14 @@ private:
     void computeControlInput();
     void updateHomeTrajectory();
     void setHomeTrajectory();
+    void solveIK();
+    void setSineTrajectory();
 
 
 private:
     CubicTrajectoryGenerator mCubicTrajectoryGen[MOTOR_NUM];
+    QuinticTrajectoryGenerator mCubicTrjectoryGenHipVertical;
+    SineTrajectoryGenerator mSineTrajectoryGenerator;
     int mHomeState;
     double mRefTime;
     double mDesiredPosition[MOTOR_NUM];

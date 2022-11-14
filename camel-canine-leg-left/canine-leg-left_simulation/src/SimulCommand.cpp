@@ -44,7 +44,7 @@ void SimulCommand::commandFunction()
         }
         case CUSTOM_1:
         {
-            sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
+            sharedMemory->controlState = STATE_TROT_REDAY;
             break;
         }
         case CUSTOM_2:
@@ -60,30 +60,30 @@ void SimulCommand::commandFunction()
 
 void SimulCommand::writeToCSVfile()
 {
-    for(int i = 0 ; i < 2 ; i++)
-    {
-        for(int j = 0 ; j < 2500 ; j++)
-        {
-            positionTrackingData(i,j) = sharedMemory->positionTrackingData[i][j];
-        }
-    }
-    std::string name1 = "positionTrackingData.csv";
-    std::ofstream file1(name1.c_str());
-    for(int  i = 0; i < positionTrackingData.rows(); i++)
-    {
-        for(int j = 0; j < positionTrackingData.cols(); j++)
-        {
-            std::string str = std::to_string(positionTrackingData(i,j));
-            if(j+1 == positionTrackingData.cols()){
-                file1<<str;
-            }else{
-                file1<<str<<',';
-            }
-        }
-        file1<<'\n';
-    }
+//    for(int i = 0 ; i < 2 ; i++)
+//    {
+//        for(int j = 0 ; j < 2500 ; j++)
+//        {
+//            positionTrackingData(i,j) = sharedMemory->positionTrackingData[i][j];
+//        }
+//    }
+//    std::string name1 = "positionTrackingData.csv";
+//    std::ofstream file1(name1.c_str());
+//    for(int  i = 0; i < positionTrackingData.rows(); i++)
+//    {
+//        for(int j = 0; j < positionTrackingData.cols(); j++)
+//        {
+//            std::string str = std::to_string(positionTrackingData(i,j));
+//            if(j+1 == positionTrackingData.cols()){
+//                file1<<str;
+//            }else{
+//                file1<<str<<',';
+//            }
+//        }
+//        file1<<'\n';
+//    }
 
-    for(int i = 0 ; i < 3 ; i++)
+    for(int i = 0 ; i < 4 ; i++)
     {
         for(int j = 0 ; j < 2500 ; j++)
         {

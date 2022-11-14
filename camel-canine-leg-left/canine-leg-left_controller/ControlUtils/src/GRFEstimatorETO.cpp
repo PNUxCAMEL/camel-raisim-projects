@@ -21,20 +21,22 @@ GRFEstimatorETO::GRFEstimatorETO() {
 
 void GRFEstimatorETO::Estimate() {
     this->UpdateState();
-    sharedMemory->estimatedGRFETO = -mResidual / 0.23;
+    sharedMemory->estimatedGRFETO = -GetResidual() / 0.23;
 }
 
 void GRFEstimatorETO::UpdateState() {
     this->updateBeta(); ///이전에 계산해놓은 C,M 을 이용함
     this->updateCoriMat();
     this->updateMassMat();
-    mMomentum = mMomentumPrev + sharedMemory->motorTorque[1] * 0.001 - mBeta * 0.001 + mResidual * 0.001;
+    mMomentum = mMomentumPrev + sharedMemory->motorTorque[1] * CONTROL_dT - mBeta * CONTROL_dT + mResidual * CONTROL_dT;
     mResidual = mGain * (-mMomentum + mMassMat * sharedMemory->motorVelocity[1]);
     mMomentumPrev = mMomentum;
 }
 
 double GRFEstimatorETO::GetResidual() {
-    return mResidual;
+    double offset;
+    offset = 0.102 * 9.81;
+    return mResidual - offset;
 }
 
 void GRFEstimatorETO::updateBeta() {

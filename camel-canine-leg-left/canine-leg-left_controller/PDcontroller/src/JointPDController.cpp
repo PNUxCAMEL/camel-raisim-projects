@@ -14,7 +14,7 @@ JointPDController::JointPDController()
     {
         Kp[motorIdx] = 150.0;
         Kd[motorIdx] = 4.5;
-        mTorqueLimit[motorIdx] = 11.0;
+        mTorqueLimit[motorIdx] = 13.0;
     }
 }
 
@@ -29,6 +29,15 @@ void JointPDController::DoHomeControl()
 void JointPDController::DoPDControl()
 {
     setTrajectory();
+    solveIK();
+    computeControlInput();
+    SetControlInput();
+}
+
+void JointPDController::DoSineControl()
+{
+    setSineTrajectory();
+    solveIK();
     computeControlInput();
     SetControlInput();
 }
@@ -48,9 +57,39 @@ void JointPDController::InitSwingTrajectory()
 
 }
 
+void JointPDController::InitSineTrajectory()
+{
+    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->desiredHipVerticalPosition, sharedMemory->localTime, 0.04, 0.7);
+}
+
+void JointPDController::InitCubicTrajectory()
+{
+    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.23, sharedMemory->localTime, 1.0);
+}
+
+void JointPDController::InitCubicTrajectory2()
+{
+    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.25, sharedMemory->localTime, 1.0);
+}
+
 void JointPDController::setTrajectory()
 {
+    sharedMemory->desiredHipVerticalPosition = mCubicTrjectoryGenHipVertical.getPositionTrajectory(sharedMemory->localTime);
+    sharedMemory->desiredHipVerticalVelocity = mCubicTrjectoryGenHipVertical.getVelocityTrajectory(sharedMemory->localTime);
+}
 
+void JointPDController::solveIK()
+{
+    mDesiredPosition[0] = acos(sharedMemory->desiredHipVerticalPosition / 0.46);
+    mDesiredPosition[1] = -2*mDesiredPosition[0];
+    mDesiredVelocity[0] = acos(sharedMemory->desiredHipVerticalVelocity / 0.46);
+    mDesiredVelocity[1] = -2*mDesiredVelocity[0];
+}
+
+void JointPDController::setSineTrajectory()
+{
+    sharedMemory->desiredHipVerticalPosition = mSineTrajectoryGenerator.getPositionTrajectory(sharedMemory->localTime);
+    sharedMemory->desiredHipVerticalVelocity = mSineTrajectoryGenerator.getVelocityTrajectory(sharedMemory->localTime);
 }
 
 void JointPDController::computeControlInput()
@@ -137,6 +176,9 @@ void JointPDController::setHomeTrajectory()
         mDesiredPosition[index] = mCubicTrajectoryGen[index].getPositionTrajectory(sharedMemory->localTime);
         mDesiredVelocity[index] = mCubicTrajectoryGen[index].getVelocityTrajectory(sharedMemory->localTime);
     }
+    double pastDesiredHipVerticalPosition = sharedMemory->desiredHipVerticalPosition;
+    sharedMemory->desiredHipVerticalPosition = 0.23 * cos(mDesiredPosition[0])+0.23 * cos(mDesiredPosition[0]+mDesiredPosition[1]);
+    sharedMemory->desiredHipVerticalVelocity = (sharedMemory->desiredHipVerticalPosition - pastDesiredHipVerticalPosition) / CONTROL_dT;
 }
 
 void JointPDController::SetControlInput()

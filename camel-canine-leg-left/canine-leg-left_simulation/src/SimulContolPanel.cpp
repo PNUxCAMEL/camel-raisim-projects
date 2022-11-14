@@ -55,7 +55,10 @@ void SimulControlPanel::ControllerFunction()
     case STATE_PD_READY:
     {
 //        IDcontrol.InitQuinticTrajectory();
-        MPCcontrol.InitSineTrajectory();
+//        MPCcontrol.InitSineTrajectory();
+
+//        PDcontrol.InitSineTrajectory();
+        PDcontrol.InitCubicTrajectory();
         mRefMPCIteration = mIteration;
         sharedMemory->controlState = STATE_PD_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
@@ -63,33 +66,49 @@ void SimulControlPanel::ControllerFunction()
     }
     case STATE_PD_CONTROL:
     {
-//        IDcontrol.DoControl();
-        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
-        {
-            MPCcontrol.DoControl();
-        }
-//        GRFcontrol.DoControl();
-        MPCcontrol.SetControlInput();
+////        IDcontrol.DoControl();
+//        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
+//        {
+//            MPCcontrol.DoControl();
+//        }
+////        GRFcontrol.DoControl();
+//        MPCcontrol.SetControlInput();
+
+//        PDcontrol.DoSineControl();
+        PDcontrol.DoPDControl();
 
         sumedSquaredPositionError += pow(sharedMemory->desiredHipVerticalPosition - sharedMemory->hipVerticalPosition, 2);
         sumedSquaredVelocityError += pow(sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity, 2);
         positionRMSE = pow(sumedSquaredPositionError / (mIteration - mRefMPCIteration), 0.5);
         velocityRMSE = pow(sumedSquaredVelocityError / (mIteration - mRefMPCIteration), 0.5);
-        std::cout << "RMSE position : " << positionRMSE << std::endl;
-        std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
-        sharedMemory->GRFEstimatorData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->measuredGRF;
-        sharedMemory->GRFEstimatorData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFMLP;
-        sharedMemory->GRFEstimatorData[2][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFSMO;
-        sharedMemory->positionTrackingData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->desiredHipVerticalPosition;
-        sharedMemory->positionTrackingData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->hipVerticalPosition;
+//        std::cout << "RMSE position : " << positionRMSE << std::endl;
+//        std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
+        if((mIteration - mRefMPCIteration - 1) >= 5000)
+        {
+
+        }
+        else
+        {
+            sharedMemory->GRFEstimatorData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->measuredGRF;
+            sharedMemory->GRFEstimatorData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFMLP;
+            sharedMemory->GRFEstimatorData[2][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFSMO;
+            sharedMemory->GRFEstimatorData[3][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFETO;
+            sharedMemory->positionTrackingData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->desiredHipVerticalPosition;
+            sharedMemory->positionTrackingData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->hipVerticalPosition;
+            std::cout<<mIteration - mRefMPCIteration - 1<<std::endl;
+        }
         break;
     }
     case STATE_TROT_REDAY:
     {
+        PDcontrol.InitCubicTrajectory2();
+        mRefMPCIteration = mIteration;
+        sharedMemory->controlState = STATE_TROT_CONTROL;
         break;
     }
     case STATE_TROT_CONTROL:
     {
+        PDcontrol.DoPDControl();
         break;
     }
     default:

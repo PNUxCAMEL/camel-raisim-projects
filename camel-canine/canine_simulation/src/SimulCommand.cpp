@@ -49,12 +49,12 @@ void SimulCommand::commandFunction()
             }
             case CUSTOM_1:
             {
-                sharedMemory->controlState = STATE_WBC_READY;
+                sharedMemory->controlState = STATE_MPC_UP_REDAY;
                 break;
             }
             case CUSTOM_2:
             {
-                sharedMemory->controlState = STATE_MPC_REDAY;
+                sharedMemory->controlState = STATE_MPC_DOWN_REDAY;
                 break;
             }
             default:

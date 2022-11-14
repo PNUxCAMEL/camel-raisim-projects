@@ -16,7 +16,8 @@ class MPCController{
 public:
     MPCController(const uint8_t& horizon);
     void DoControl();
-    void InitTrajectory();
+    void InitUpTrajectory();
+    void InitDownTrajectory();
 private:
     void updateState();
     void computeControlInput();

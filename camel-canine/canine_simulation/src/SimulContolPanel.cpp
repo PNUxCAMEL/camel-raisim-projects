@@ -86,9 +86,16 @@ void SimulControlPanel::ControllerFunction()
             WBControl.DoWBControl();
             break;
         }
-        case STATE_MPC_REDAY:
+        case STATE_MPC_UP_REDAY:
         {
-            MPCcontrol.InitTrajectory();
+            MPCcontrol.InitUpTrajectory();
+            sharedMemory->controlState = STATE_MPC_CONTROL;
+            sharedMemory->visualState = STATE_UPDATE_VISUAL;
+            break;
+        }
+        case STATE_MPC_DOWN_REDAY:
+        {
+            MPCcontrol.InitDownTrajectory();
             sharedMemory->controlState = STATE_MPC_CONTROL;
             sharedMemory->visualState = STATE_UPDATE_VISUAL;
             break;

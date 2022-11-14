@@ -16,7 +16,7 @@ raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
 
 SimulCommand userCommand;
-SimulXboxCommand userXboxCommand;
+//SimulXboxCommand userXboxCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
@@ -26,7 +26,7 @@ void* NRTCommandThread(void* arg)
     std::cout << "entered #Command_NRT_thread" << std::endl;
     while (true)
     {
-        userXboxCommand.commandFunction();
+        userCommand.commandFunction();
         usleep(CMD_dT * 1e6);
     }
 }

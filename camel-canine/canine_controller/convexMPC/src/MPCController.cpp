@@ -19,12 +19,20 @@ MPCController::MPCController(const uint8_t& horizon)
     mInitState.setZero();
 }
 
-void MPCController::InitTrajectory()
+void MPCController::InitUpTrajectory()
 {
     SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
     double timeDuration = 2.0;
-    mBaseTrajectory.updateTrajectory(sharedMemory->basePosition[2], 0.3,
+    mBaseTrajectory.updateTrajectory(sharedMemory->basePosition[2], 0.35,
                                         sharedMemory->localTime, timeDuration);
+}
+
+void MPCController::InitDownTrajectory()
+{
+    SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
+    double timeDuration = 2.0;
+    mBaseTrajectory.updateTrajectory(sharedMemory->basePosition[2], 0.0,
+                                     sharedMemory->localTime, timeDuration);
 }
 
 void MPCController::DoControl()

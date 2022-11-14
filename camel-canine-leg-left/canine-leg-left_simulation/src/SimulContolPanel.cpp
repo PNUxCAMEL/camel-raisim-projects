@@ -55,10 +55,10 @@ void SimulControlPanel::ControllerFunction()
     case STATE_PD_READY:
     {
 //        IDcontrol.InitQuinticTrajectory();
-//        MPCcontrol.InitSineTrajectory();
+        MPCcontrol.InitSineTrajectory();
 
 //        PDcontrol.InitSineTrajectory();
-        PDcontrol.InitCubicTrajectory();
+//        PDcontrol.InitCubicTrajectory();
         mRefMPCIteration = mIteration;
         sharedMemory->controlState = STATE_PD_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
@@ -67,15 +67,15 @@ void SimulControlPanel::ControllerFunction()
     case STATE_PD_CONTROL:
     {
 ////        IDcontrol.DoControl();
-//        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
-//        {
-//            MPCcontrol.DoControl();
-//        }
+        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
+        {
+            MPCcontrol.DoControl();
+        }
 ////        GRFcontrol.DoControl();
-//        MPCcontrol.SetControlInput();
+        MPCcontrol.SetControlInput();
 
 //        PDcontrol.DoSineControl();
-        PDcontrol.DoPDControl();
+//        PDcontrol.DoPDControl();
 
         sumedSquaredPositionError += pow(sharedMemory->desiredHipVerticalPosition - sharedMemory->hipVerticalPosition, 2);
         sumedSquaredVelocityError += pow(sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity, 2);

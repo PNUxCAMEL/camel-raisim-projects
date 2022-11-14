@@ -34,7 +34,7 @@ void GRFEstimatorETO::UpdateState() {
 }
 
 double GRFEstimatorETO::GetResidual() {
-    double offset;
+    double offset = 0;
     offset = 0.102 * 9.81;
     return mResidual - offset;
 }

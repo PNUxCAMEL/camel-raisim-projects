@@ -15,7 +15,7 @@ GRFEstimatorMLP::GRFEstimatorMLP()
 
     std::array<char const*, 1> tags{ "serve" };
 //    const char* modelPath = "/home/jh/AnacondaWorkspace/tensorflow260/DynamicBehaviorIdentification/RITA_models/model15";
-    const char* modelPath = "/home/cha/AnacondaWorkspace/tensorflow260/DynamicBehaviorIdentification/RITA_models/model_v2";
+    const char* modelPath = "/home/jh/AnacondaWorkspace/tensorflow260/DynamicBehaviorIdentification/RITA_models/model_v3";
     mSession = TF_LoadSessionFromSavedModel(mSessionOptions, mRunOption,
         modelPath,
         tags.data(),

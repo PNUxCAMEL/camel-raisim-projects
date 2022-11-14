@@ -64,12 +64,12 @@ void JointPDController::InitSineTrajectory()
 
 void JointPDController::InitCubicTrajectory()
 {
-    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.23, sharedMemory->localTime, 1.0);
+    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.40, sharedMemory->localTime, 0.7);
 }
 
 void JointPDController::InitCubicTrajectory2()
 {
-    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.25, sharedMemory->localTime, 1.0);
+    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.30, sharedMemory->localTime, 1.0);
 }
 
 void JointPDController::setTrajectory()

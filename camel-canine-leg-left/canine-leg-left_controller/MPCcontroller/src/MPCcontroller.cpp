@@ -44,7 +44,7 @@ void MPCcontroller::DoControl()
 
 void MPCcontroller::InitSineTrajectory()
 {
-    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.05, 0.5);
+    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.1, 0.5);
 }
 
 void MPCcontroller::SetControlInput()

@@ -134,12 +134,12 @@ void SimulControlPanel::integrateSimul()
     mWorld->integrate();
     updateStates();
 
-    for (int idx = 0; idx < BUF_SIZE - 1; idx++)
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
+        for (int idx = 0; idx < BUF_SIZE - 1; idx++)
         {
-            sharedMemory->bufMotorPosition[motorIdx][idx + 1] = sharedMemory->bufMotorPosition[motorIdx][idx];
-            sharedMemory->bufMotorVelocity[motorIdx][idx + 1] = sharedMemory->bufMotorVelocity[motorIdx][idx];
+            sharedMemory->bufMotorPosition[motorIdx][BUF_SIZE - idx - 1] = sharedMemory->bufMotorPosition[motorIdx][BUF_SIZE - idx - 2];
+            sharedMemory->bufMotorVelocity[motorIdx][BUF_SIZE - idx - 1] = sharedMemory->bufMotorVelocity[motorIdx][BUF_SIZE - idx - 2];
         }
     }
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)

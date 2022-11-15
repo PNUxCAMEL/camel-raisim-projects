@@ -30,7 +30,7 @@ private:
     MPCController MPCcontrol;
     WBC WBControl;
 
-    OffsetGait stand, trot;
+    OffsetGait stand, trot, test;
 };
 
 #endif //RAISIM_CONTROLSTATE_H

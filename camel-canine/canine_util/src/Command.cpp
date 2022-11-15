@@ -43,16 +43,12 @@ void Command::commandFunction()
             }
             case HOME:
             {
-                sharedMemory->controlState = STATE_HOME_STAND_UP_READY;
-                sharedMemory->can1State = CAN_SET_TORQUE;
-                sharedMemory->can2State = CAN_SET_TORQUE;
+                sharedMemory->gaitState = TEST;
+                sharedMemory->gaitIteration = 0;
                 break;
             }
             case PD_CMD:
             {
-                sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
-                sharedMemory->can1State = CAN_SET_TORQUE;
-                sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             case CUSTOM_1:

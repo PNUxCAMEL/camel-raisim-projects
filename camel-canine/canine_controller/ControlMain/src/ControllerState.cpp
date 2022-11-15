@@ -12,6 +12,7 @@ ControllerState::ControllerState()
     , mGaitLength(3)
     , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
     , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
+    , test(mGaitLength, Vec4<int>(100,100,50,0), Vec4<int>(100,100,50,50), 100)
     , MPCcontrol(mGaitLength)
 {
 }
@@ -33,6 +34,12 @@ void ControllerState::ControllerFunction()
         {
             trot.setIterations(sharedMemory->gaitIteration);
             sharedMemory->gaitTable = trot.getGaitTable();
+            break;
+        }
+        case TEST:
+        {
+            test.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = test.getGaitTable();
             break;
         }
         default:

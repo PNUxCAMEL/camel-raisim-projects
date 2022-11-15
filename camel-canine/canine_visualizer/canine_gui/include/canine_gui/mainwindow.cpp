@@ -465,12 +465,12 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_BASE_Y->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredVelocity[1]);
     ui->PLOT_VEL_BASE_Z->graph(1)->addData(sharedMemory->localTime, sharedMemory->baseDesiredVelocity[2]);
 
-    ui->PLOT_POS_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[0]);
-    ui->PLOT_POS_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[1]);
-    ui->PLOT_POS_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[2]);
-    ui->PLOT_VEL_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[0]);
-    ui->PLOT_VEL_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[1]);
-    ui->PLOT_VEL_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[2]);
+    ui->PLOT_POS_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[0]*R2D);
+    ui->PLOT_POS_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[1]*R2D);
+    ui->PLOT_POS_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerPosition[2]*R2D);
+    ui->PLOT_VEL_BASE_ROLL->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[0]*R2D);
+    ui->PLOT_VEL_BASE_PITCH->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[1]*R2D);
+    ui->PLOT_VEL_BASE_YAW->graph(0)->addData(sharedMemory->localTime, sharedMemory->baseEulerVelocity[2]*R2D);
 
     ui->PLOT_VEL_LFHR->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LFHR_IDX]);
     ui->PLOT_VEL_LFHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[LFHP_IDX]);

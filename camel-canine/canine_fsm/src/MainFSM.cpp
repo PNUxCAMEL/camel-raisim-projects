@@ -66,7 +66,7 @@ void* NRTImuThread(void* arg)
     mscl::EulerAngles IMUAngularPositionOffset(3.141592, 0, 0);
     node.setSensorToVehicleRotation_eulerAngles(IMUAngularPositionOffset);
 
-    for (int idx=0; idx<100; idx++)
+    for (int idx=0; idx<500; idx++)
     {
         IMUBase.ParseData();
         baseAngularPosition = IMUBase.GetEulerAngle();
@@ -74,9 +74,9 @@ void* NRTImuThread(void* arg)
         Offset[1] += baseAngularPosition[1];
         Offset[2] += baseAngularPosition[2];
     }
-    Offset[0] /= 100;
-    Offset[1] /= 100;
-    Offset[2] /= 100;
+    Offset[0] /= 500;
+    Offset[1] /= 500;
+    Offset[2] /= 500;
 
     while (true)
     {

@@ -12,7 +12,7 @@ ControllerState::ControllerState()
     , mGaitLength(3)
     , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
     , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
-    , test(mGaitLength, Vec4<int>(100,100,50,0), Vec4<int>(100,100,50,50), 100)
+    , test(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,0), 100)
     , MPCcontrol(mGaitLength)
 {
 }
@@ -75,32 +75,15 @@ void ControllerState::ControllerFunction()
             PDcontrol.DoHomeControl();
             break;
         }
-        case STATE_PD_UP_READY:
+        case STATE_MPC_UP_REDAY:
         {
+            MPCcontrol.InitUpTrajectory();
+            sharedMemory->controlState = STATE_MPC_CONTROL;
             break;
         }
-        case STATE_PD_DOWN_READY:
+        case STATE_MPC_DOWN_REDAY:
         {
-            break;
-        }
-        case STATE_PD_CONTROL:
-        {
-            break;
-        }
-        case STATE_WBC_READY:
-        {
-            WBControl.InitTrajectory();
-            sharedMemory->controlState = STATE_WBC_CONTROL;
-            break;
-        }
-        case STATE_WBC_CONTROL:
-        {
-            WBControl.DoWBControl();
-            break;
-        }
-        case STATE_MPC_REDAY:
-        {
-            MPCcontrol.InitTrajectory();
+            MPCcontrol.InitDownTrajectory();
             sharedMemory->controlState = STATE_MPC_CONTROL;
             break;
         }

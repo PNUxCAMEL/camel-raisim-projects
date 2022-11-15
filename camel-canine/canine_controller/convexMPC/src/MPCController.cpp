@@ -12,15 +12,15 @@ MPCController::MPCController(const uint8_t& horizon)
     , ConvexMPCSolver(mHorizon)
     , SwingLegTrajectory(0.5)
     , mFirstRunTrot(true)
-    , mPgain{20,50,50}
-    , mDgain{1,0.5,0.5}
+    , mPgain{30,30,30}
+    , mDgain{2,2,2}
+/*    , mPgain{20,50,50}
+    , mDgain{1,0.5,0.5}*/
 {
     mGRF->setZero();
     mTorque->setZero();
     mInitState.setZero();
     mSwingTorque->setZero();
-    mSwingJointPos.setZero();
-    mSwingJointVel.setZero();
 }
 
 void MPCController::InitUpTrajectory()
@@ -65,8 +65,8 @@ void MPCController::DoControl()
             InitSwingTrjactory();
             mFirstRunTrot = false;
         }
-        setLegControl();
     }
+    setLegControl();
     computeControlInput();
     setControlInput();
 }

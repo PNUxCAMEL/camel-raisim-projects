@@ -375,16 +375,16 @@ void MainWindow::GraphInitialize(){
 
     ui->PLOT_CUSTOM_1->legend->setVisible(true);
     ui->PLOT_CUSTOM_1->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_CUSTOM_1->graph(0)->setName("tau RFHR");
-    ui->PLOT_CUSTOM_1->graph(1)->setName("des_tau RFHR");
+    ui->PLOT_CUSTOM_1->graph(0)->setName("tau RBHR");
+    ui->PLOT_CUSTOM_1->graph(1)->setName("des_tau RBHR");
     ui->PLOT_CUSTOM_3->legend->setVisible(true);
     ui->PLOT_CUSTOM_3->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_CUSTOM_3->graph(0)->setName("tau RFHP");
-    ui->PLOT_CUSTOM_3->graph(1)->setName("des_tau RFHP");
+    ui->PLOT_CUSTOM_3->graph(0)->setName("tau RBHP");
+    ui->PLOT_CUSTOM_3->graph(1)->setName("des_tau RBHP");
     ui->PLOT_CUSTOM_5->legend->setVisible(true);
     ui->PLOT_CUSTOM_5->legend->setFont(QFont("Helvetica", 9));
-    ui->PLOT_CUSTOM_5->graph(0)->setName("tau RFKP");
-    ui->PLOT_CUSTOM_5->graph(1)->setName("des_tau RFKP");
+    ui->PLOT_CUSTOM_5->graph(0)->setName("tau RBKP");
+    ui->PLOT_CUSTOM_5->graph(1)->setName("des_tau RBKP");
 
     ui->PLOT_POS_BASE_X->xAxis->setTicker(timeTicker);
     ui->PLOT_POS_BASE_Y->xAxis->setTicker(timeTicker);
@@ -486,12 +486,12 @@ void MainWindow::GraphUpdate()
     ui->PLOT_VEL_RBHP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RBHP_IDX]);
     ui->PLOT_VEL_RBKP->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorVelocity[RBKP_IDX]);
 
-    ui->PLOT_CUSTOM_1->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[RFHR_IDX]);
-    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[RFHP_IDX]);
-    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[RFKP_IDX]);
-    ui->PLOT_CUSTOM_1->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[RFHR_IDX]);
-    ui->PLOT_CUSTOM_3->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[RFHP_IDX]);
-    ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[RFKP_IDX]);
+    ui->PLOT_CUSTOM_1->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[RBHR_IDX]);
+    ui->PLOT_CUSTOM_3->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[RBHP_IDX]);
+    ui->PLOT_CUSTOM_5->graph(0)->addData(sharedMemory->localTime, sharedMemory->motorTorque[RBKP_IDX]);
+    ui->PLOT_CUSTOM_1->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[RBHR_IDX]);
+    ui->PLOT_CUSTOM_3->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[RBHP_IDX]);
+    ui->PLOT_CUSTOM_5->graph(1)->addData(sharedMemory->localTime, sharedMemory->motorDesiredTorque[RBKP_IDX]);
 
     ui->PLOT_POS_BASE_X->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);
     ui->PLOT_POS_BASE_Y->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);

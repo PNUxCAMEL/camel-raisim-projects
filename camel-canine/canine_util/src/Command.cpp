@@ -43,7 +43,7 @@ void Command::commandFunction()
             }
             case HOME:
             {
-                sharedMemory->gaitState = TEST;
+                sharedMemory->gaitState = TROT;
                 sharedMemory->gaitIteration = 0;
                 break;
             }

@@ -59,7 +59,7 @@ typedef struct _SHM_
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
-    uint32_t gaitIteration;
+    int gaitIteration;
 
 } SHM, * pSHM;
 

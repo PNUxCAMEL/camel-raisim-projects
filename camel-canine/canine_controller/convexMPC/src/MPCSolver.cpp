@@ -35,11 +35,13 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory)
+void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3])
 {
     for(int horizon = 0; horizon < mHorizon ; horizon++)
     {
-        xd[horizon*13+5] = Trajectory.getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+        xd[horizon*13+3] = Trajectory[0].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+        xd[horizon*13+4] = Trajectory[1].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+        xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
     }
 
     sharedMemory->baseDesiredVelocity[0] = xd[0];

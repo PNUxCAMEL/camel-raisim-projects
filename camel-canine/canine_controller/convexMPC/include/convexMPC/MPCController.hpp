@@ -29,7 +29,7 @@ private:
     const int mTorqueLimit;
     MPCSolver ConvexMPCSolver;
     SwingLeg SwingLegTrajectory;
-    CubicTrajectoryGenerator mBaseTrajectory;
+    CubicTrajectoryGenerator mBaseTrajectory[3];
 
     double mDesiredPosition[2];
     double mBasePosition[3];

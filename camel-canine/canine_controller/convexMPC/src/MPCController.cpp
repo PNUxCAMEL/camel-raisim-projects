@@ -23,7 +23,11 @@ void MPCController::InitUpTrajectory()
 {
     SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
     double timeDuration = 2.0;
-    mBaseTrajectory.updateTrajectory(sharedMemory->basePosition[2], 0.35,
+    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], 0.0,
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], 0.0,
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.35,
                                         sharedMemory->localTime, timeDuration);
 }
 
@@ -31,8 +35,12 @@ void MPCController::InitDownTrajectory()
 {
     SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
     double timeDuration = 2.0;
-    mBaseTrajectory.updateTrajectory(sharedMemory->basePosition[2], 0.0,
-                                     sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], sharedMemory->basePosition[0],
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], sharedMemory->basePosition[1],
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.0,
+                                        sharedMemory->localTime, timeDuration);
 }
 
 void MPCController::DoControl()

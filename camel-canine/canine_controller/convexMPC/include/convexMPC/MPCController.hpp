@@ -14,7 +14,7 @@ using Eigen::Dynamic;
 
 class MPCController{
 public:
-    MPCController(const uint8_t& horizon);
+    MPCController(const uint8_t& horizon, const double& swingT);
     void DoControl();
     void InitUpTrajectory();
     void InitDownTrajectory();

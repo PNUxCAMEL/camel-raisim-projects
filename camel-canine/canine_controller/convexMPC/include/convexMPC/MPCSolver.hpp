@@ -57,7 +57,6 @@ private:
     Eigen::Matrix<double, Dynamic, 13> Aqp;
     Eigen::Matrix<double, Dynamic, Dynamic> Bqp;
 
-    Eigen::Matrix<double, 13, 1> x0;
     Eigen::Matrix<double, Dynamic, 1> xd;
 
     Eigen::Matrix<double, Dynamic, Dynamic> L;

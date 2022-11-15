@@ -6,16 +6,16 @@
 
 extern pSHM sharedMemory;
 
-MPCController::MPCController(const uint8_t& horizon)
+MPCController::MPCController(const uint8_t& horizon, const double& swingT)
     : mHorizon(horizon)
-    , mTorqueLimit(17.0)
+    , mTorqueLimit(40)
     , ConvexMPCSolver(mHorizon)
-    , SwingLegTrajectory(0.5)
+    , SwingLegTrajectory(swingT)
     , mFirstRunTrot(true)
-    , mPgain{30,30,30}
-    , mDgain{2,2,2}
-/*    , mPgain{20,50,50}
-    , mDgain{1,0.5,0.5}*/
+//    , mPgain{30,30,30}
+//    , mDgain{2,2,2}
+    , mPgain{20,50,50}
+    , mDgain{1,0.5,0.5}
 {
     mGRF->setZero();
     mTorque->setZero();
@@ -26,7 +26,7 @@ MPCController::MPCController(const uint8_t& horizon)
 void MPCController::InitUpTrajectory()
 {
     double timeDuration = 2.0;
-    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], 0.0,
+    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], -0.05,
                                         sharedMemory->localTime, timeDuration);
     mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], 0.0,
                                         sharedMemory->localTime, timeDuration);
@@ -151,6 +151,7 @@ void MPCController::computeControlInput()
 
 void MPCController::setControlInput()
 {
+    std::cout << "=========Torque========" << std::endl;
     for (int leg = 0; leg < 4; leg++)
     {
         for (int motor = 0; motor < 3; motor++)
@@ -163,7 +164,10 @@ void MPCController::setControlInput()
             {
                 mTorque[leg][motor] = -mTorqueLimit;
             }
+            std::cout << mTorque[leg][motor] << "\t";
             sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
         }
+        std::cout << std::endl;
     }
+    std::cout << std::endl;
 }

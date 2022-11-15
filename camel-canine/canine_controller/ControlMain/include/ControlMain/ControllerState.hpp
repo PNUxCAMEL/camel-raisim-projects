@@ -25,6 +25,7 @@ public:
 private:
     uint16_t mIteration;
     uint8_t mGaitLength;
+    double mSwT;
 
     JointPDController PDcontrol;
     MPCController MPCcontrol;

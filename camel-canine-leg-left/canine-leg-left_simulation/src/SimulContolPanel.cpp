@@ -37,6 +37,7 @@ void SimulControlPanel::ControllerFunction()
         PDcontrol.InitHomeStandUpTrajectory();
         sharedMemory->controlState = STATE_HOME_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
+//        mRefMPCIteration = mIteration;
         break;
     }
     case STATE_HOME_STAND_DOWN_READY:
@@ -50,6 +51,20 @@ void SimulControlPanel::ControllerFunction()
     case STATE_HOME_CONTROL:
     {
         PDcontrol.DoHomeControl();
+//        if((mIteration - mRefMPCIteration - 1) >= 5000)
+//        {
+//
+//        }
+//        else
+//        {
+//            sharedMemory->GRFEstimatorData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->measuredGRF;
+//            sharedMemory->GRFEstimatorData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFMLP;
+//            sharedMemory->GRFEstimatorData[2][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFSMO;
+//            sharedMemory->GRFEstimatorData[3][mIteration - mRefMPCIteration - 1] = sharedMemory->estimatedGRFETO;
+//            sharedMemory->positionTrackingData[0][mIteration - mRefMPCIteration - 1] = sharedMemory->desiredHipVerticalPosition;
+//            sharedMemory->positionTrackingData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->hipVerticalPosition;
+//            std::cout<<mIteration - mRefMPCIteration - 1<<std::endl;
+//        }
         break;
     }
     case STATE_PD_READY:
@@ -67,10 +82,10 @@ void SimulControlPanel::ControllerFunction()
     case STATE_PD_CONTROL:
     {
 ////        IDcontrol.DoControl();
-        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
-        {
+//        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
+//        {
             MPCcontrol.DoControl();
-        }
+//        }
 ////        GRFcontrol.DoControl();
         MPCcontrol.SetControlInput();
 
@@ -97,6 +112,15 @@ void SimulControlPanel::ControllerFunction()
             sharedMemory->positionTrackingData[1][mIteration - mRefMPCIteration - 1] = sharedMemory->hipVerticalPosition;
             std::cout<<mIteration - mRefMPCIteration - 1<<std::endl;
         }
+
+        if(((mIteration - mRefMPCIteration - 1) >= 1000) && ((mIteration - mRefMPCIteration - 1) <= 1500))
+        {
+            int bodyIdx = 2;
+            const raisim::Vec<3> pos{0, 0, 0};
+            const raisim::Vec<3> force{0, 0, 10};
+            mRobot->setExternalForce(bodyIdx, pos, force);
+        }
+
         break;
     }
     case STATE_TROT_REDAY:
@@ -119,8 +143,8 @@ void SimulControlPanel::ControllerFunction()
     {
         integrateSimul();
         GRFNet.Estimate();
-        GRFSMO.Estimate();
-        GRFETO.Estimate();
+//        GRFSMO.Estimate();
+//        GRFETO.Estimate();
     }
 }
 

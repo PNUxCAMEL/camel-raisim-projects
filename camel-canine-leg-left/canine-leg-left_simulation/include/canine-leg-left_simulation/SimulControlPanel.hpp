@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include <raisim/World.hpp>
+#include <raisim/math.hpp>
 
 #include <canine-leg-left_util/SharedMemory.hpp>
 #include <canine-leg-left_util/RobotDescription.hpp>

@@ -64,12 +64,12 @@ void JointPDController::InitSineTrajectory()
 
 void JointPDController::InitCubicTrajectory()
 {
-    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.40, sharedMemory->localTime, 0.7);
+    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.40, sharedMemory->localTime, 1.0);
 }
 
 void JointPDController::InitCubicTrajectory2()
 {
-    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.30, sharedMemory->localTime, 1.0);
+    mCubicTrjectoryGenHipVertical.updateTrajectory(sharedMemory->desiredHipVerticalPosition, 0.20, sharedMemory->localTime, 1.0);
 }
 
 void JointPDController::setTrajectory()
@@ -112,6 +112,13 @@ void JointPDController::updateHomeTrajectory()
         double homeHip = 60;
         double homeKnee = -120;
         double timeDuration = 1.0;
+
+        /*
+         * For Jump
+         * double homeHip = 70;
+         * double homeKnee = -140;
+         * double timeDuration = 1.0;
+         */
         mRefTime = sharedMemory->localTime + timeDuration;
         mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
         mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);
@@ -130,6 +137,14 @@ void JointPDController::updateHomeTrajectory()
         double homeHip = 45;
         double homeKnee = -90;
         double timeDuration = 1.0;
+
+        /*
+         * For Jump
+         * double homeHip = 30;
+         * double homeKnee = -60;
+         * double timeDuration = 0.1;
+         */
+
         mRefTime = sharedMemory->localTime + timeDuration;
         mCubicTrajectoryGen[0].updateTrajectory(mDesiredPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
         mCubicTrajectoryGen[1].updateTrajectory(mDesiredPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);

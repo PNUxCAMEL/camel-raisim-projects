@@ -120,6 +120,7 @@ enum GAIT_TYPE
 {
     STAND = 0,
     TROT,
+    TEST
 };
 
 

@@ -39,7 +39,7 @@ private:
     JointPDController PDcontrol;
     MPCController MPCcontrol;
     WBC WBControl;
-    OffsetGait stand, trot;
+    OffsetGait stand, trot, test;
 };
 
 #endif //RAISIM_SIMULCONTROLPANEL_HPP

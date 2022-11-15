@@ -18,11 +18,12 @@ public:
     void DoControl();
     void InitUpTrajectory();
     void InitDownTrajectory();
+    void InitSwingTrjactory();
 private:
     void updateState();
     void computeControlInput();
     void setControlInput();
-    void setLegcontrol();
+    void setLegControl();
 
 private:
     const uint8_t mHorizon;
@@ -37,9 +38,8 @@ private:
     double mBaseEulerPosition[3];
     double mBaseEulerVelocity[3];
     double mFootPosition[4][3];
-
-    Eigen::Matrix<double,3,1> robottorque[4];
-    Eigen::Matrix<double,3,1> swingtorque[4];
+    double mPgain[3];
+    double mDgain[3];
 
     Vec3<double> mGRF[4];
     Vec3<double> mTorque[4];
@@ -47,9 +47,13 @@ private:
     Vec3<double> mMotorVelocity[4];
     Vec3<double> mTorqueJacobian[4];
     Vec13<double> mInitState;
-
     Mat3<double> mJacobian[4];
 
+    Vec3<double> mSwingTorque[4];
+    Vec3<double> mSwingJointPos;
+    Vec3<double> mSwingJointVel;
+
+    bool mFirstRunTrot;
 };
 
 #endif //RAISIM_MPCCONTROLLER_H

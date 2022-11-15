@@ -11,17 +11,20 @@ MPCController::MPCController(const uint8_t& horizon)
     , mTorqueLimit(17.0)
     , ConvexMPCSolver(mHorizon)
     , SwingLegTrajectory(0.5)
+    , mFirstRunTrot(true)
+    , mPgain{20,50,50}
+    , mDgain{1,0.5,0.5}
 {
     mGRF->setZero();
     mTorque->setZero();
-    robottorque->setZero();
-    swingtorque->setZero();
     mInitState.setZero();
+    mSwingTorque->setZero();
+    mSwingJointPos.setZero();
+    mSwingJointVel.setZero();
 }
 
 void MPCController::InitUpTrajectory()
 {
-    SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
     double timeDuration = 2.0;
     mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], 0.0,
                                         sharedMemory->localTime, timeDuration);
@@ -33,7 +36,6 @@ void MPCController::InitUpTrajectory()
 
 void MPCController::InitDownTrajectory()
 {
-    SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
     double timeDuration = 2.0;
     mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], sharedMemory->basePosition[0],
                                         sharedMemory->localTime, timeDuration);
@@ -41,6 +43,11 @@ void MPCController::InitDownTrajectory()
                                         sharedMemory->localTime, timeDuration);
     mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.0,
                                         sharedMemory->localTime, timeDuration);
+}
+
+void MPCController::InitSwingTrjactory()
+{
+    SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
 }
 
 void MPCController::DoControl()
@@ -51,7 +58,15 @@ void MPCController::DoControl()
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);
 
-    setLegcontrol();
+    if (sharedMemory->gaitState != STAND)
+    {
+        if (mFirstRunTrot)
+        {
+            InitSwingTrjactory();
+            mFirstRunTrot = false;
+        }
+        setLegControl();
+    }
     computeControlInput();
     setControlInput();
 }
@@ -82,47 +97,36 @@ void MPCController::updateState()
             mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], GRAVITY;
 }
 
-void MPCController::setLegcontrol()
+void MPCController::setLegControl()
 {
     SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
 
     double d = sqrt(pow(mDesiredPosition[0],2)+pow(mDesiredPosition[1],2));
     double phi = acos(abs(mDesiredPosition[0])/ d);
     double psi = acos(pow(d,2)/(2*0.23*d));
-
-    double jointPos[3];
-    double jointVel[3] = {0,0,0};
-
-    jointPos[0] = 0.f;
     if (mDesiredPosition[0] < 0)
-        jointPos[1] = 1.57 - phi + psi;
+        mSwingJointPos[1] = 1.57 - phi + psi;
     else if(mDesiredPosition[0] == 0)
-        jointPos[1] = psi;
+        mSwingJointPos[1] = psi;
     else
-        jointPos[1] = phi + psi - 1.57;
-    jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
+        mSwingJointPos[1] = phi + psi - 1.57;
+    mSwingJointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
 
-    double Pgain[3] = {20,20,30};
-    double Dgain[3] = {0.5,1,1};
-
-    double posError[3];
-    double velError[3];
     for (int i = 0; i < 4; i++)
     {
         if (sharedMemory->gaitTable[i] == 0)
         {
             for(int j=0; j<3; j++)
             {
-                posError[j] = jointPos[j] - mMotorPosition[i][j];
-                velError[j] = jointVel[j] - mMotorVelocity[i][j];
-                swingtorque[i][j] = Pgain[j] * posError[j] + Dgain[j] * velError[j];
+                mSwingTorque[i][j] = mPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
+                                   + mDgain[j] * (mSwingJointVel[j] - mMotorVelocity[i][j]);
             }
         }
         else
         {
             for(int j=0; j<3; j++)
             {
-                swingtorque[i][j] = 0.f;
+                mSwingTorque[i][j] = 0.f;
             }
         }
     }
@@ -139,9 +143,9 @@ void MPCController::computeControlInput()
     {
         mJacobian[idx].transposeInPlace();
         mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
-        mTorque[idx][0] = mTorqueJacobian[idx][0]+swingtorque[idx][0];
-        mTorque[idx][1] = mTorqueJacobian[idx][1]+swingtorque[idx][1];
-        mTorque[idx][2] = mTorqueJacobian[idx][2]+swingtorque[idx][2];
+        mTorque[idx][0] = mTorqueJacobian[idx][0]+mSwingTorque[idx][0];
+        mTorque[idx][1] = mTorqueJacobian[idx][1]+mSwingTorque[idx][1];
+        mTorque[idx][2] = mTorqueJacobian[idx][2]+mSwingTorque[idx][2];
     }
 }
 

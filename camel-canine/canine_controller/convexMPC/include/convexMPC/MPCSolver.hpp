@@ -15,8 +15,6 @@
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotMath.hpp>
 
-#include "MPCdescription.hpp"
-
 using Eigen::Dynamic;
 
 class MPCSolver{

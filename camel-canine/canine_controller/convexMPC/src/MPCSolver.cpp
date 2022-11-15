@@ -4,17 +4,16 @@
 
 #include "convexMPC/MPCSolver.hpp"
 
-
 extern pSHM sharedMemory;
 
 MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(CONTROL_dT)
-    , mAlpha(ALPHA)
-    , mFmax(80)
+    , mAlpha(1e-7)
+    , mFmax(250)
     , mMu(0.6)
-    , mWeightMat(WEIGHT)
     , mHorizon(horizon)
 {
+    mWeightMat << 10, 10, 10, 100, 100, 100, 0, 0, 1, 1, 1, 1, 0.0;
     initMatrix();
     resizeMatrix();
 }
@@ -225,14 +224,19 @@ void MPCSolver::SolveQP()
     }
 }
 
-void MPCSolver::GetGRF(Vec3<double> GRF[4]){
+void MPCSolver::GetGRF(Vec3<double> GRF[4])
+{
+//    std::cout << "=====GRF=====" << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
             GRF[leg][axis] = q_soln[leg*3 + axis];
+//            std::cout << GRF[leg][axis] << "\t";
         }
+//        std::cout << std::endl;
     }
+//    std::cout << std::endl;
 }
 
 void MPCSolver::getStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4][3])

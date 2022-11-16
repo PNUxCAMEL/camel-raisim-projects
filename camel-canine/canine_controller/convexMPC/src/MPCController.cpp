@@ -12,10 +12,14 @@ MPCController::MPCController(const uint8_t& horizon, const double& swingT)
     , ConvexMPCSolver(mHorizon)
     , SwingLegTrajectory(swingT)
     , mFirstRunTrot(true)
-    , mPgain{30,30,30}
-    , mDgain{2,2,2}
-//    , mPgain{20,50,50}
-//    , mDgain{1,0.5,0.5}
+    , mSwingPgain{30,30,30}
+    , mSwingDgain{2,2,2}
+    , mStandPgain{10,10,10}
+    , mStandDgain{2,2,2}
+/*    , mSwingPgain{20,50,50}
+    , mSwingDgain{1,0.5,0.5}
+    , mStandPgain{10,10,10}
+    , mStandDgain{1,0.5,0.5}*/
 {
     mGRF->setZero();
     mTorque->setZero();
@@ -108,8 +112,6 @@ void MPCController::getJointPos(const double& x, const double& z, Vec3<double>& 
     double phi = acos(abs(x)/ d);
     double psi = acos(pow(d,2)/(2*LEN_THI*d));
 
-    std::cout << pos[0] << std::endl;
-
     if (x < 0)
         pos[1] = 1.57 - phi + psi;
     else if(x == 0)
@@ -131,16 +133,16 @@ void MPCController::setLegControl()
         {
             for(int j=0; j<3; j++)
             {
-                mLegTorque[i][j] = mPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
-                                   + mDgain[j] * (mSwingJointVel[j] - mMotorVelocity[i][j]);
+                mLegTorque[i][j] = mSwingPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
+                                   + mSwingDgain[j] * (mSwingJointVel[j] - mMotorVelocity[i][j]);
             }
         }
         else
         {
             for(int j=0; j<3; j++)
             {
-                mLegTorque[i][j] = mPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
-                                   + mDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
+                mLegTorque[i][j] = mStandPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
+                                   + mStandDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
             }
         }
     }
@@ -157,12 +159,9 @@ void MPCController::computeControlInput()
     {
         mJacobian[idx].transposeInPlace();
         mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
-/*        mTorque[idx][0] = mTorqueJacobian[idx][0]+mLegTorque[idx][0];
+        mTorque[idx][0] = mTorqueJacobian[idx][0]+mLegTorque[idx][0];
         mTorque[idx][1] = mTorqueJacobian[idx][1]+mLegTorque[idx][1];
-        mTorque[idx][2] = mTorqueJacobian[idx][2]+mLegTorque[idx][2];*/
-        mTorque[idx][0] = mLegTorque[idx][0];
-        mTorque[idx][1] = mLegTorque[idx][1];
-        mTorque[idx][2] = mLegTorque[idx][2];
+        mTorque[idx][2] = mTorqueJacobian[idx][2]+mLegTorque[idx][2];
     }
 }
 

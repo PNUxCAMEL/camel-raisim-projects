@@ -29,6 +29,10 @@ private:
 private:
     const uint8_t mHorizon;
     const int mTorqueLimit;
+    const double mSwingPgain[3];
+    const double mSwingDgain[3];
+    const double mStandPgain[3];
+    const double mStandDgain[3];
     MPCSolver ConvexMPCSolver;
     SwingLeg SwingLegTrajectory;
     CubicTrajectoryGenerator mBaseTrajectory[3];
@@ -39,8 +43,7 @@ private:
     double mBaseEulerPosition[3];
     double mBaseEulerVelocity[3];
     double mFootPosition[4][3];
-    double mPgain[3];
-    double mDgain[3];
+
 
     Vec3<double> mGRF[4];
     Vec3<double> mTorque[4];

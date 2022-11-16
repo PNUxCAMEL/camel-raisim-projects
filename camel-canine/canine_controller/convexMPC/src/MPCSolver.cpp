@@ -227,17 +227,17 @@ void MPCSolver::SolveQP()
 
 void MPCSolver::GetGRF(Vec3<double> GRF[4])
 {
-    std::cout << "=====GRF=====" << std::endl;
+//    std::cout << "=====GRF=====" << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
             GRF[leg][axis] = q_soln[leg*3 + axis];
-            std::cout << GRF[leg][axis] << "\t";
+//            std::cout << GRF[leg][axis] << "\t";
         }
-        std::cout << std::endl;
+//        std::cout << std::endl;
     }
-    std::cout << std::endl;
+//    std::cout << std::endl;
 }
 
 void MPCSolver::getStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4][3])

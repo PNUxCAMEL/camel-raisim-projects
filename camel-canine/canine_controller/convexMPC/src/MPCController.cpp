@@ -8,14 +8,14 @@ extern pSHM sharedMemory;
 
 MPCController::MPCController(const uint8_t& horizon, const double& swingT)
     : mHorizon(horizon)
-    , mTorqueLimit(40)
+    , mTorqueLimit(20)
     , ConvexMPCSolver(mHorizon)
     , SwingLegTrajectory(swingT)
     , mFirstRunTrot(true)
-//    , mPgain{30,30,30}
-//    , mDgain{2,2,2}
-    , mPgain{20,50,50}
-    , mDgain{1,0.5,0.5}
+    , mPgain{30,30,30}
+    , mDgain{2,2,2}
+//    , mPgain{20,50,50}
+//    , mDgain{1,0.5,0.5}
 {
     mGRF->setZero();
     mTorque->setZero();
@@ -31,7 +31,7 @@ MPCController::MPCController(const uint8_t& horizon, const double& swingT)
 void MPCController::InitUpTrajectory()
 {
     double timeDuration = 2.0;
-    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], -0.05,
+    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], 0.0,
                                         sharedMemory->localTime, timeDuration);
     mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], 0.0,
                                         sharedMemory->localTime, timeDuration);

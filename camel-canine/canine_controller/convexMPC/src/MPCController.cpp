@@ -20,7 +20,12 @@ MPCController::MPCController(const uint8_t& horizon, const double& swingT)
     mGRF->setZero();
     mTorque->setZero();
     mInitState.setZero();
-    mSwingTorque->setZero();
+    mLegTorque->setZero();
+
+    mSwingJointPos.setZero();
+    mSwingJointVel.setZero();
+    mStandJointPos.setZero();
+    mStandJointVel.setZero();
 }
 
 void MPCController::InitUpTrajectory()
@@ -97,20 +102,28 @@ void MPCController::updateState()
             mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], GRAVITY;
 }
 
+void MPCController::getJointPos(const double& x, const double& z, Vec3<double>& pos)
+{
+    double d = sqrt(pow(x,2)+pow(z,2));
+    double phi = acos(abs(x)/ d);
+    double psi = acos(pow(d,2)/(2*LEN_THI*d));
+
+    std::cout << pos[0] << std::endl;
+
+    if (x < 0)
+        pos[1] = 1.57 - phi + psi;
+    else if(x == 0)
+        pos[1] = psi;
+    else
+        pos[1] = phi + psi - 1.57;
+    pos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
+}
+
 void MPCController::setLegControl()
 {
     SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
-
-    double d = sqrt(pow(mDesiredPosition[0],2)+pow(mDesiredPosition[1],2));
-    double phi = acos(abs(mDesiredPosition[0])/ d);
-    double psi = acos(pow(d,2)/(2*0.23*d));
-    if (mDesiredPosition[0] < 0)
-        mSwingJointPos[1] = 1.57 - phi + psi;
-    else if(mDesiredPosition[0] == 0)
-        mSwingJointPos[1] = psi;
-    else
-        mSwingJointPos[1] = phi + psi - 1.57;
-    mSwingJointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
+    getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
+    getJointPos(0.0, sharedMemory->baseDesiredPosition[2], mStandJointPos);
 
     for (int i = 0; i < 4; i++)
     {
@@ -118,7 +131,7 @@ void MPCController::setLegControl()
         {
             for(int j=0; j<3; j++)
             {
-                mSwingTorque[i][j] = mPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
+                mLegTorque[i][j] = mPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
                                    + mDgain[j] * (mSwingJointVel[j] - mMotorVelocity[i][j]);
             }
         }
@@ -126,7 +139,8 @@ void MPCController::setLegControl()
         {
             for(int j=0; j<3; j++)
             {
-                mSwingTorque[i][j] = 0.f;
+                mLegTorque[i][j] = mPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
+                                   + mDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
             }
         }
     }
@@ -143,9 +157,12 @@ void MPCController::computeControlInput()
     {
         mJacobian[idx].transposeInPlace();
         mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
-        mTorque[idx][0] = mTorqueJacobian[idx][0]+mSwingTorque[idx][0];
-        mTorque[idx][1] = mTorqueJacobian[idx][1]+mSwingTorque[idx][1];
-        mTorque[idx][2] = mTorqueJacobian[idx][2]+mSwingTorque[idx][2];
+/*        mTorque[idx][0] = mTorqueJacobian[idx][0]+mLegTorque[idx][0];
+        mTorque[idx][1] = mTorqueJacobian[idx][1]+mLegTorque[idx][1];
+        mTorque[idx][2] = mTorqueJacobian[idx][2]+mLegTorque[idx][2];*/
+        mTorque[idx][0] = mLegTorque[idx][0];
+        mTorque[idx][1] = mLegTorque[idx][1];
+        mTorque[idx][2] = mLegTorque[idx][2];
     }
 }
 

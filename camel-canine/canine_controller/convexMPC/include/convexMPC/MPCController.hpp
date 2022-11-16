@@ -24,6 +24,7 @@ private:
     void computeControlInput();
     void setControlInput();
     void setLegControl();
+    void getJointPos(const double& x, const double& z, Vec3<double>& pos);
 
 private:
     const uint8_t mHorizon;
@@ -49,9 +50,11 @@ private:
     Vec13<double> mInitState;
     Mat3<double> mJacobian[4];
 
-    Vec3<double> mSwingTorque[4];
+    Vec3<double> mLegTorque[4];
     Vec3<double> mSwingJointPos;
     Vec3<double> mSwingJointVel;
+    Vec3<double> mStandJointPos;
+    Vec3<double> mStandJointVel;
 
     bool mFirstRunTrot;
 };

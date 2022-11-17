@@ -8,13 +8,13 @@ extern pSHM sharedMemory;
 
 MPCController::MPCController(const uint8_t& horizon, const double& swingT)
     : mHorizon(horizon)
-    , mTorqueLimit(20)
+    , mTorqueLimit(35)
     , ConvexMPCSolver(mHorizon)
     , SwingLegTrajectory(swingT)
     , mFirstRunTrot(true)
     , mSwingPgain{30,30,30}
     , mSwingDgain{2,2,2}
-    , mStandPgain{10,10,10}
+    , mStandPgain{20,10,10}
     , mStandDgain{2,2,2}
 /*    , mSwingPgain{20,50,50}
     , mSwingDgain{1,0.5,0.5}

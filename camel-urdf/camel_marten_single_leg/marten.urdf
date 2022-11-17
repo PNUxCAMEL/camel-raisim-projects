@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="bipedal">
+  <link
+    name="hip">
+    <inertial>
+      <origin
+        xyz="0.0173834753494876 0.000104515089306609 8.47570205442905E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.145351084248357" />
+      <inertia
+        ixx="9.42168190177246E-05"
+        ixy="-2.11499558612165E-07"
+        ixz="-1.71516596824862E-07"
+        iyy="6.2237093053808E-05"
+        iyz="2.51434127778847E-07"
+        izz="6.2130947779561E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://bipedal/meshes/hip.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://bipedal/meshes/hip.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="thigh">
+    <inertial>
+      <origin
+        xyz="-0.0468402510419575 -0.0291148019085358 0.0179527896163789"
+        rpy="0 0 0" />
+      <mass
+        value="0.416055160505322" />
+      <inertia
+        ixx="0.000860597525008314"
+        ixy="8.64189866727972E-06"
+        ixz="-5.37555316904657E-06"
+        iyy="0.000330091472990173"
+        iyz="0.000253540497913734"
+        izz="0.000581710663565449" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://bipedal/meshes/thigh.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://bipedal/meshes/thigh.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="thigh"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="1.9908 0 0" />
+    <parent
+      link="hip" />
+    <child
+      link="thigh" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="calf">
+    <inertial>
+      <origin
+        xyz="-0.0159943328931739 -0.0724625522067053 -0.0518203633585031"
+        rpy="0 0 0" />
+      <mass
+        value="0.100407475051468" />
+      <inertia
+        ixx="0.000174201504421799"
+        ixy="-3.69356135594425E-08"
+        ixz="-2.64129484295427E-08"
+        iyy="6.70724360673057E-05"
+        iyz="-7.67423937930242E-05"
+        izz="0.00011950317547468" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://bipedal/meshes/calf.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://bipedal/meshes/calf.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="calf"
+    type="revolute">
+    <origin
+      xyz="-0.04955 -0.15303 0.094774"
+      rpy="0.36505 0 0" />
+    <parent
+      link="thigh" />
+    <child
+      link="calf" />
+    <axis
+      xyz="1 0 0" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>

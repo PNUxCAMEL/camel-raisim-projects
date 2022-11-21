@@ -22,6 +22,7 @@
 #include <canine_simulation/SimulVisualizer.hpp>
 #include <canine_simulation/SimulCommand.hpp>
 #include <canine_simulation/SimulXboxCommand.hpp>
+#include <canine_simulation/SimulKalmanFilter.hpp>
 
 void StartSimulation();
 void* NRTCommandThread(void* arg);

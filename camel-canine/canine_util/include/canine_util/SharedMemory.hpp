@@ -50,6 +50,7 @@ typedef struct _SHM_
     Vec3<double> baseVelocity; ///todo
     Vec3<double> baseDesiredPosition; ///todo
     Vec3<double> baseDesiredVelocity; ///todo
+    double baseAcceleration[3];
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];

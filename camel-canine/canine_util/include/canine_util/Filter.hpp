@@ -10,8 +10,7 @@
 
 namespace CanineFilter
 {
-    class Vec3LPF
-    {
+    class Vec3LPF{
     public:
         Vec3LPF(double DT, double cutoffFreq);
         Vec3<double> GetFilteredVar(const Vec3<double>& data);
@@ -27,8 +26,7 @@ namespace CanineFilter
         Vec3<double> mFilteredData;
     };
 
-    class LPF
-    {
+    class LPF{
     public:
         LPF(double dt, double fc);
         double GetFilteredVar(double const data);
@@ -43,6 +41,7 @@ namespace CanineFilter
         double mPreviousData;
         double mFilteredData;
     };
+
 }
 
 

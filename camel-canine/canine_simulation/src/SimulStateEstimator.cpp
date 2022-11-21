@@ -86,7 +86,8 @@ void SimulStateEstimator::getRobotFootPosition()
 
 void SimulStateEstimator::getRobotLinearState()
 {
-/*    if (bIsFirstRun)
+/*
+    if (bIsFirstRun)
     {
         sharedMemory->basePosition[0] = 0;
         sharedMemory->basePosition[1] = 0;
@@ -108,7 +109,8 @@ void SimulStateEstimator::getRobotLinearState()
     }
 
     mBodyPrev[2] = -mTransMat[2].block(0,3,3,1);
-    mBodyPrev[3] = -mTransMat[3].block(0,3,3,1);*/
+    mBodyPrev[3] = -mTransMat[3].block(0,3,3,1);
+*/
 
     for (int idx=0; idx<3; idx++)
     {

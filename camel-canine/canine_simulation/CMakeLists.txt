@@ -34,6 +34,7 @@ add_library(${PROJECT_NAME}
         src/SimulVisualizer.cpp
         src/SimulCommand.cpp
         src/SimulXboxCommand.cpp
+        src/SimulKalmanFilter.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

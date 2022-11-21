@@ -19,7 +19,8 @@ SimulCommand userCommand;
 //SimulXboxCommand userXboxCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
-SimulStateEstimator StateEstimator(robot);
+//SimulStateEstimator StateEstimator(robot);
+SimulKalmanFilter StateEstimator(robot);
 
 void* NRTCommandThread(void* arg)
 {

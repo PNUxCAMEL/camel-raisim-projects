@@ -34,8 +34,6 @@ void JointPDController::DoHomeControl()
     updateState();
     updateHomeTrajectory();
     setHomeTrajectory();
-    ForceQPsolver.SolveQP(mInitState, mDesiredState, mFootPosition);
-    ForceQPsolver.GetGRF(mGRF);
 
     computeControlInput();
     SetControlInput();

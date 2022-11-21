@@ -62,6 +62,7 @@ void* NRTImuThread(void* arg)
     IMUBase.SetConfig(250);
     double* baseAngularPosition;
     double* baseAngularVelocity;
+    double* baseAcceleration;
 
     mscl::EulerAngles IMUAngularPositionOffset(3.141592, 0, 0);
     node.setSensorToVehicleRotation_eulerAngles(IMUAngularPositionOffset);
@@ -84,6 +85,11 @@ void* NRTImuThread(void* arg)
 
         baseAngularPosition = IMUBase.GetEulerAngle();
         baseAngularVelocity = IMUBase.GetAngularVelocity();
+        baseAcceleration = IMUBase.GetAccelVector();
+
+        sharedMemory->baseAcceleration[0] = baseAcceleration[0];
+        sharedMemory->baseAcceleration[1] = baseAcceleration[1];
+        sharedMemory->baseAcceleration[2] = baseAcceleration[2];
 
         sharedMemory->baseEulerPosition[0] =   baseAngularPosition[0]-Offset[0];
         sharedMemory->baseEulerPosition[1] = -(baseAngularPosition[1]-Offset[1]);

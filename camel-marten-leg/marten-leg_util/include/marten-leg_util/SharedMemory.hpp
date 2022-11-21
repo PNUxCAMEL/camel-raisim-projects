@@ -33,22 +33,15 @@ typedef struct _UI_COMMAND_
 typedef struct _SHM_
 {
     bool newCommand;
-    bool can1Status;
-    bool can2Status;
+    bool canStatus;
     bool motorStatus;
     bool simulState;
     int controlState;
     int visualState;
-    int can1State;
-    int can2State;
+    int canState;
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
-    double basePosition[3];
-    double baseVelocity[3];
-    double baseEulerPosition[3];
-    double baseQuartPosition[4];
-    double baseEulerVelocity[3];
     double desiredHipVerticalPosition;
     double desiredHipVerticalVelocity;
     double hipVerticalPosition;

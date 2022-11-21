@@ -8,14 +8,16 @@
 constexpr int MOTOR_NUM = 2;
 constexpr int MOTOR_NUM_PER_CAN = 2;
 
-constexpr int MOTOR_HIP_ID = 0x142;
+constexpr int MOTOR_HIP_ID = 0x145;
 constexpr int MOTOR_KNEE_ID = 0x141;
 
 //TODO::should be changed (offset, mass)
-constexpr double HIP_POS_OFFSET = 1.8300;
-constexpr double KNEE_POS_OFFSET = -3.2021;
+constexpr double HIP_POS_OFFSET = 0.0506;
+constexpr double KNEE_POS_OFFSET = -3.271;
 
-constexpr double LUMPED_MASS = 0.847;
+
+//constexpr double LUMPED_MASS = 0.847; //only robot mass
+constexpr double LUMPED_MASS = 1.583;
 constexpr double LINK1_LENGTH = 0.18;
 constexpr double LINK2_LENGTH = 0.18;
 
@@ -48,8 +50,8 @@ enum CONTROL_STATE
     STATE_HOME_CONTROL,
     STATE_PD_READY,
     STATE_PD_CONTROL,
-    STATE_TROT_REDAY,
-    STATE_TROT_CONTROL
+    STATE_MPC_READY,
+    STATE_MPC_CONTROL
 };
 
 enum CAN_STATE

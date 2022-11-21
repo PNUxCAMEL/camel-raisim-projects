@@ -18,8 +18,7 @@ void Command::commandFunction()
         {
         case CAN_ON:
         {
-            sharedMemory->can1State = CAN_INIT;
-            sharedMemory->can2State = CAN_INIT;
+            sharedMemory->canState = CAN_INIT;
             break;
         }
         case VISUAL_ON:
@@ -30,40 +29,37 @@ void Command::commandFunction()
         case MOTOR_ON:
         {
             sharedMemory->controlState = STATE_CONTROL_STOP;
-            sharedMemory->can1State = CAN_MOTOR_ON;
-            sharedMemory->can2State = CAN_MOTOR_ON;
+            sharedMemory->canState = CAN_MOTOR_ON;
             break;
         }
         case MOTOR_OFF:
         {
             sharedMemory->controlState = STATE_CONTROL_STOP;
-            sharedMemory->can1State = CAN_MOTOR_OFF;
-            sharedMemory->can2State = CAN_MOTOR_OFF;
+            sharedMemory->canState = CAN_MOTOR_OFF;
             break;
         }
         case HOME:
         {
             sharedMemory->controlState = STATE_HOME_STAND_UP_READY;
-            sharedMemory->can1State = CAN_SET_TORQUE;
-            sharedMemory->can2State = CAN_SET_TORQUE;
+            sharedMemory->canState = CAN_SET_TORQUE;
             break;
         }
         case PD_CMD:
         {
             sharedMemory->controlState = STATE_PD_READY;
-            sharedMemory->can1State = CAN_SET_TORQUE;
-            sharedMemory->can2State = CAN_SET_TORQUE;
+            sharedMemory->canState = CAN_SET_TORQUE;
             break;
         }
         case CUSTOM_1:
         {
-            sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
-            sharedMemory->can1State = CAN_SET_TORQUE;
-            sharedMemory->can2State = CAN_SET_TORQUE;
+            sharedMemory->controlState = STATE_MPC_READY;
+            sharedMemory->canState = CAN_SET_TORQUE;
             break;
         }
         case CUSTOM_2:
         {
+            sharedMemory->controlState = STATE_HOME_STAND_DOWN_READY;
+            sharedMemory->canState = CAN_SET_TORQUE;
             break;
         }
         default:

@@ -9,11 +9,6 @@ extern pSHM sharedMemory;
 
 ControllerState::ControllerState()
     : mIteration(0)
-    , mGaitCounter(0)
-    , mGaitLength(5)
-    , stand(mGaitLength, Vec4<int>(100, 100, 100, 100), Vec4<int>(100, 100, 100, 100), 100)
-    , trot(mGaitLength, Vec4<int>(0, 50, 50, 0), Vec4<int>(50, 50, 50, 50), 100)
-    , MPCcontrol(mGaitLength)
 {
     mTorque.setZero();
 }
@@ -30,19 +25,22 @@ void ControllerState::ControllerFunction()
     }
     case STATE_READY:
     {
-        PDcontrol.SetControlInput();
         break;
     }
     case STATE_HOME_STAND_UP_READY:
     {
         PDcontrol.InitHomeStandUpTrajectory();
         sharedMemory->controlState = STATE_HOME_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
+
+
         break;
     }
     case STATE_HOME_STAND_DOWN_READY:
     {
         PDcontrol.InitHomeStandDownTrajectory();
         sharedMemory->controlState = STATE_HOME_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
     }
     case STATE_HOME_CONTROL:
@@ -52,25 +50,26 @@ void ControllerState::ControllerFunction()
     }
     case STATE_PD_READY:
     {
+        PDcontrol.InitSineTrajectory();
+        sharedMemory->controlState = STATE_PD_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
     }
     case STATE_PD_CONTROL:
     {
+        PDcontrol.DoSineControl();
         break;
     }
-    case STATE_TROT_REDAY:
+    case STATE_MPC_READY:
     {
-        MPCcontrol.InitSwingLegTrajectory();
-        sharedMemory->controlState = STATE_TROT_CONTROL;
-        sharedMemory->gaitState = TROT;
+        MPCcontrol.InitSineTrajectory();
+        sharedMemory->controlState = STATE_MPC_CONTROL;
+        sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
     }
-    case STATE_TROT_CONTROL:
+    case STATE_MPC_CONTROL:
     {
-        trot.setIterations(mGaitCounter);
-        sharedMemory->gaitTable = trot.getGaitTable();
         MPCcontrol.DoControl();
-        mGaitCounter++;
         break;
     }
     default:

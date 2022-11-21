@@ -13,6 +13,8 @@
 #include <marten-leg_util/RobotDescription.hpp>
 
 #include <PDcontroller/JointPDController.hpp>
+#include <IDcontroller/IDController.hpp>
+#include <MPCcontroller/MPCcontroller.hpp>
 
 class ControllerState
 {
@@ -22,15 +24,13 @@ public:
     void ControllerFunction();
 
 private:
-    uint16_t mIteration;
-    uint16_t mGaitCounter;
-    uint8_t mGaitLength;
+    uint64_t mIteration;
 
-    raisim::VecDyn mTorque = raisim::VecDyn(18);
+    raisim::VecDyn mTorque = raisim::VecDyn(2);
 
     JointPDController PDcontrol;
-    MPCController MPCcontrol;
-    OffsetGait stand, trot;
+    IDController IDcontrol;
+    MPCcontroller MPCcontrol;
 };
 
 #endif //RAISIM_CONTROLSTATE_H

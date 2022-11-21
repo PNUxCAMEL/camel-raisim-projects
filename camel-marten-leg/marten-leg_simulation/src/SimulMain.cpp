@@ -59,14 +59,12 @@ void* RTControllerThread(void* arg)
 void clearSharedMemory()
 {
     sharedMemory->newCommand = false;
-    sharedMemory->can1Status = false;
-    sharedMemory->can2Status = false;
+    sharedMemory->canStatus = false;
     sharedMemory->motorStatus = false;
     sharedMemory->simulState = true;
     sharedMemory->controlState = STATE_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
-    sharedMemory->can1State = CAN_NO_ACT;
-    sharedMemory->can2State = CAN_NO_ACT;
+    sharedMemory->canState = CAN_NO_ACT;
     sharedMemory->localTime = 0;
     sharedMemory->desiredHipVerticalPosition = 0;
     sharedMemory->desiredHipVerticalVelocity = 0;
@@ -88,18 +86,6 @@ void clearSharedMemory()
         sharedMemory->motorDesiredTorque[index] = 0;
         sharedMemory->motorVoltage[index] = 0;
     }
-    for (int index = 0; index < 3; index++)
-    {
-        sharedMemory->basePosition[index] = 0;
-        sharedMemory->baseVelocity[index] = 0;
-        sharedMemory->baseEulerPosition[index] = 0;
-        sharedMemory->baseEulerVelocity[index] = 0;
-    }
-
-    sharedMemory->baseQuartPosition[0] = 1.0;
-    sharedMemory->baseQuartPosition[1] = 0.0;
-    sharedMemory->baseQuartPosition[2] = 0.0;
-    sharedMemory->baseQuartPosition[3] = 0.0;
 
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {

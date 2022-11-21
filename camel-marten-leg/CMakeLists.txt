@@ -17,6 +17,9 @@ add_subdirectory(marten-leg_controller/GRFcontroller)
 add_subdirectory(marten-leg_simulation)
 add_subdirectory(marten-leg_util)
 add_subdirectory(marten-leg_visualizer/marten-leg_gui)
+add_subdirectory(marten-leg_visualizer/marten-leg_raisim)
+
+add_subdirectory(marten-leg_fsm)
 
 include_directories(
         ${EIGEN3_INCLUDE_DIRS}
@@ -27,9 +30,19 @@ include_directories(
         ${ControlMain_SOURCE_DIR}/include
         ${ControlUtils_SOURCE_DIR}/include
         ${marten-leg_gui_SOURCE_DIR}/include
+        ${marten-leg_raisim_SOURCE_DIR}/include
         ${marten-leg_util_SOURCE_DIR}/include
+        ${marten-leg_fsm_SOURCE_DIR}/include
         ${marten-leg_simulation_SOURCE_DIR}/include
 )
+
+add_executable(camel-marten-leg marten-leg_demo/MartenLegMain.cpp)
+target_link_libraries(camel-marten-leg
+        PUBLIC
+        Qt5::Widgets
+        PRIVATE
+        marten-leg_fsm
+        )
 
 add_executable(camel-marten-leg-simul marten-leg_demo/MartenLegSimul.cpp)
 target_link_libraries(camel-marten-leg-simul

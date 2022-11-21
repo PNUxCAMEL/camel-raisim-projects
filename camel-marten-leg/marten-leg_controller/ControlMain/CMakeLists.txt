@@ -8,6 +8,8 @@ include_directories(
         ${EIGEN3_INCLUDE_DIRS}
         ${marten-leg_util_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
+        ${IDcontroller_SOURCE_DIR}/include
+        ${MPCcontroller_SOURCE_DIR}/include
 )
 
 add_library(${PROJECT_NAME} STATIC

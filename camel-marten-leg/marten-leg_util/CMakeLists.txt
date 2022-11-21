@@ -11,6 +11,7 @@ include_directories(
 add_library(marten-leg_util
         SHARED
         src/Command.cpp
+        src/CanMotor.cpp
         )
 target_link_libraries(marten-leg_util
         PUBLIC

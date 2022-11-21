@@ -65,14 +65,14 @@ void SimulControlPanel::ControllerFunction()
         PDcontrol.DoSineControl();
         break;
     }
-    case STATE_TROT_REDAY:
+    case STATE_MPC_READY:
     {
         MPCcontrol.InitSineTrajectory();
-        sharedMemory->controlState = STATE_TROT_CONTROL;
+        sharedMemory->controlState = STATE_MPC_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
         break;
     }
-    case STATE_TROT_CONTROL:
+    case STATE_MPC_CONTROL:
     {
         MPCcontrol.DoControl();
         break;

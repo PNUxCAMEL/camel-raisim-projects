@@ -12,9 +12,9 @@ JointPDController::JointPDController()
 {
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        Kp[motorIdx] = 150.0;
-        Kd[motorIdx] = 4.5;
-        mTorqueLimit[motorIdx] = 13.0;
+        Kp[motorIdx] = 50.0;
+        Kd[motorIdx] = 2.0;
+        mTorqueLimit[motorIdx] = 3.5;
     }
 }
 
@@ -109,8 +109,8 @@ void JointPDController::updateHomeTrajectory()
         break;
     case HOME_STAND_UP_PHASE1:
     {
-        double homeHip = 60;
-        double homeKnee = -120;
+        double homeHip = 50;
+        double homeKnee = -100;
         double timeDuration = 1.0;
 
         /*
@@ -153,8 +153,8 @@ void JointPDController::updateHomeTrajectory()
         break;
     case HOME_STAND_DOWN_PHASE1:
     {
-        double homeHip = 60;
-        double homeKnee = -120;
+        double homeHip = 50;
+        double homeKnee = -100;
         double timeDuration = 2.0;
         mRefTime = sharedMemory->localTime + timeDuration;
         mCubicTrajectoryGen[0].updateTrajectory(mDesiredPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);

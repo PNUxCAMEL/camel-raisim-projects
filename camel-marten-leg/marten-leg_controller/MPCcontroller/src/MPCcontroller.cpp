@@ -29,7 +29,7 @@ MPCcontroller::MPCcontroller()
     mR << 1e-3 * MPC_dT * MPC_dT;
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        mTorqueLimit[motorIdx] = 9.0;
+        mTorqueLimit[motorIdx] = 3.5;
     }
 }
 

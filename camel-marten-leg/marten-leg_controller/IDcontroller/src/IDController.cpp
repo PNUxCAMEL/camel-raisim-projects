@@ -19,7 +19,7 @@ IDController::IDController()
     mForce.setZero();
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        mTorqueLimit[motorIdx] = 11.0;
+        mTorqueLimit[motorIdx] = 3.5;
     }
 }
 

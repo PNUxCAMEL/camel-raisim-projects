@@ -10,7 +10,7 @@ extern pSHM sharedMemory;
 ControllerState::ControllerState()
     : mIteration(0)
     , mGaitLength(3)
-    , mSwT(GAIT_PERIOD*1000)
+    , mSwT(GAIT_PERIOD*200)
     , stand(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT,mSwT), Vec4<int>(mSwT,mSwT,mSwT,mSwT), mSwT)
     , trot(mGaitLength, Vec4<int>(0,mSwT/2,mSwT/2,0), Vec4<int>(mSwT/2,mSwT/2,mSwT/2,mSwT/2), mSwT)
     , test(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT/2,0), Vec4<int>(mSwT,mSwT,mSwT/2,mSwT/2), mSwT)

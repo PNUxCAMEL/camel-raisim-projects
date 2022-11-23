@@ -13,8 +13,7 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
     , mMu(0.3)
     , mHorizon(horizon)
 {
-    mWeightMat << 100, 100, 100, 100, 100, 100, 0, 0, 10, 10, 10, 10, 0.0;
-//    mWeightMat << 1, 1, 10, 40, 40, 40, 0, 0, 0.1, 0.005, 0.005, 0.005, 0.f;
+    mWeightMat << 20, 20, 20, 40, 40, 40, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.f;
     initMatrix();
     resizeMatrix();
 }

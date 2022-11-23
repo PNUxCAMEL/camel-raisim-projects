@@ -29,7 +29,6 @@ private:
     Vec3<double> mAcceleration;
 
     Eigen::Matrix<double, 18, 1> mX;
-    Eigen::Matrix<double, 18, 1> mXprev;
     Eigen::Matrix<double, 18, 1> mXp;
     Eigen::Matrix<double, 18, 18> mP;
     Eigen::Matrix<double, 18, 18> mPp;

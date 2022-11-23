@@ -3,7 +3,6 @@ project(canine_simulation LANGUAGES CXX)
 
 find_package(camel-tools-thread REQUIRED)
 find_package(camel-tools-filter REQUIRED)
-find_package(camel-tools-sensor REQUIRED)
 
 include_directories(
         include

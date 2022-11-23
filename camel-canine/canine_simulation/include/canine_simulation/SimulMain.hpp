@@ -22,8 +22,6 @@
 #include <canine_simulation/SimulVisualizer.hpp>
 #include <canine_simulation/SimulCommand.hpp>
 
-#include <camel-tools/sensor.hpp>
-
 void StartSimulation();
 void* NRTCommandThread(void* arg);
 void *RTControllerThread(void *arg);

@@ -57,8 +57,7 @@ void* NRTVisualThread(void* arg)
 
 //TODO: Cha is gonna implement "GetLinearVelocity" and "GetEulerVelocity" from T265 tracking camera. 여기에 T265도 붙여 버리자.
 void* NRTT265Thread(void* arg) {
-    std::cout << "entered #Command_NRTImuThread" << std::endl;
-    ///
+    std::cout << "entered #nrt_T265_thread" << std::endl;
     TrackingCam.SetConfig();
     TrackingCam.ParseData();
 

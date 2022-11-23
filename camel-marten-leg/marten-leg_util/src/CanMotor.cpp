@@ -13,10 +13,13 @@ CanMotor::CanMotor(std::string canName)
 {
     enc2rad = 2.0 * 3.141592 / 65535;
     mSock = 0;
-    mGearRatio = 6;
+//    mGearRatio = 6;
+//    torque2int[HIP_IDX] = 71.0227;
+//    torque2int[KNEE_IDX] = 71.0227;
 
-    torque2int[HIP_IDX] = 71.0227;
-    torque2int[KNEE_IDX] = 71.0227;
+    mGearRatio = 9;
+    torque2int[HIP_IDX] = 24.0385;
+    torque2int[KNEE_IDX] = 24.0385;
 
     mMotorId[HIP_IDX] = MOTOR_HIP_ID;
     mMotorId[KNEE_IDX] = MOTOR_KNEE_ID;
@@ -241,6 +244,9 @@ void CanMotor::setTorque()
         currentLowerData = desiredCurrent % 256;
         desiredCurrent = desiredCurrent / 256;
         currentUpperData = desiredCurrent % 256;
+
+//        currentLowerData = 0.0;
+//        currentUpperData = 0.0;
 
         u_int8_t data[8] = { 0Xa1, 0X00, 0X00, 0X00, currentLowerData, currentUpperData, 0X00, 0X00 };
 

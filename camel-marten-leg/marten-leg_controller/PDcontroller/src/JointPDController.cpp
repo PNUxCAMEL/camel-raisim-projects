@@ -9,12 +9,14 @@ extern pSHM sharedMemory;
 JointPDController::JointPDController()
     : mRefTime(0.0)
     , mHomeState(HOME_NO_ACT)
+    , mPhase(1)
 {
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        Kp[motorIdx] = 50.0;
-        Kd[motorIdx] = 2.0;
-        mTorqueLimit[motorIdx] = 3.5;
+        Kp[motorIdx] = 200.0;
+        Kd[motorIdx] = 4.5;
+//        mTorqueLimit[motorIdx] = 3.5;
+        mTorqueLimit[motorIdx] = 11.0;
     }
 }
 
@@ -44,7 +46,7 @@ void JointPDController::DoSineControl()
 
 void JointPDController::InitHomeStandUpTrajectory()
 {
-    mHomeState = HOME_STAND_UP_PHASE1;
+    mHomeState = HOME_STAND_UP_PHASE;
 }
 
 void JointPDController::InitHomeStandDownTrajectory()
@@ -59,7 +61,9 @@ void JointPDController::InitSwingTrajectory()
 
 void JointPDController::InitSineTrajectory()
 {
-    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->desiredHipVerticalPosition, sharedMemory->localTime, 0.04, 0.7);
+//    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->desiredHipVerticalPosition, sharedMemory->localTime, 0.04, 0.7);
+    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->desiredHipVerticalPosition, sharedMemory->localTime, 0.05, 0.5);
+
 }
 
 void JointPDController::InitCubicTrajectory()
@@ -80,9 +84,14 @@ void JointPDController::setTrajectory()
 
 void JointPDController::solveIK()
 {
-    mDesiredPosition[0] = acos(sharedMemory->desiredHipVerticalPosition / (LINK1_LENGTH * 2));
+//    mDesiredPosition[0] = acos(sharedMemory->desiredHipVerticalPosition / (LINK1_LENGTH * 2));
+//    mDesiredPosition[1] = -2*mDesiredPosition[0];
+//    mDesiredVelocity[0] = acos(sharedMemory->desiredHipVerticalVelocity / (LINK1_LENGTH * 2));
+//    mDesiredVelocity[1] = -2*mDesiredVelocity[0];
+
+    mDesiredPosition[0] = -mPhase*acos(sharedMemory->desiredHipVerticalPosition / (LINK1_LENGTH * 2));
     mDesiredPosition[1] = -2*mDesiredPosition[0];
-    mDesiredVelocity[0] = acos(sharedMemory->desiredHipVerticalVelocity / (LINK1_LENGTH * 2));
+    mDesiredVelocity[0] = -mPhase*acos(sharedMemory->desiredHipVerticalVelocity / (LINK1_LENGTH * 2));
     mDesiredVelocity[1] = -2*mDesiredVelocity[0];
 }
 
@@ -107,36 +116,13 @@ void JointPDController::updateHomeTrajectory()
     {
     case HOME_NO_ACT:
         break;
-    case HOME_STAND_UP_PHASE1:
+    case HOME_STAND_UP_PHASE:
     {
-        double homeHip = 50;
-        double homeKnee = -100;
-        double timeDuration = 1.0;
-
-        /*
-         * For Jump
-         * double homeHip = 70;
-         * double homeKnee = -140;
-         * double timeDuration = 1.0;
-         */
-        mRefTime = sharedMemory->localTime + timeDuration;
-        mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
-        mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);
-        mHomeState = HOME_STAND_UP_PHASE2;
-    }
-        break;
-
-    case HOME_STAND_UP_PHASE2:
-        if (sharedMemory->localTime > mRefTime + 0.5)
-        {
-            mHomeState = HOME_STAND_UP_PHASE3;
-        }
-        break;
-    case HOME_STAND_UP_PHASE3:
-    {
-        double homeHip = 45;
-        double homeKnee = -90;
-        double timeDuration = 1.0;
+//        double homeHip = 45;
+//        double homeKnee = -90;
+        double homeHip = -45;
+        double homeKnee = 90;
+        double timeDuration = 2.0;
 
         /*
          * For Jump
@@ -146,16 +132,18 @@ void JointPDController::updateHomeTrajectory()
          */
 
         mRefTime = sharedMemory->localTime + timeDuration;
-        mCubicTrajectoryGen[0].updateTrajectory(mDesiredPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
-        mCubicTrajectoryGen[1].updateTrajectory(mDesiredPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+        mCubicTrajectoryGen[0].updateTrajectory(sharedMemory->motorPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
+        mCubicTrajectoryGen[1].updateTrajectory(sharedMemory->motorPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);
         mHomeState = HOME_NO_ACT;
     }
         break;
     case HOME_STAND_DOWN_PHASE1:
     {
-        double homeHip = 50;
-        double homeKnee = -100;
-        double timeDuration = 2.0;
+//        double homeHip = 50;
+//        double homeKnee = -100;
+        double homeHip = mPhase * 0;
+        double homeKnee = mPhase * 0;
+        double timeDuration = 1.5;
         mRefTime = sharedMemory->localTime + timeDuration;
         mCubicTrajectoryGen[0].updateTrajectory(mDesiredPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
         mCubicTrajectoryGen[1].updateTrajectory(mDesiredPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);
@@ -170,13 +158,16 @@ void JointPDController::updateHomeTrajectory()
         break;
     case HOME_STAND_DOWN_PHASE3:
     {
-        double homeHip = 80;
-        double homeKnee = -160;
+//        double homeHip = 122;
+//        double homeKnee = -160;
+        double homeHip = mPhase * 50;
+        double homeKnee = mPhase * -100;
         double timeDuration = 1.5;
         mRefTime = sharedMemory->localTime + timeDuration;
         mCubicTrajectoryGen[0].updateTrajectory(mDesiredPosition[0], homeHip * D2R, sharedMemory->localTime, timeDuration);
         mCubicTrajectoryGen[1].updateTrajectory(mDesiredPosition[1], homeKnee * D2R, sharedMemory->localTime, timeDuration);
         mHomeState = HOME_NO_ACT;
+        mPhase = -mPhase;
     }
         break;
     default:

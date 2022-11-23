@@ -11,15 +11,17 @@ constexpr int MOTOR_NUM_PER_CAN = 2;
 constexpr int MOTOR_HIP_ID = 0x145;
 constexpr int MOTOR_KNEE_ID = 0x141;
 
-//TODO::should be changed (offset, mass)
-constexpr double HIP_POS_OFFSET = 0.0506;
-constexpr double KNEE_POS_OFFSET = -3.271;
+//constexpr double HIP_POS_OFFSET = 0.0506;
+//constexpr double KNEE_POS_OFFSET = -3.596;
+//constexpr double LUMPED_MASS = 1.583;
+//constexpr double LINK1_LENGTH = 0.18;
+//constexpr double LINK2_LENGTH = 0.18;
 
-
-//constexpr double LUMPED_MASS = 0.847; //only robot mass
-constexpr double LUMPED_MASS = 1.583;
-constexpr double LINK1_LENGTH = 0.18;
-constexpr double LINK2_LENGTH = 0.18;
+constexpr double HIP_POS_OFFSET = -1.8631;
+constexpr double KNEE_POS_OFFSET = 1.9862;
+constexpr double LUMPED_MASS = 3.460;
+constexpr double LINK1_LENGTH = 0.23;
+constexpr double LINK2_LENGTH = 0.23;
 
 enum MOTOR_INDEX
 {

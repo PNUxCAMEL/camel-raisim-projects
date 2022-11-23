@@ -32,8 +32,6 @@ void ControllerState::ControllerFunction()
         PDcontrol.InitHomeStandUpTrajectory();
         sharedMemory->controlState = STATE_HOME_CONTROL;
         sharedMemory->visualState = STATE_UPDATE_VISUAL;
-
-
         break;
     }
     case STATE_HOME_STAND_DOWN_READY:

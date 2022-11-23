@@ -25,11 +25,11 @@ MPCcontroller::MPCcontroller()
     mA << 1.0, MPC_dT, 0.0, 1.0;
     mB << 0.0, MPC_dT / LUMPED_MASS;
     mC << 0.0, GRAVITY;
-    mQ << 1.5, 0.0, 0.0, 1e-3;
+    mQ << 1.5, 0.0, 0.0, 5*1e-3;
     mR << 1e-3 * MPC_dT * MPC_dT;
     for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        mTorqueLimit[motorIdx] = 3.5;
+        mTorqueLimit[motorIdx] = 11.0;
     }
 }
 
@@ -44,7 +44,7 @@ void MPCcontroller::DoControl()
 
 void MPCcontroller::InitSineTrajectory()
 {
-    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.05, 0.5);
+    mSineTrajectoryGenerator.updateTrajectory(sharedMemory->hipVerticalPosition, sharedMemory->localTime, 0.05, 0.7);
 }
 
 void MPCcontroller::SetControlInput()
@@ -109,7 +109,7 @@ void MPCcontroller::solve()
 
         if (isTerminateCondition())
         {
-//            std::cout << "iteration : " << mIteration << std::endl;
+            std::cout << "iteration : " << mIteration << std::endl;
 //            std::cout << "mTrajectorySequence : \n" << mTrajectorySequence << std::endl;
 //            std::cout << "mNextStates : \n" << mNextStates << "\n\n" << std::endl;
             break;

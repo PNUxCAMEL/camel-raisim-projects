@@ -50,13 +50,11 @@ private:
     double Kd[MOTOR_NUM];
     double mTorque[MOTOR_NUM];
     double mTorqueLimit[MOTOR_NUM];
-
+    int mPhase;
     enum eHomePositionControl
     {
         HOME_NO_ACT,
-        HOME_STAND_UP_PHASE1,
-        HOME_STAND_UP_PHASE2,
-        HOME_STAND_UP_PHASE3,
+        HOME_STAND_UP_PHASE,
         HOME_STAND_DOWN_PHASE1,
         HOME_STAND_DOWN_PHASE2,
         HOME_STAND_DOWN_PHASE3,

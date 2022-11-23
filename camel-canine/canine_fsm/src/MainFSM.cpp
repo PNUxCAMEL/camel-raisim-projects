@@ -67,9 +67,9 @@ void* NRTT265Thread(void* arg) {
         /// 여기서 계속 돌다가 t265 에서 입력 스트림이 들어오면 출력 시작.
         std::this_thread::sleep_for(std::chrono::milliseconds(2));
         sharedMemory->baseQuartPosition[0] = TrackingCam.GetT265quat().w;
-        sharedMemory->baseQuartPosition[1] = TrackingCam.GetT265quat().x;
-        sharedMemory->baseQuartPosition[2] = TrackingCam.GetT265quat().y;
-        sharedMemory->baseQuartPosition[3] = TrackingCam.GetT265quat().z;
+        sharedMemory->baseQuartPosition[1] = -TrackingCam.GetT265quat().x;
+        sharedMemory->baseQuartPosition[2] = TrackingCam.GetT265quat().z;
+        sharedMemory->baseQuartPosition[3] = TrackingCam.GetT265quat().y;
     }
 }
 

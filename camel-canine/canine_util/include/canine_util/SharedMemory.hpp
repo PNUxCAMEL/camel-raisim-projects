@@ -9,9 +9,9 @@
 #include "EigenTypes.hpp"
 
 #define CMD_dT              0.002
-#define HIGH_CONTROL_dT     0.01
+#define HIGH_CONTROL_dT     0.02
 #define LOW_CONTROL_dT      0.005
-#define GAIT_PERIOD         0.5
+#define GAIT_PERIOD         1
 #define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
@@ -21,6 +21,7 @@
 #define PI                  3.141592
 #define R2D                 57.2957802
 #define D2R                 0.0174533
+#define MPC_HORIZON         5
 
 
 typedef struct _UI_COMMAND_

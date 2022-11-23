@@ -5,11 +5,12 @@ project(sensor LANGUAGES CXX)
 #for mscl
 include_directories(/usr/share/c++-mscl/source /usr/share/c++-mscl/Boost/include)
 link_directories(/usr/share/c++-mscl)
-link_libraries(mscl stdc++ pthread)
+link_libraries(mscl stdc++ pthread realsense2)
 
 set(sensor_src
         src/LoadCell.cpp
         src/LordImu3DmGx5Ahrs.cpp
+        src/T265.cpp
 #        src/MPU9250.cpp
 #        src/RE22SC.cpp
 )
@@ -18,6 +19,7 @@ set(sensor_hdr
         include/sensor.hpp
         include/LoadCell.hpp
         include/LordImu3DmGx5Ahrs.hpp
+        include/T265.hpp
 #        include/MPU9250.h
 #        include/RE22SC.h
 )

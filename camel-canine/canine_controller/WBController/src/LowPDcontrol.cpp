@@ -13,7 +13,7 @@ LowPDcontrol::LowPDcontrol()
     , mFirstRunTrot(true)
     , mSwingPgain{30,30,30}
     , mSwingDgain{2,2,2}
-    , mStandPgain{5,5,5}
+    , mStandPgain{2,2,2}
     , mStandDgain{0.5,1,1}
 {
     mTorque->setZero();
@@ -93,12 +93,8 @@ void LowPDcontrol::setLegControl()
         }
     }
 
-    std::cout << "======torque=====" << std::endl;
     for(int idx=0; idx<4; idx++)
     {
-        std::cout << mLegTorque[idx][0] << "\t";
-        std::cout << mLegTorque[idx][1] << "\t";
-        std::cout << mLegTorque[idx][2] << std::endl;
         mTorque[idx][0] = mLegTorque[idx][0] + sharedMemory->mpcTorque[idx][0];
         mTorque[idx][1] = mLegTorque[idx][1] + sharedMemory->mpcTorque[idx][1];
         mTorque[idx][2] = mLegTorque[idx][2] + sharedMemory->mpcTorque[idx][2];

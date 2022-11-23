@@ -79,7 +79,7 @@ void* NRTT265Thread(void* arg) {
 
         sharedMemory->basePosition[0] = -TrackingCam.GetT265pos().x ;
         sharedMemory->basePosition[1] = TrackingCam.GetT265pos().z ;
-        sharedMemory->basePosition[2] = TrackingCam.GetT265pos().y ;
+        sharedMemory->basePosition[2] = TrackingCam.GetT265pos().y + 0.08;
     }
 }
 

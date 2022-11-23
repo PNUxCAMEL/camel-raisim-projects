@@ -10,10 +10,10 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(HIGH_CONTROL_dT)
     , mAlpha(1e-6)
     , mFmax(200)
-    , mMu(0.3)
+    , mMu(0.4)
     , mHorizon(horizon)
 {
-    mWeightMat << 10, 10, 10, 10, 10, 10, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.f;
+    mWeightMat << 10, 10, 10, 5, 5, 30, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.f;
     initMatrix();
     resizeMatrix();
 }

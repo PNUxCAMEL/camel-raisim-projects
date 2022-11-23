@@ -17,7 +17,7 @@ void StateEstimator::StateEstimatorFunction()
     {
         updateState();
         getRobotFootPosition();
-        getRobotLinearState();
+//        getRobotLinearState();
     }
 }
 

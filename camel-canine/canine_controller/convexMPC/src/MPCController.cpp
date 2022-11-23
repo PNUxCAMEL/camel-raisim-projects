@@ -22,7 +22,7 @@ void MPCController::InitUpTrajectory()
                                         sharedMemory->localTime, timeDuration);
     mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], 0.0,
                                         sharedMemory->localTime, timeDuration);
-    mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.35,
+    mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.3,
                                         sharedMemory->localTime, timeDuration);
 }
 

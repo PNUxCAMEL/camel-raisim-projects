@@ -11,7 +11,7 @@
 #define CMD_dT              0.002
 #define HIGH_CONTROL_dT     0.02
 #define LOW_CONTROL_dT      0.005
-#define GAIT_PERIOD         1
+#define GAIT_PERIOD         0.5
 #define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001

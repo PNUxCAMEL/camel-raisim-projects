@@ -69,8 +69,8 @@ typedef struct _SHM_
     float measuredGRF;
     float desiredGRF;
 
-    double positionTrackingData[2][5000];
-    double GRFEstimatorData[4][5000];
+    double positionTrackingData[2][10000];
+    double GRFEstimatorData[4][10000];
 } SHM, * pSHM;
 
 typedef struct _CUSTOM_DATA_

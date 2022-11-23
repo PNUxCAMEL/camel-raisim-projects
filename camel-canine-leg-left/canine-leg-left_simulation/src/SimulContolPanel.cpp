@@ -82,12 +82,12 @@ void SimulControlPanel::ControllerFunction()
     case STATE_PD_CONTROL:
     {
 ////        IDcontrol.DoControl();
-//        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
-//        {
+        if ((mIteration - mRefMPCIteration - 1) % (int)(MPC_dT / CONTROL_dT) == 0)
+        {
             MPCcontrol.DoControl();
-//        }
-////        GRFcontrol.DoControl();
-        MPCcontrol.SetControlInput();
+        }
+//        MPCcontrol.SetControlInput();
+        GRFcontrol.DoControl();
 
 //        PDcontrol.DoSineControl();
 //        PDcontrol.DoPDControl();
@@ -96,9 +96,9 @@ void SimulControlPanel::ControllerFunction()
         sumedSquaredVelocityError += pow(sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity, 2);
         positionRMSE = pow(sumedSquaredPositionError / (mIteration - mRefMPCIteration), 0.5);
         velocityRMSE = pow(sumedSquaredVelocityError / (mIteration - mRefMPCIteration), 0.5);
-//        std::cout << "RMSE position : " << positionRMSE << std::endl;
-//        std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
-        if((mIteration - mRefMPCIteration - 1) >= 5000)
+        std::cout << "RMSE position : " << positionRMSE << std::endl;
+        std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
+        if((mIteration - mRefMPCIteration - 1) >= 10000)
         {
 
         }
@@ -143,7 +143,7 @@ void SimulControlPanel::ControllerFunction()
     {
         integrateSimul();
         GRFNet.Estimate();
-//        GRFSMO.Estimate();
+        GRFSMO.Estimate();
 //        GRFETO.Estimate();
     }
 }

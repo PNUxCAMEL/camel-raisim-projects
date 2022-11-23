@@ -11,6 +11,7 @@ pthread_t NRTThreadVisual;
 pthread_t NRTThreadIMU;
 pthread_t NRTThreadCANForward;
 pthread_t NRTThreadCANBackward;
+pthread_t NRTThreadT265;
 
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
@@ -31,7 +32,7 @@ const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
 mscl::InertialNode node(mConnection);
 LordImu3DmGx5Ahrs IMUBase(&node);
-
+T265 TrackingCam;
 
 
 void* NRTCommandThread(void* arg)
@@ -55,6 +56,31 @@ void* NRTVisualThread(void* arg)
 }
 
 //TODO: Cha is gonna implemet "GetLinearVelocity" and "GetEulerVelocity" from T265 tracking camera.
+void* NRTT265Thread(void* arg) {
+    std::cout << "entered #Command_NRTImuThread" << std::endl;
+    ///
+    TrackingCam.SetConfig();
+    TrackingCam.ParseData();
+
+    while(true)
+    {
+        /// 여기서 계속 돌다가 t265 에서 입력 스트림이 들어오면 출력 시작.
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        sharedMemory->baseQuartPosition[0] = TrackingCam.GetT265quat().w;
+        sharedMemory->baseQuartPosition[1] = -TrackingCam.GetT265quat().x;
+        sharedMemory->baseQuartPosition[2] = TrackingCam.GetT265quat().z;
+        sharedMemory->baseQuartPosition[3] = TrackingCam.GetT265quat().y;
+
+        sharedMemory->baseVelocity[0] = -TrackingCam.GetT265vel().x;
+        sharedMemory->baseVelocity[1] = TrackingCam.GetT265vel().z;
+        sharedMemory->baseVelocity[2] = TrackingCam.GetT265vel().y;
+
+        sharedMemory->basePosition[0] = -TrackingCam.GetT265pos().x ;
+        sharedMemory->basePosition[1] = TrackingCam.GetT265pos().z ;
+        sharedMemory->basePosition[2] = TrackingCam.GetT265pos().y ;
+    }
+}
+
 void* NRTImuThread(void* arg)
 {
     double Offset[3]={0.0,0.0,0.0};
@@ -106,10 +132,10 @@ void* NRTImuThread(void* arg)
         double cr = cos(sharedMemory->baseEulerPosition[0] * 0.5);
         double sr = sin(sharedMemory->baseEulerPosition[0] * 0.5);
 
-        sharedMemory->baseQuartPosition[0] = cr * cp * cy + sr * sp * sy;
-        sharedMemory->baseQuartPosition[1] = sr * cp * cy - cr * sp * sy;
-        sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
-        sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
+//        sharedMemory->baseQuartPosition[0] = cr * cp * cy + sr * sp * sy;
+//        sharedMemory->baseQuartPosition[1] = sr * cp * cy - cr * sp * sy;
+//        sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
+//        sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
 
         usleep(IMU_dT * 1e6);
     }
@@ -234,5 +260,5 @@ void StartFSM()
     int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);
     int thread_id_nrt4 = generate_nrt_thread(NRTThreadCANForward, NRTCANForward, "nrt_thread4", 3, NULL);
     int thread_id_nrt5 = generate_nrt_thread(NRTThreadCANBackward, NRTCANBackward, "nrt_thread5", 4, NULL);
-
+    int thread_id_nrt6 = generate_nrt_thread(NRTThreadT265, NRTT265Thread,"nrt_thread6",5,NULL);
 }

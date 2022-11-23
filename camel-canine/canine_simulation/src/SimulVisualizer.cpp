@@ -12,7 +12,7 @@ SimulVisualizer::SimulVisualizer(raisim::World* world, raisim::ArticulatedSystem
         , mServer(server)
 {
     mWorld->setGravity({0.0, 0.0, -9.81});
-    mWorld->setTimeStep(CONTROL_dT);
+    mWorld->setTimeStep(LOW_CONTROL_dT);
     mWorld->addGround();
     mRobot->setName("Canine");
     initRobotPose();

@@ -47,4 +47,5 @@ target_link_libraries(${PROJECT_NAME}
         canine_controller::PDcontroller
         canine_controller::WBController
         canine_controller::convexMPC
+        canine_util
 )

@@ -24,7 +24,6 @@ private:
     void getRobotFootPosition();
     void getRobotLinearState();
     void initLinearKalmanFilter();
-    void setLinearKalmanFilter();
     void doLinearKalmanFilter();
 
 private:

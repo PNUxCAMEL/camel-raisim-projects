@@ -13,9 +13,7 @@
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/EigenTypes.hpp>
 
-#include <PDcontroller/JointPDController.hpp>
-#include <convexMPC/MPCController.hpp>
-#include <WBController/WBC.hpp>
+#include <WBController/LowPDcontrol.hpp>
 #include <ControlUtils/Gait.hpp>
 
 class SimulControlPanel{
@@ -23,10 +21,8 @@ public:
     SimulControlPanel(raisim::World* world, raisim::ArticulatedSystem* robot);
 
     void ControllerFunction();
-
 private:
     void integrateSimul();
-
 private:
     raisim::World* mWorld;
     raisim::ArticulatedSystem* mRobot;
@@ -37,9 +33,7 @@ private:
 
     raisim::VecDyn mTorque = raisim::VecDyn(18);
 
-    JointPDController PDcontrol;
-    MPCController MPCcontrol;
-    WBC WBControl;
+    LowPDcontrol LowController;
     OffsetGait stand, trot, test;
 };
 

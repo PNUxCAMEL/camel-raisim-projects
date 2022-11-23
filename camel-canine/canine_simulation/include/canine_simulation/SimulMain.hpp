@@ -23,10 +23,12 @@
 #include <canine_simulation/SimulCommand.hpp>
 #include <canine_simulation/SimulXboxCommand.hpp>
 #include <canine_simulation/SimulKalmanFilter.hpp>
+#include <convexMPC/MPCController.hpp>
 
 void StartSimulation();
 void* NRTCommandThread(void* arg);
-void *RTControllerThread(void *arg);
+void *RTControllerThreadHigh(void *arg);
+void *RTControllerThreadLow(void *arg);
 void* RTStateEstimator(void* arg);
 
 #endif //RAISIM_SIMULMAIN_HPP

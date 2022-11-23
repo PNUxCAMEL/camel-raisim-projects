@@ -12,19 +12,17 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
     , mRobot(robot)
     , mIteration(0)
     , mGaitLength(3)
-    , mSwT(50) //0.25s swing
+    , mSwT(GAIT_PERIOD*1000) //0.25s swing
     , stand(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT,mSwT), Vec4<int>(mSwT,mSwT,mSwT,mSwT), mSwT)
     , trot(mGaitLength, Vec4<int>(0,mSwT/2,mSwT/2,0), Vec4<int>(mSwT/2,mSwT/2,mSwT/2,mSwT/2), mSwT)
     , test(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT/2,0), Vec4<int>(mSwT,mSwT,mSwT/2,mSwT/2), mSwT)
-    , MPCcontrol(mGaitLength, mSwT/200)
 {
-    PDcontrol.SetPDgain(75.0,1.0);
     mTorque.setZero();
 }
 
 void SimulControlPanel::ControllerFunction()
 {
-    sharedMemory->localTime = mIteration * CONTROL_dT;
+    sharedMemory->localTime = mIteration * LOW_CONTROL_dT;
     mIteration++;
     sharedMemory->gaitIteration++;
     switch (sharedMemory->gaitState)
@@ -52,65 +50,15 @@ void SimulControlPanel::ControllerFunction()
             break;
         }
     }
-    switch (sharedMemory->controlState)
+    switch (sharedMemory->LowControlState)
     {
-        case STATE_CONTROL_STOP:
+        case STATE_LOW_CONTROL_STOP:
         {
             break;
         }
-        case STATE_READY:
+        case STATE_LOW_CONTROL_START:
         {
-            PDcontrol.SetControlInput();
-            break;
-        }
-        case STATE_HOME_STAND_UP_READY:
-        {
-            PDcontrol.InitHomeStandUpTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_HOME_STAND_DOWN_READY:
-        {
-            PDcontrol.InitHomeStandDownTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_HOME_CONTROL:
-        {
-            PDcontrol.DoHomeControl();
-            break;
-        }
-        case STATE_WBC_READY:
-        {
-            WBControl.InitTrajectory();
-            sharedMemory->controlState = STATE_WBC_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_WBC_CONTROL:
-        {
-            WBControl.DoWBControl();
-            break;
-        }
-        case STATE_MPC_UP_REDAY:
-        {
-            MPCcontrol.InitUpTrajectory();
-            sharedMemory->controlState = STATE_MPC_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_MPC_DOWN_REDAY:
-        {
-            MPCcontrol.InitDownTrajectory();
-            sharedMemory->controlState = STATE_MPC_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_MPC_CONTROL:
-        {
-            MPCcontrol.DoControl();
+            LowController.DoControl();
             break;
         }
         default:

@@ -40,7 +40,6 @@ private:
     const double mAlpha;
     const double mMu;
     const int mFmax;
-    double mStopPosX = 0.0;
     char var_elim[2000];
     char con_elim[2000];
 

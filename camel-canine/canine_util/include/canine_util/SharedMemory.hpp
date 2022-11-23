@@ -9,7 +9,9 @@
 #include "EigenTypes.hpp"
 
 #define CMD_dT              0.002
-#define CONTROL_dT          0.01
+#define HIGH_CONTROL_dT     0.01
+#define LOW_CONTROL_dT      0.001
+#define GAIT_PERIOD         0.5
 #define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
@@ -38,7 +40,8 @@ typedef struct _SHM_
     bool motorStatus;
     bool motorBackState;
     bool motorForeState;
-    int controlState;
+    int LowControlState;
+    int HighControlState;
     int visualState;
     int gaitState;
     int can1State;
@@ -50,6 +53,7 @@ typedef struct _SHM_
     Vec3<double> baseVelocity; ///todo
     Vec3<double> baseDesiredPosition; ///todo
     Vec3<double> baseDesiredVelocity; ///todo
+    Vec3<double> mpcTorque[4];
     double baseAcceleration[3];
     double baseEulerPosition[3];
     double baseQuartPosition[4];

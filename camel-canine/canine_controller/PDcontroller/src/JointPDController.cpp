@@ -175,7 +175,7 @@ void JointPDController::SetControlInput()
 {
     for (int index = 0; index < MOTOR_NUM; index++)
     {
-        if (sharedMemory->controlState == STATE_READY)
+        if (sharedMemory->HighControlState == STATE_READY)
         {
             mTorque[index] = 0;
         }

@@ -11,9 +11,7 @@
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/EigenTypes.hpp>
 
-#include <WBController/WBC.hpp>
-#include <PDcontroller/JointPDController.hpp>
-#include <convexMPC/MPCController.hpp>
+#include <WBController/LowPDcontrol.hpp>
 #include <ControlUtils/Gait.hpp>
 
 class ControllerState{
@@ -27,10 +25,7 @@ private:
     uint8_t mGaitLength;
     uint8_t mSwT;
 
-    JointPDController PDcontrol;
-    MPCController MPCcontrol;
-    WBC WBControl;
-
+    LowPDcontrol LowController;
     OffsetGait stand, trot, test;
 };
 

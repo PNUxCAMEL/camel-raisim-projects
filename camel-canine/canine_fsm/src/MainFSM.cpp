@@ -4,7 +4,8 @@
 
 #include <canine_fsm/MainFSM.hpp>
 
-pthread_t RTThreadController;
+pthread_t RTThreadControllerHigh;
+pthread_t RTThreadControllerLow;
 pthread_t RTThreadStateEstimator;
 pthread_t NRTThreadCommand;
 pthread_t NRTThreadVisual;
@@ -26,13 +27,12 @@ raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_R
 RobotVisualization userVisual(&world, robot, &server);
 StateEstimator robotstate;
 ControllerState userController;
+MPCController MPControl(3);
 
 const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
 mscl::InertialNode node(mConnection);
 LordImu3DmGx5Ahrs IMUBase(&node);
-
-
 
 void* NRTCommandThread(void* arg)
 {
@@ -115,28 +115,90 @@ void* NRTImuThread(void* arg)
     }
 }
 
-void* RTControllerThread(void* arg)
+void *RTControllerThreadHigh(void *arg)
 {
-    std::cout << "entered #rt_controller_thread" << std::endl;
+    std::cout << "entered #High Controller_RT_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
-    const long PERIOD_US = long(CONTROL_dT * 1e6);
+    const long PERIOD_US = long(HIGH_CONTROL_dT * 1e6); // 200Hz 짜리 쓰레드
+
     clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
-    std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << "Hz" << std::endl;
-    while (true)
-    {
-        clock_gettime(CLOCK_REALTIME, &TIME_NOW);
-        timespec_add_us(&TIME_NEXT, PERIOD_US);
+    std::cout << "bf #while" << std::endl;
+    std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << std::endl;
 
-        userController.ControllerFunction();
+    while (true) {
+        clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
+        timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
 
-        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
-        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)
+        if (sharedMemory->visualState != STATE_VISUAL_STOP)
         {
-            std::cout << "RT Deadline Miss, controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+            switch (sharedMemory->HighControlState)
+            {
+                case STATE_CONTROL_STOP:
+                {
+                    break;
+                }
+                case STATE_HOME_STAND_UP_READY:
+                {
+                    MPControl.InitUpTrajectory();
+                    sharedMemory->HighControlState = STATE_HOME_CONTROL;
+                    sharedMemory->visualState = STATE_UPDATE_VISUAL;
+                    break;
+                }
+                case STATE_HOME_STAND_DOWN_READY:
+                {
+                    MPControl.InitDownTrajectory();
+                    sharedMemory->HighControlState = STATE_HOME_CONTROL;
+                    sharedMemory->visualState = STATE_UPDATE_VISUAL;
+                    break;
+                }
+                case STATE_HOME_CONTROL:
+                {
+                    MPControl.DoControl();
+                    sharedMemory->LowControlState = STATE_LOW_CONTROL_START;
+                    break;
+                }
+                default:
+                    break;
+            }
         }
+
+        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
+            std::cout << "RT Deadline Miss, High Controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+        }
+
     }
 }
+
+void *RTControllerThreadLow(void *arg)
+{
+    std::cout << "entered #Low Controller_RT_thread" << std::endl;
+    struct timespec TIME_NEXT;
+    struct timespec TIME_NOW;
+    const long PERIOD_US = long(LOW_CONTROL_dT * 1e6); // 200Hz 짜리 쓰레드
+
+    clock_gettime(CLOCK_REALTIME, &TIME_NEXT);
+    std::cout << "bf #while" << std::endl;
+    std::cout << "control freq : " << 1 / double(PERIOD_US) * 1e6 << std::endl;
+
+    while (true) {
+        clock_gettime(CLOCK_REALTIME, &TIME_NOW); //현재 시간 구함
+        timespec_add_us(&TIME_NEXT, PERIOD_US);   //목표 시간 구함
+
+        if (sharedMemory->visualState != STATE_VISUAL_STOP)
+        {
+            userController.ControllerFunction();
+        }
+
+        clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL); //목표시간까지 기다림 (현재시간이 이미 오바되어 있으면 바로 넘어갈 듯)
+        if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0) {  // 현재시간이 목표시간 보다 오바되면 경고 띄우기
+            std::cout << "RT Deadline Miss, Low Controller thread : " << timediff_us(&TIME_NEXT, &TIME_NOW) * 0.001 << " ms" << std::endl;
+        }
+
+    }
+}
+
 
 void* RTStateEstimator(void* arg)
 {
@@ -186,7 +248,8 @@ void clearSharedMemory()
     sharedMemory->can1Status = false;
     sharedMemory->can2Status = false;
     sharedMemory->motorStatus = false;
-    sharedMemory->controlState = STATE_CONTROL_STOP;
+    sharedMemory->HighControlState = STATE_CONTROL_STOP;
+    sharedMemory->LowControlState = STATE_LOW_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->can1State = CAN_NO_ACT;
     sharedMemory->can2State = CAN_NO_ACT;
@@ -226,8 +289,9 @@ void StartFSM()
     sharedMemory = (pSHM)malloc(sizeof(SHM));
     clearSharedMemory();
 
-    int thread_id_rt1 = generate_rt_thread(RTThreadController, RTControllerThread, "rt_thread1", 6, 99, NULL);
-    int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 7, 99,NULL);
+    int thread_id_rt1 = generate_rt_thread(RTThreadControllerHigh, RTControllerThreadHigh, "rt_thread1", 6, 99, NULL);
+    int thread_id_rt2 = generate_rt_thread(RTThreadControllerLow, RTControllerThreadLow, "rt_thread2", 7, 99, NULL);
+    int thread_id_rt3 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread3", 8, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
     int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);

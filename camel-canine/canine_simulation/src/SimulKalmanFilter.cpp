@@ -18,8 +18,6 @@ SimulKalmanFilter::SimulKalmanFilter(raisim::ArticulatedSystem* robot)
     mB.setZero();
     mH.setZero();
     mK.setZero();
-    mAccel.setZero();
-    mXprev.setZero();
 }
 
 void SimulKalmanFilter::StateEstimatorFunction()
@@ -94,10 +92,6 @@ void SimulKalmanFilter::getRobotLinearState()
         initLinearKalmanFilter();
         IsKalmanFirstRun = false;
     }
-    else
-    {
-        setLinearKalmanFilter();
-    }
     doLinearKalmanFilter();
 
     sharedMemory->basePosition[0] = mX[0];
@@ -126,7 +120,7 @@ void SimulKalmanFilter::initLinearKalmanFilter()
     mX.block(15, 0, 3, 1) = mGlobalFootPos[3];
 
     mP.setIdentity();
-    mP = mP*1e-1;
+    mP = mP*10;
 
     mA.block(0, 0, 3, 3) = Eigen::Matrix<double, 3, 3>::Identity();
     mA.block(0, 3, 3, 3) = Eigen::Matrix<double, 3, 3>::Identity() * ESTIMATOR_dT;
@@ -141,19 +135,29 @@ void SimulKalmanFilter::initLinearKalmanFilter()
     mH.block(9, 0, 3, 3) = Eigen::Matrix<double, 3, 3>::Identity();
     mH.block(0, 6, 12, 12) = (-1.0)*Eigen::Matrix<double, 12, 12>::Identity();
 
-    mQ.setIdentity();
-    mQ = mQ*1e-2;
+    mQ(0,0)   = 1e-7;
+    mQ(1,1)   = 1e-7;
+    mQ(2,2)   = 1e-7;
+    mQ(3,3)   = 1e-2;
+    mQ(4,4)   = 1e-2;
+    mQ(5,5)   = 1e-2;
+    mQ(6,6)   = 1e-10;
+    mQ(7,7)   = 1e-10;
+    mQ(8,8)   = 1e-10;
+    mQ(9,9)   = 1e-10;
+    mQ(10,10) = 1e-10;
+    mQ(11,11) = 1e-10;
+    mQ(12,12) = 1e-10;
+    mQ(13,13) = 1e-10;
+    mQ(14,14) = 1e-10;
+    mQ(15,15) = 1e-10;
+    mQ(16,16) = 1e-10;
+    mQ(17,17) = 1e-10;
+
     mR.setIdentity();
-    mR = mR*10;
-}
+    mR = mR*1e-2;
 
-void SimulKalmanFilter::setLinearKalmanFilter()
-{
-    mAccel[0] = (mX[3] - mXprev[3])/ESTIMATOR_dT;
-    mAccel[1] = (mX[4] - mXprev[4])/ESTIMATOR_dT;
-    mAccel[2] = (mX[5] - mXprev[5])/ESTIMATOR_dT;
 }
-
 void SimulKalmanFilter::doLinearKalmanFilter()
 {
     mZ.block(0, 0, 3, 1) = -mTransMat[0].block(0, 3, 3, 1);
@@ -161,14 +165,27 @@ void SimulKalmanFilter::doLinearKalmanFilter()
     mZ.block(6, 0, 3, 1) = -mTransMat[2].block(0, 3, 3, 1);
     mZ.block(9, 0, 3, 1) = -mTransMat[3].block(0, 3, 3, 1);
 
+
+//    mXp = mA*mX + mB*mAcceleration;
     mXp = mA*mX;
     mPp = mA*mP*mA.transpose() + mQ;
 
     mS = mH*mPp*mH.transpose() + mR;
     mK = mPp*mH.transpose()*mS.inverse();
 
-    mXprev = mX;
-    mZp = mH*mXp;
-    mX = mXp + mK*(mZ-mZp);
+    for (int idx=0; idx<4; idx++)
+    {
+        if (sharedMemory->gaitTable[idx] == 0)
+        {
+            for (int j=0; j<6; j++)
+            {
+                mK(j, idx*3  ) = 0;
+                mK(j, idx*3+1) = 0;
+                mK(j, idx*3+2) = 0;
+            }
+        }
+    }
+    mZp = mZ - mH*mXp;
+    mX = mXp + mK*mZp;
     mP = mPp - mK*mH*mPp;
 }

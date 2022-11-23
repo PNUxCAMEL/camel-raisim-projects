@@ -10,17 +10,16 @@ extern pSHM sharedMemory;
 ControllerState::ControllerState()
     : mIteration(0)
     , mGaitLength(3)
-    , mSwT(50)
+    , mSwT(GAIT_PERIOD*1000)
     , stand(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT,mSwT), Vec4<int>(mSwT,mSwT,mSwT,mSwT), mSwT)
     , trot(mGaitLength, Vec4<int>(0,mSwT/2,mSwT/2,0), Vec4<int>(mSwT/2,mSwT/2,mSwT/2,mSwT/2), mSwT)
     , test(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT/2,0), Vec4<int>(mSwT,mSwT,mSwT/2,mSwT/2), mSwT)
-    , MPCcontrol(mGaitLength, (double)mSwT/200)
 {
 }
 
 void ControllerState::ControllerFunction()
 {
-    sharedMemory->localTime = mIteration * CONTROL_dT;
+    sharedMemory->localTime = mIteration * LOW_CONTROL_dT;
     mIteration++;
     sharedMemory->gaitIteration++;
     switch (sharedMemory->gaitState)
@@ -48,49 +47,15 @@ void ControllerState::ControllerFunction()
             break;
         }
     }
-    switch (sharedMemory->controlState)
+    switch (sharedMemory->LowControlState)
     {
-        case STATE_CONTROL_STOP:
+        case STATE_LOW_CONTROL_STOP:
         {
             break;
         }
-        case STATE_READY:
+        case STATE_LOW_CONTROL_START:
         {
-            PDcontrol.SetControlInput();
-            break;
-        }
-        case STATE_HOME_STAND_UP_READY:
-        {
-            PDcontrol.InitHomeStandUpTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            break;
-        }
-        case STATE_HOME_STAND_DOWN_READY:
-        {
-            PDcontrol.InitHomeStandDownTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            break;
-        }
-        case STATE_HOME_CONTROL:
-        {
-            PDcontrol.DoHomeControl();
-            break;
-        }
-        case STATE_MPC_UP_REDAY:
-        {
-            MPCcontrol.InitUpTrajectory();
-            sharedMemory->controlState = STATE_MPC_CONTROL;
-            break;
-        }
-        case STATE_MPC_DOWN_REDAY:
-        {
-            MPCcontrol.InitDownTrajectory();
-            sharedMemory->controlState = STATE_MPC_CONTROL;
-            break;
-        }
-        case STATE_MPC_CONTROL:
-        {
-            MPCcontrol.DoControl();
+            LowController.DoControl();
             break;
         }
         default:

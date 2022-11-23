@@ -6,30 +6,13 @@
 
 extern pSHM sharedMemory;
 
-MPCController::MPCController(const uint8_t& horizon, const double& swingT)
+MPCController::MPCController(const uint8_t& horizon)
     : mHorizon(horizon)
-    , mTorqueLimit(35)
     , ConvexMPCSolver(mHorizon)
-    , SwingLegTrajectory(swingT)
-    , mFirstRunTrot(true)
-//    , mSwingPgain{30,30,30}
-//    , mSwingDgain{2,2,2}
-//    , mStandPgain{20,10,10}
-//    , mStandDgain{2,2,2}
-    , mSwingPgain{20,50,50}
-    , mSwingDgain{1,0.5,0.5}
-    , mStandPgain{10,10,10}
-    , mStandDgain{1,0.5,0.5}
 {
     mGRF->setZero();
     mTorque->setZero();
     mInitState.setZero();
-    mLegTorque->setZero();
-
-    mSwingJointPos.setZero();
-    mSwingJointVel.setZero();
-    mStandJointPos.setZero();
-    mStandJointVel.setZero();
 }
 
 void MPCController::InitUpTrajectory()
@@ -54,10 +37,6 @@ void MPCController::InitDownTrajectory()
                                         sharedMemory->localTime, timeDuration);
 }
 
-void MPCController::InitSwingTrjactory()
-{
-    SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
-}
 
 void MPCController::DoControl()
 {
@@ -67,17 +46,7 @@ void MPCController::DoControl()
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);
 
-    if (sharedMemory->gaitState != STAND)
-    {
-        if (mFirstRunTrot)
-        {
-            InitSwingTrjactory();
-            mFirstRunTrot = false;
-        }
-    }
-    setLegControl();
     computeControlInput();
-    setControlInput();
 }
 
 void MPCController::updateState()
@@ -96,7 +65,6 @@ void MPCController::updateState()
         {
             mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
             mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
-            mMotorVelocity[leg][mt] = sharedMemory->motorVelocity[leg*3+mt];
         }
     }
 
@@ -104,48 +72,6 @@ void MPCController::updateState()
             mBasePosition[0], mBasePosition[1], mBasePosition[2],
             mBaseEulerVelocity[0], mBaseEulerVelocity[1], mBaseEulerVelocity[2],
             mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], GRAVITY;
-}
-
-void MPCController::getJointPos(const double& x, const double& z, Vec3<double>& pos)
-{
-    double d = sqrt(pow(x,2)+pow(z,2));
-    double phi = acos(abs(x)/ d);
-    double psi = acos(pow(d,2)/(2*LEN_THI*d));
-
-    if (x < 0)
-        pos[1] = 1.57 - phi + psi;
-    else if(x == 0)
-        pos[1] = psi;
-    else
-        pos[1] = phi + psi - 1.57;
-    pos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
-}
-
-void MPCController::setLegControl()
-{
-    SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
-    getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
-    getJointPos(0.0, sharedMemory->baseDesiredPosition[2], mStandJointPos);
-
-    for (int i = 0; i < 4; i++)
-    {
-        if (sharedMemory->gaitTable[i] == 0)
-        {
-            for(int j=0; j<3; j++)
-            {
-                mLegTorque[i][j] = mSwingPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
-                                   + mSwingDgain[j] * (mSwingJointVel[j] - mMotorVelocity[i][j]);
-            }
-        }
-        else
-        {
-            for(int j=0; j<3; j++)
-            {
-                mLegTorque[i][j] = mStandPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
-                                   + mStandDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
-            }
-        }
-    }
 }
 
 void MPCController::computeControlInput()
@@ -159,31 +85,8 @@ void MPCController::computeControlInput()
     {
         mJacobian[idx].transposeInPlace();
         mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
-        mTorque[idx][0] = mTorqueJacobian[idx][0]+mLegTorque[idx][0];
-        mTorque[idx][1] = mTorqueJacobian[idx][1]+mLegTorque[idx][1];
-        mTorque[idx][2] = mTorqueJacobian[idx][2]+mLegTorque[idx][2];
+        sharedMemory->mpcTorque[idx][0] = mTorqueJacobian[idx][0];
+        sharedMemory->mpcTorque[idx][1] = mTorqueJacobian[idx][1];
+        sharedMemory->mpcTorque[idx][2] = mTorqueJacobian[idx][2];
     }
-}
-
-void MPCController::setControlInput()
-{
-//    std::cout << "=========Torque========" << std::endl;
-    for (int leg = 0; leg < 4; leg++)
-    {
-        for (int motor = 0; motor < 3; motor++)
-        {
-            if (mTorque[leg][motor] > mTorqueLimit)
-            {
-                mTorque[leg][motor] = mTorqueLimit;
-            }
-            else if (mTorque[leg][motor] < -mTorqueLimit)
-            {
-                mTorque[leg][motor] = -mTorqueLimit;
-            }
-//            std::cout << mTorque[leg][motor] << "\t";
-            sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
-        }
-//        std::cout << std::endl;
-    }
-//    std::cout << std::endl;
 }

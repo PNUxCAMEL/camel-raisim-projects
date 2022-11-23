@@ -22,6 +22,9 @@
 #include <canine_simulation/SimulVisualizer.hpp>
 #include <canine_simulation/SimulCommand.hpp>
 
+#include <camel-tools/sensor.hpp>
+#include <librealsense2/rs.hpp> //for t265
+
 void StartSimulation();
 void* NRTCommandThread(void* arg);
 void *RTControllerThread(void *arg);

@@ -7,6 +7,7 @@
 pthread_t RTThreadController;
 pthread_t RTThreadStateEstimator;
 pthread_t NRTThreadCommand;
+pthread_t NRTThreadIMU;
 
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
@@ -19,6 +20,7 @@ SimulCommand userCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
+T265 TrackingCam;
 
 void* NRTCommandThread(void* arg)
 {
@@ -27,6 +29,36 @@ void* NRTCommandThread(void* arg)
     {
         userCommand.commandFunction();
         usleep(CMD_dT * 1e6);
+    }
+}
+
+void* NRTImuThread(void* arg)
+{
+    std::cout << "entered #Command_NRTImuThread" << std::endl;
+    std::string serial;
+    rs2::pipeline pipe;
+    rs2::config cfg;
+    if(!serial.empty())
+        cfg.enable_device(serial);
+    cfg.enable_stream(RS2_STREAM_POSE,RS2_FORMAT_6DOF);
+    auto callback = [&](const rs2::frame& frame) {
+        if (rs2::pose_frame fp = frame.as<rs2::pose_frame>()) {
+            rs2_pose pose_data = fp.get_pose_data();
+            auto now = std::chrono::system_clock::now().time_since_epoch();
+            double now_ms = static_cast<double>(std::chrono::duration_cast<std::chrono::milliseconds>(now).count());
+            double pose_time_ms = fp.get_timestamp();
+            float dt_s = static_cast<float>(std::max(0., (now_ms - pose_time_ms) / 1000.));
+            rs2_pose predicted_pose = TrackingCam.predict_pose(pose_data, dt_s);
+            sharedMemory->baseQuartPosition[0];
+            sharedMemory->baseQuartPosition[1];
+            sharedMemory->baseQuartPosition[2];
+            sharedMemory->baseQuartPosition[3];
+            std::cout << predicted_pose.velocity.x << std::endl;
+        }
+    };
+    rs2::pipeline_profile profiles = pipe.start(cfg, callback);
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 
@@ -132,4 +164,6 @@ void StartSimulation()
     int thread_id_rt2 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread2", 7, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
+    int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);
+
 }

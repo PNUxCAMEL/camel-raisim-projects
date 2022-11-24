@@ -9,7 +9,8 @@ constexpr int MOTOR_NUM = 12;
 constexpr int MOTOR_NUM_PER_CAN = 6;
 
 constexpr double GRAVITY = -9.81;
-constexpr double BODYMASS = 10.0;
+constexpr double BODYMASS = 14.2;
+constexpr double BODY_INERTIA[3] = {0.085609, 0.11548, 0.17193};
 constexpr double LEN_HIP = 0.085;
 constexpr double LEN_THI = 0.23;
 constexpr double LEN_CAL = 0.23;
@@ -43,6 +44,14 @@ constexpr double LBKP_POS_OFFSET = -3.3375;
 
 //constexpr double LUMPED_MASS = 0.0;
 
+enum LEG_INDEX
+{
+    R_FRON = 0,
+    L_FRON,
+    R_BACK,
+    L_BACK
+};
+
 enum MOTOR_INDEX
 {
     RFHR_IDX = 0,
@@ -72,17 +81,28 @@ enum COMMAND
     CUSTOM_2
 };
 
-enum CONTROL_STATE
+enum HIGH_CONTROL_STATE
 {
     STATE_CONTROL_STOP,
     STATE_MOTOR_OFF,
     STATE_READY,
-    STATE_HOME_READY,
+    STATE_HOME_STAND_UP_READY,
+    STATE_HOME_STAND_DOWN_READY,
     STATE_HOME_CONTROL,
-    STATE_PD_READY,
+    STATE_PD_UP_READY,
+    STATE_PD_DOWN_READY,
     STATE_PD_CONTROL,
-    STATE_MPC_REDAY,
-    STATE_MPC_CONTROL
+    STATE_MPC_UP_REDAY,
+    STATE_MPC_DOWN_REDAY,
+    STATE_MPC_CONTROL,
+    STATE_WBC_READY,
+    STATE_WBC_CONTROL,
+};
+
+enum LOW_CONTROL_STATE
+{
+    STATE_LOW_CONTROL_STOP,
+    STATE_LOW_CONTROL_START
 };
 
 enum CAN_STATE
@@ -105,7 +125,8 @@ enum VISUAL_STATE
 enum GAIT_TYPE
 {
     STAND = 0,
-    TROT
+    TROT,
+    TEST
 };
 
 

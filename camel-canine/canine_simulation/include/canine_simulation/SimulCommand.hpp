@@ -5,6 +5,8 @@
 #ifndef RAISIM_SIMULCOMMAND_HPP
 #define RAISIM_SIMULCOMMAND_HPP
 
+#include <iostream>
+
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/RobotDescription.hpp>
 

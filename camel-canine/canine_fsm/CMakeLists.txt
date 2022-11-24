@@ -7,15 +7,18 @@ find_package(camel-tools-sensor REQUIRED)
 include_directories(
         include
         ${EIGEN3_INCLUDE_DIRS}
+        ${qpOASES_SOURCE_DIR}/include
+
         ${ControlMain_SOURCE_DIR}/include
+        ${WBController_SOURCE_DIR}/include
+        ${ControlUtils_SOURCE_DIR}/include
+        ${convexMPC_SOURCE_DIR}/include
+        ${PDcontroller_SOURCE_DIR}/include
+
         ${canine_gui_SOURCE_DIR}/include
         ${canine_raisim_SOURCE_DIR}/include
         ${GaitScheduler_SOUCRE_DIR}/include
         ${canine_util_SOURCE_DIR}/include
-        ${ControlUtils_SOURCE_DIR}/include
-        ${PDcontroller_SOURCE_DIR}/include
-        ${convexMPC_SOURCE_DIR}/include
-        ${qpOASES_SOURCE_DIR}/include
 )
 link_directories(
         ${qpOASES_SOURCE_DIR}/bin
@@ -39,10 +42,12 @@ SET(CAMEL_LIBS
         camel-tools-sensor
 )
 SET(CANINE_LIBS
-        canine_controller::convexMPC
         canine_controller::ControlMain
-        canine_controller::PDcontroller
         canine_controller::ControlUtils
+        canine_controller::PDcontroller
+        canine_controller::WBController
+        canine_controller::convexMPC
+
         canine_visualizer::canine_gui
         canine_visualizer::canine_raisim
         canine_util
@@ -51,7 +56,6 @@ SET(CANINE_LIBS
 target_link_libraries(canine_fsm
         PUBLIC
         ${PUBLIC_LIBS}
-        PRIVATE
         ${CAMEL_LIBS}
         ${CANINE_LIBS}
 )

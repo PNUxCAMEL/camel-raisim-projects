@@ -8,67 +8,57 @@ extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
 SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSystem* robot)
-        : mWorld(world)
-        , mRobot(robot)
-        , mIteration(0)
-        , mGaitCounter(0)
-        , mGaitLength(1)
-        , stand(mGaitLength, Vec4<int>(100,100,100,100), Vec4<int>(100,100,100,100), 100)
-        , trot(mGaitLength, Vec4<int>(0,50,50,0), Vec4<int>(50,50,50,50), 100)
-        , MPCcontrol(mGaitLength)
+    : mWorld(world)
+    , mRobot(robot)
+    , mIteration(0)
+    , mGaitLength(3)
+    , mSwT(GAIT_PERIOD*1000) //0.25s swing
+    , stand(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT,mSwT), Vec4<int>(mSwT,mSwT,mSwT,mSwT), mSwT)
+    , trot(mGaitLength, Vec4<int>(0,mSwT/2,mSwT/2,0), Vec4<int>(mSwT/2,mSwT/2,mSwT/2,mSwT/2), mSwT)
+    , test(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT/2,0), Vec4<int>(mSwT,mSwT,mSwT/2,mSwT/2), mSwT)
 {
     mTorque.setZero();
 }
 
 void SimulControlPanel::ControllerFunction()
 {
-    sharedMemory->localTime = mIteration * CONTROL_dT;
+    sharedMemory->localTime = mIteration * LOW_CONTROL_dT;
     mIteration++;
-    switch (sharedMemory->controlState)
+    sharedMemory->gaitIteration++;
+    switch (sharedMemory->gaitState)
     {
-        case STATE_CONTROL_STOP:
+        case STAND:
         {
+            stand.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = stand.getGaitTable();
             break;
         }
-        case STATE_READY:
+        case TROT:
         {
-            PDcontrol.SetControlInput();
-            break;
-        }
-        case STATE_HOME_READY:
-        {
-            PDcontrol.InitHomeTrajectory();
-            sharedMemory->controlState = STATE_HOME_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            break;
-        }
-        case STATE_HOME_CONTROL:
-        {
-            PDcontrol.DoHomeControl();
-            break;
-        }
-        case STATE_PD_READY:
-        {
-            break;
-        }
-        case STATE_PD_CONTROL:
-        {
-            break;
-        }
-        case STATE_MPC_REDAY:
-        {
-            MPCcontrol.InitSwingLegTrajectory();
-            sharedMemory->controlState = STATE_MPC_CONTROL;
-            sharedMemory->visualState = STATE_UPDATE_VISUAL;
-            sharedMemory->gaitState = TROT;
-            break;
-        }
-        case STATE_MPC_CONTROL:
-        {
-            trot.setIterations(mGaitCounter);
+            trot.setIterations(sharedMemory->gaitIteration);
             sharedMemory->gaitTable = trot.getGaitTable();
-            MPCcontrol.DoControl();
-            mGaitCounter++;
+            break;
+        }
+        case TEST:
+        {
+            test.setIterations(sharedMemory->gaitIteration);
+            sharedMemory->gaitTable = test.getGaitTable();
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
+    switch (sharedMemory->LowControlState)
+    {
+        case STATE_LOW_CONTROL_STOP:
+        {
+            break;
+        }
+        case STATE_LOW_CONTROL_START:
+        {
+            LowController.DoControl();
             break;
         }
         default:

@@ -6,9 +6,12 @@
 #define RAISIM_SHAREDMEMORY_H
 
 #include "RobotDescription.hpp"
+#include "EigenTypes.hpp"
 
-#define CMD_dT              0.001
-#define CONTROL_dT          0.005
+#define CMD_dT              0.002
+#define HIGH_CONTROL_dT     0.02
+#define LOW_CONTROL_dT      0.005
+#define GAIT_PERIOD         0.5
 #define CAN_dT              0.0025
 #define VISUAL_dT           0.01
 #define IMU_dT              0.0001
@@ -18,6 +21,7 @@
 #define PI                  3.141592
 #define R2D                 57.2957802
 #define D2R                 0.0174533
+#define MPC_HORIZON         5
 
 
 typedef struct _UI_COMMAND_
@@ -35,7 +39,10 @@ typedef struct _SHM_
     bool can1Status;
     bool can2Status;
     bool motorStatus;
-    int controlState;
+    bool motorBackState;
+    bool motorForeState;
+    int LowControlState;
+    int HighControlState;
     int visualState;
     int gaitState;
     int can1State;
@@ -43,17 +50,23 @@ typedef struct _SHM_
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
-    double basePosition[3];
-    double baseVelocity[3];
+    Vec3<double> basePosition; ///todo
+    Vec3<double> baseVelocity; ///todo
+    Vec3<double> baseDesiredPosition; ///todo
+    Vec3<double> baseDesiredVelocity; ///todo
+    Vec3<double> mpcTorque[4];
+    double baseAcceleration[3];
     double baseEulerPosition[3];
     double baseQuartPosition[4];
     double baseEulerVelocity[3];
-    double footPosition[4][3];
+    double footPosition[4][3];  ///todo
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];
     double motorDesiredTorque[MOTOR_NUM];
     double motorVoltage[MOTOR_NUM];
+    int gaitIteration;
+
 } SHM, * pSHM;
 
 typedef struct _CUSTOM_DATA_

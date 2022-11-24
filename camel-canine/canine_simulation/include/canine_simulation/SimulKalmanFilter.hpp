@@ -1,34 +1,42 @@
 //
-// Created by hs on 22. 10. 14.
+// Created by hs on 22. 11. 20.
 //
 
-#ifndef RAISIM_STATEESTIMATOR_HPP
-#define RAISIM_STATEESTIMATOR_HPP
+#ifndef RAISIM_SIMULKALMANFILTER_HPP
+#define RAISIM_SIMULKALMANFILTER_HPP
+
+#endif //RAISIM_SIMULKALMANFILTER_HPP
 
 #include <raisim/World.hpp>
 
-#include "RobotDescription.hpp"
-#include "SharedMemory.hpp"
-#include "RobotMath.hpp"
-#include "Filter.hpp"
+#include <canine_util/SharedMemory.hpp>
+#include <canine_util/RobotMath.hpp>
 
-class StateEstimator{
+class SimulKalmanFilter{
 public:
-    StateEstimator();
+    SimulKalmanFilter(raisim::ArticulatedSystem* robot);
 
     void StateEstimatorFunction();
 private:
     void updateState();
-    void getRobotLinearState();
+    void getJointState();
+    void getRobotAngulerState();
     void getRobotFootPosition();
+    void getRobotLinearState();
     void initLinearKalmanFilter();
     void doLinearKalmanFilter();
+
 private:
+    raisim::ArticulatedSystem* mRobot;
+    raisim::VecDyn mPosition;
+    raisim::VecDyn mVelocity;
+
     Vec4<double> mQuaternion;
     Mat4<double> mTransMat[4];
-    Vec3<double> mAcceleration;
+
 
     Eigen::Matrix<double, 18, 1> mX;
+    Eigen::Matrix<double, 18, 1> mXprev;
     Eigen::Matrix<double, 18, 1> mXp;
     Eigen::Matrix<double, 18, 18> mP;
     Eigen::Matrix<double, 18, 18> mPp;
@@ -43,7 +51,7 @@ private:
     Eigen::Matrix<double, 12, 12> mS;
     Eigen::Matrix<double, 18, 12> mK;
 
+    Vec3<double> mAccel;
+
     bool IsKalmanFirstRun;
 };
-
-#endif //RAISIM_STATEESTIMATOR_HPP

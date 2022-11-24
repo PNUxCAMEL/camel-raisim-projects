@@ -4,20 +4,16 @@
 
 #include "convexMPC/MPCSolver.hpp"
 
-char var_elim[2000];
-char con_elim[2000];
-
 extern pSHM sharedMemory;
 
 MPCSolver::MPCSolver(const uint8_t& horizon)
-    : mDt(CONTROL_dT)
-    , mAlpha(ALPHA)
-    , mFmax(240)
-    , mMu(0.6)
-    , mWeightMat(WEIGHT)
+    : mDt(HIGH_CONTROL_dT)
+    , mAlpha(1e-6)
+    , mFmax(200)
+    , mMu(0.4)
     , mHorizon(horizon)
-    , mBodyInertia(BODY_INERTIA)
 {
+    mWeightMat << 10, 10, 10, 5, 5, 30, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.f;
     initMatrix();
     resizeMatrix();
 }
@@ -38,36 +34,27 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory(const double* mP)
+void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3])
 {
-    for(int i = 0; i < mHorizon ; i++)
+    for(int horizon = 0; horizon < mHorizon ; horizon++)
     {
-        xd(i*13+5,0) = 0.37;
-
-
-/*        if(sharedMemory->gaitState == STAND)
-        {
-            xd(i*13+3,0) = mStopPosX;
-            xd(i*13+9,0) = 0.0;
-        }
-        else
-        {
-            xd(i*13+3,0) = mP[0]+0.3*(mDt*i);
-            xd(i*13+9,0) = 0.3;
-        }*/
+        xd[horizon*13+3] = Trajectory[0].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+        xd[horizon*13+4] = Trajectory[1].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+        xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
     }
+
+    sharedMemory->baseDesiredVelocity[0] = xd[0];
+    sharedMemory->baseDesiredVelocity[1] = xd[1];
+    sharedMemory->baseDesiredVelocity[2] = xd[2];
+
+    sharedMemory->baseDesiredPosition[0] = xd[3];
+    sharedMemory->baseDesiredPosition[1] = xd[4];
+    sharedMemory->baseDesiredPosition[2] = xd[5];
 }
 
-void MPCSolver::GetMetrices(const double* mQ, const double* mP,
-                            const double* mW, const double* mV,
-                            const double mFoot[4][3])
+void MPCSolver::GetMetrices(const Vec13<double>&  x0, const double mFoot[4][3])
 {
-    x0 << mQ[0],mQ[1],mQ[2],
-          mP[0],mP[1],mP[2],
-          mW[0],mW[1],mW[2],
-          mV[0],mV[1],mV[2], GRAVITY;
-
-    getStateSpaceMatrix(mP, mQ, mFoot);
+    getStateSpaceMatrix(x0, mFoot);
     transformC2QP();
     L.diagonal() = mWeightMat.replicate(mHorizon,1);
 
@@ -100,16 +87,6 @@ void MPCSolver::GetMetrices(const double* mQ, const double* mP,
     }
 }
 
-int8_t near_zero(float a)
-{
-    return (a < 0.01 && a > -.01);
-}
-
-int8_t near_one(float a)
-{
-    return near_zero(a-1);
-}
-
 void MPCSolver::SolveQP()
 {
     transformMat2Real(H_qpoases, H, 12*mHorizon, 12*mHorizon);
@@ -139,7 +116,7 @@ void MPCSolver::SolveQP()
 
     for(int i=0; i<num_constraints; i++)
     {
-        if(!(near_zero(lb_qpoases[i]) && near_zero(ub_qpoases[i])))
+        if(!(NearZero(lb_qpoases[i]) && NearZero(ub_qpoases[i])))
         {
             continue;
         }
@@ -147,7 +124,7 @@ void MPCSolver::SolveQP()
         double* c_row = &A_qpoases[i*num_variables];
         for(int j=0; j<num_variables; j++)
         {
-            if(near_one(c_row[j]))
+            if(NearOne(c_row[j]))
             {
                 new_vars -= 3;
                 new_cons -= 5;
@@ -247,39 +224,100 @@ void MPCSolver::SolveQP()
     }
 }
 
-void MPCSolver::GetGRF(Vec3<double> _f[4]){
+void MPCSolver::GetGRF(Vec3<double> GRF[4])
+{
+//    std::cout << "=====GRF=====" << std::endl;
     for(int leg = 0; leg < 4; leg++)
     {
         for(int axis = 0; axis < 3; axis++)
         {
-            _f[leg][axis] = q_soln[leg*3 + axis];
+            GRF[leg][axis] = q_soln[leg*3 + axis];
+//            std::cout << GRF[leg][axis] << "\t";
+        }
+//        std::cout << std::endl;
+    }
+//    std::cout << std::endl;
+}
+
+void MPCSolver::getStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4][3])
+{
+    double yc = cos(x0[2]);
+    double ys = sin(x0[2]);
+
+    R_yaw <<  yc,  -ys,   0,
+            ys,  yc,   0,
+            0,   0,   1;
+
+    Ac.setZero();
+    Ac(3,9) = 1.f;
+    Ac(4,10) = 1.f;
+    Ac(5,11) = 1.f;
+    Ac(11,12) = 1.f;
+    Ac.block(0,6,3,3) = R_yaw.transpose();
+
+    Eigen::Matrix<double,4,3> R_feet;
+    for (int row=0; row<4; row++)
+    {
+        for (int col=0; col<3; col++)
+        {
+            R_feet(row, col) = mFoot[row][col];
+        }
+    }
+    Bc.setZero();
+
+    mBodyInertia = R_yaw*mBodyInertia*R_yaw.transpose();
+    mBodyInertiaInverse = mBodyInertia.inverse();
+
+    for(int n=0; n<4; n++)
+    {
+        Bc.block(6,n*3,3,3) = mBodyInertiaInverse*GetSkew(R_feet.row(n));
+        Bc.block(9,n*3,3,3) = Eigen::Matrix3d::Identity() / BODYMASS;
+    }
+}
+
+void MPCSolver::transformC2QP()
+{
+    ABc.setZero();
+    ABc.block(0,0,13,13) = Ac;
+    ABc.block(0,13,13,12) = Bc;
+    ABc = mDt*ABc;
+    expmm = ABc.exp();
+
+    Adt = expmm.block(0,0,13,13);
+    Bdt = expmm.block(0,13,13,12);
+
+    Eigen::Matrix<double,13,13> D[20];
+    D[0].setIdentity();
+    for(int i=1; i<=mHorizon; i++)
+    {
+        D[i] = Adt * D[i-1];
+    }
+
+    for(int r=0; r<mHorizon; r++)
+    {
+        Aqp.block(13*r,0,13,13) = D[r+1];
+        for(int c=0; c<mHorizon; c++)
+        {
+            if(r>=c)
+            {
+                int a_num = r-c;
+                Bqp.block(13*r,12*c,13,12) = D[a_num]*Bdt;
+            }
         }
     }
 }
 
-void MPCSolver::GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side)
+void MPCSolver::transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols)
 {
-    double s1 = std::sin(hip);
-    double s2 = std::sin(thigh);
-
-    double c1 = std::cos(hip);
-    double c2 = std::cos(thigh);
-
-    double s32 = std::sin(calf+thigh);
-    double c32 = std::cos(calf+thigh);
-
-    //right leg side = 1 / left leg side = -1
-    J << 0,
-            LEN_THI*c2+LEN_CAL*c32,
-            LEN_CAL*c32,
-
-            (-1)*side*LEN_HIP*s1-LEN_THI*c1*c2-LEN_CAL*c1*c32,
-            LEN_THI*s1*s2+LEN_CAL*s1*s32,
-            LEN_CAL*s1*s32,
-
-            side*LEN_HIP*c1-LEN_THI*s1*c2-LEN_CAL*s1*c32,
-            -LEN_THI*c1*s2-LEN_CAL*c1*s32,
-            -LEN_CAL*c1*s32;
+    int32_t a = 0;
+    for(int16_t r = 0; r < rows; r++)
+    {
+        for(int16_t c = 0; c < cols; c++)
+        {
+            dst[a] = src(r,c);
+            a++;
+        }
+    }
 }
 
 void MPCSolver::resizeMatrix()
@@ -338,7 +376,6 @@ void MPCSolver::resizeMatrix()
 
 void MPCSolver::initMatrix()
 {
-    x0.setZero();
     xd.setZero();
     K.setIdentity();
     Aqp.setZero();
@@ -348,94 +385,9 @@ void MPCSolver::initMatrix()
     g.setZero();
     U_b.setZero();
     fmat.setZero();
-}
-
-void MPCSolver::transformC2QP()
-{
-    ABc.setZero();
-    ABc.block(0,0,13,13) = Ac;
-    ABc.block(0,13,13,12) = Bc;
-    ABc = mDt*ABc;
-    expmm = ABc.exp();
-
-    Adt = expmm.block(0,0,13,13);
-    Bdt = expmm.block(0,13,13,12);
-
-    Eigen::Matrix<double,13,13> D[20];
-    D[0].setIdentity();
-    for(int i=1; i<=mHorizon; i++)
+    mBodyInertia.setZero();
+    for (int idx=0; idx<3; idx++)
     {
-        D[i] = Adt * D[i-1];
-    }
-
-    for(int r=0; r<mHorizon; r++)
-    {
-        Aqp.block(13*r,0,13,13) = D[r+1];
-        for(int c=0; c<mHorizon; c++)
-        {
-            if(r>=c)
-            {
-                int a_num = r-c;
-                Bqp.block(13*r,12*c,13,12) = D[a_num]*Bdt;
-            }
-        }
-    }
-}
-
-inline Eigen::Matrix<double,3,3> getSkew(Vec3<double> r)
-{
-    Eigen::Matrix3d cm;
-    cm << 0.f, -r(2), r(1),
-            r(2), 0.f, -r(0),
-            -r(1), r(0), 0.f;
-    return cm;
-}
-
-void MPCSolver::getStateSpaceMatrix(const double* mP, const double* mQ, const double mFoot[4][3])
-{
-    double yc = cos(mQ[2]);
-    double ys = sin(mQ[2]);
-
-    R_yaw <<  yc,  -ys,   0,
-            ys,  yc,   0,
-            0,   0,   1;
-
-    Ac.setZero();
-    Ac(3,9) = 1.f;
-    Ac(4,10) = 1.f;
-    Ac(5,11) = 1.f;
-    Ac(11,12) = 1.f;
-    Ac.block(0,6,3,3) = R_yaw.transpose();
-
-    Eigen::Matrix<double,4,3> R_feet;
-    for (int row=0; row<4; row++)
-    {
-        for (int col=0; col<3; col++)
-        {
-            R_feet(row, col) = mFoot[row][col] - mP[col];
-        }
-    }
-    Bc.setZero();
-
-    mBodyInertia = R_yaw*mBodyInertia*R_yaw.transpose();
-    mBodyInertiaInverse = mBodyInertia.inverse();
-
-    for(int n=0; n<4; n++)
-    {
-        Bc.block(6,n*3,3,3) = mBodyInertiaInverse*getSkew(R_feet.row(n));
-        Bc.block(9,n*3,3,3) = Eigen::Matrix3d::Identity() / BODYMASS;
-    }
-}
-
-void MPCSolver::transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols)
-{
-    int32_t a = 0;
-    for(int16_t r = 0; r < rows; r++)
-    {
-        for(int16_t c = 0; c < cols; c++)
-        {
-            dst[a] = src(r,c);
-            a++;
-        }
+        mBodyInertia(idx,idx) = BODY_INERTIA[idx];
     }
 }

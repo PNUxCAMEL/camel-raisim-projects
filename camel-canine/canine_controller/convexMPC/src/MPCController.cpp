@@ -9,38 +9,44 @@ extern pSHM sharedMemory;
 MPCController::MPCController(const uint8_t& horizon)
     : mHorizon(horizon)
     , ConvexMPCSolver(mHorizon)
-    , SwingLegTrajectory(0.25)
 {
-    for(double & motorIdx : mTorqueLimit)
-    {
-        motorIdx = 50.0;
-    }
     mGRF->setZero();
-    mTorque.setZero();
-    robotJacobian->setZero();
-    robottorque->setZero();
-    swingtorque->setZero();
+    mTorque->setZero();
+    mInitState.setZero();
 }
 
-void MPCController::InitSwingLegTrajectory()
+void MPCController::InitUpTrajectory()
 {
-    SwingLegTrajectory.UpdateTrajectory(sharedMemory->localTime);
+    double timeDuration = 2.0;
+    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], 0.0,
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], 0.0,
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.3,
+                                        sharedMemory->localTime, timeDuration);
 }
+
+void MPCController::InitDownTrajectory()
+{
+    double timeDuration = 2.0;
+    mBaseTrajectory[0].updateTrajectory(sharedMemory->basePosition[0], sharedMemory->basePosition[0],
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[1].updateTrajectory(sharedMemory->basePosition[1], sharedMemory->basePosition[1],
+                                        sharedMemory->localTime, timeDuration);
+    mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.0,
+                                        sharedMemory->localTime, timeDuration);
+}
+
 
 void MPCController::DoControl()
 {
-    //TODO: Make structure for robot states
     updateState();
-    ConvexMPCSolver.SetTrajectory(mBasePosition);
-    ConvexMPCSolver.GetMetrices(mBaseEulerPosition, mBasePosition,
-                                mBaseEulerVelocity, mBaseVelocity,
-                                mFootPosition);
+    ConvexMPCSolver.SetTrajectory(mBaseTrajectory);
+    ConvexMPCSolver.GetMetrices(mInitState, mFootPosition);
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);
 
-    setLegcontrol();
     computeControlInput();
-    setControlInput();
 }
 
 void MPCController::updateState()
@@ -58,103 +64,29 @@ void MPCController::updateState()
         for (int mt=0; mt<3; mt++)
         {
             mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
+            mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
         }
     }
 
-    for (int idx=0; idx<MOTOR_NUM; idx++)
-    {
-        mMotorPosition[idx] = sharedMemory->motorPosition[idx];
-        mMotorVelocity[idx] = sharedMemory->motorVelocity[idx];
-    }
-}
-
-void MPCController::setLegcontrol()
-{
-    SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
-
-    double d = sqrt(pow(mDesiredPosition[0],2)+pow(mDesiredPosition[1],2));
-    double phi = acos(abs(mDesiredPosition[0])/ d);
-    double psi = acos(pow(d,2)/(2*0.23*d));
-
-    double jointPos[3];
-    double jointVel[3] = {0,0,0};
-
-    jointPos[0] = 0.f;
-    if (mDesiredPosition[0] < 0)
-        jointPos[1] = 1.57 - phi + psi;
-    else if(mDesiredPosition[0] == 0)
-        jointPos[1] = psi;
-    else
-        jointPos[1] = phi + psi - 1.57;
-    jointPos[2] = -acos((pow(d,2)-2*pow(0.23,2)) / (2*0.23*0.23));
-
-    double Pgain[3] = {20,20,30};
-    double Dgain[3] = {0.5,1,1};
-
-    double posError[3];
-    double velError[3];
-    for (int i = 0; i < 4; i++)
-    {
-        if (sharedMemory->gaitTable[i] == 0)
-        {
-            for(int j=0; j<3; j++)
-            {
-                posError[j] = jointPos[j] - mMotorPosition[i*3+j];
-                velError[j] = jointVel[j] - mMotorVelocity[i*3+j];
-                swingtorque[i][j] = Pgain[j] * posError[j] + Dgain[j] * velError[j];
-            }
-        }
-        else
-        {
-            for(int j=0; j<3; j++)
-            {
-                swingtorque[i][j] = 0.f;
-            }
-        }
-    }
+    mInitState << mBaseEulerPosition[0], mBaseEulerPosition[1], mBaseEulerPosition[2],
+            mBasePosition[0], mBasePosition[1], mBasePosition[2],
+            mBaseEulerVelocity[0], mBaseEulerVelocity[1], mBaseEulerVelocity[2],
+            mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], GRAVITY;
 }
 
 void MPCController::computeControlInput()
 {
-    ConvexMPCSolver.GetJacobian(robotJacobian[0],
-                                mMotorPosition[0],
-                                mMotorPosition[1],
-                                mMotorPosition[2],1);
-    ConvexMPCSolver.GetJacobian(robotJacobian[1],
-                                mMotorPosition[3],
-                                mMotorPosition[4],
-                                mMotorPosition[5],-1);
-    ConvexMPCSolver.GetJacobian(robotJacobian[2],
-                                mMotorPosition[6],
-                                mMotorPosition[7],
-                                mMotorPosition[8],1);
-    ConvexMPCSolver.GetJacobian(robotJacobian[3],
-                                mMotorPosition[9],
-                                mMotorPosition[10],
-                                mMotorPosition[11],-1);
+    GetJacobian(mJacobian[0], mMotorPosition[0],1);
+    GetJacobian(mJacobian[1], mMotorPosition[1],-1);
+    GetJacobian(mJacobian[2], mMotorPosition[2],1);
+    GetJacobian(mJacobian[3], mMotorPosition[3],-1);
 
     for(int idx=0; idx<4; idx++)
     {
-        robotJacobian[idx].transposeInPlace();
-        robottorque[idx] = robotJacobian[idx]*mGRF[idx];
-        mTorque[idx*3+0] = robottorque[idx][0]+swingtorque[idx][0];
-        mTorque[idx*3+1] = robottorque[idx][1]+swingtorque[idx][1];
-        mTorque[idx*3+2] = robottorque[idx][2]+swingtorque[idx][2];
-    }
-}
-
-void MPCController::setControlInput()
-{
-    for (int index = 0; index < MOTOR_NUM; index++)
-    {
-        if (mTorque[index] > mTorqueLimit[index])
-        {
-            mTorque[index] = mTorqueLimit[index];
-        }
-        else if (mTorque[index] < -mTorqueLimit[index])
-        {
-            mTorque[index] = -mTorqueLimit[index];
-        }
-        sharedMemory->motorDesiredTorque[index] = mTorque[index];
+        mJacobian[idx].transposeInPlace();
+        mTorqueJacobian[idx] = mJacobian[idx]*mGRF[idx];
+        sharedMemory->mpcTorque[idx][0] = mTorqueJacobian[idx][0];
+        sharedMemory->mpcTorque[idx][1] = mTorqueJacobian[idx][1];
+        sharedMemory->mpcTorque[idx][2] = mTorqueJacobian[idx][2];
     }
 }

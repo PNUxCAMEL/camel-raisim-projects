@@ -1,39 +1,63 @@
 //
-// Created by hs on 22. 10. 14.
+// Created by hs on 22. 11. 20.
 //
 
-#include <canine_util/StateEstimator.hpp>
+#include <canine_simulation/SimulKalmanFilter.hpp>
 
 extern pSHM sharedMemory;
 
-StateEstimator::StateEstimator()
-    : IsKalmanFirstRun(true)
+SimulKalmanFilter::SimulKalmanFilter(raisim::ArticulatedSystem* robot)
+    : mRobot(robot)
+    , mPosition(raisim::VecDyn(19))
+    , mVelocity(raisim::VecDyn(18))
+    , IsKalmanFirstRun(true)
 {
+    mX.setZero();
+    mZ.setZero();
+    mA.setZero();
+    mB.setZero();
+    mH.setZero();
+    mK.setZero();
 }
 
-void StateEstimator::StateEstimatorFunction()
+void SimulKalmanFilter::StateEstimatorFunction()
 {
-    if (sharedMemory->motorForeState && sharedMemory->motorBackState)
+    updateState();
+    getJointState();
+    getRobotAngulerState();
+    getRobotFootPosition();
+    getRobotLinearState();
+}
+
+void SimulKalmanFilter::updateState()
+{
+    mPosition = mRobot->getGeneralizedCoordinate();
+    mVelocity = mRobot->getGeneralizedVelocity();
+}
+
+void SimulKalmanFilter::getJointState()
+{
+    for (int idx=0; idx<MOTOR_NUM; idx++)
     {
-        updateState();
-        getRobotFootPosition();
-//        getRobotLinearState();
+        sharedMemory->motorPosition[idx] = mPosition[idx+7];
+        sharedMemory->motorVelocity[idx] = mVelocity[idx+6];
     }
 }
 
-void StateEstimator::updateState()
+void SimulKalmanFilter::getRobotAngulerState()
 {
-    for(int idx=0; idx<4; idx++)
-    {
-        mQuaternion[idx] = sharedMemory->baseQuartPosition[idx];
-    }
     for(int idx=0; idx<3; idx++)
     {
-        mAcceleration[idx] = sharedMemory->baseAcceleration[idx];
+        sharedMemory->baseEulerVelocity[idx] = mVelocity[idx+3];
     }
+    for(int idx=0; idx<4; idx++)
+    {
+        mQuaternion[idx] = mPosition[idx+3];
+    }
+    TransformQuat2Euler(mQuaternion, sharedMemory->baseEulerPosition);
 }
 
-void StateEstimator::getRobotFootPosition()
+void SimulKalmanFilter::getRobotFootPosition()
 {
     TransMatBody2Foot(&mTransMat[0], R_FRON, mQuaternion,
                       sharedMemory->motorPosition[0],
@@ -61,7 +85,7 @@ void StateEstimator::getRobotFootPosition()
     }
 }
 
-void StateEstimator::getRobotLinearState()
+void SimulKalmanFilter::getRobotLinearState()
 {
     if (IsKalmanFirstRun)
     {
@@ -79,7 +103,7 @@ void StateEstimator::getRobotLinearState()
     sharedMemory->baseVelocity[2] = mX[5];
 }
 
-void StateEstimator::initLinearKalmanFilter()
+void SimulKalmanFilter::initLinearKalmanFilter()
 {
     mX[2] = -(mTransMat[0](2,3)+mTransMat[1](2,3)+mTransMat[2](2,3)+mTransMat[3](2,3)) / 4;
     Vec3<double> mGlobalFootPos[4];
@@ -134,7 +158,7 @@ void StateEstimator::initLinearKalmanFilter()
     mR = mR*1e-2;
 
 }
-void StateEstimator::doLinearKalmanFilter()
+void SimulKalmanFilter::doLinearKalmanFilter()
 {
     mZ.block(0, 0, 3, 1) = -mTransMat[0].block(0, 3, 3, 1);
     mZ.block(3, 0, 3, 1) = -mTransMat[1].block(0, 3, 3, 1);

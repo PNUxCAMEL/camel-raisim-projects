@@ -10,10 +10,10 @@
 #include <unsupported/Eigen/MatrixFunctions>
 #include <qpOASES.hpp>
 
+#include <camel-tools/trajectory.hpp>
 #include <canine_util/EigenTypes.hpp>
 #include <canine_util/SharedMemory.hpp>
-
-#include "MPCdescription.hpp"
+#include <canine_util/RobotMath.hpp>
 
 using Eigen::Dynamic;
 
@@ -22,18 +22,15 @@ public:
     MPCSolver(const uint8_t& horizon);
     ~MPCSolver();
 
-    void SetTrajectory(const double* mP);
-    void GetMetrices(const double* mQ, const double* mP,
-                     const double* mW, const double* mV,
-                     const double mFoot[4][3]);
+    void SetTrajectory(CubicTrajectoryGenerator Trajectory[3]);
+    void GetMetrices(const Vec13<double>&  x0, const double mFoot[4][3]);
     void SolveQP();
     void GetGRF(Vec3<double> f[4]);
-    void GetJacobian(Eigen::Matrix<double,3,3>& J, double hip, double thigh, double calf, int side);
 
 private:
     void initMatrix();
     void resizeMatrix();
-    void getStateSpaceMatrix(const double* mP, const double* mQ, const double mFoot[4][3]);
+    void getStateSpaceMatrix(const Vec13<double>& x0, const double mFoot[4][3]);
     void transformC2QP();
 
     static void transformMat2Real(qpOASES::real_t* dst, Eigen::Matrix<double,Dynamic,Dynamic> src, int16_t rows, int16_t cols);
@@ -43,7 +40,8 @@ private:
     const double mAlpha;
     const double mMu;
     const int mFmax;
-    double mStopPosX = 0.0;
+    char var_elim[2000];
+    char con_elim[2000];
 
     Vec13<double> mWeightMat;
     const uint8_t mHorizon;
@@ -58,7 +56,6 @@ private:
     Eigen::Matrix<double, Dynamic, 13> Aqp;
     Eigen::Matrix<double, Dynamic, Dynamic> Bqp;
 
-    Eigen::Matrix<double, 13, 1> x0;
     Eigen::Matrix<double, Dynamic, 1> xd;
 
     Eigen::Matrix<double, Dynamic, Dynamic> L;

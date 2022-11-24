@@ -29,38 +29,36 @@ void Command::commandFunction()
             }
             case MOTOR_ON:
             {
-                sharedMemory->controlState = STATE_CONTROL_STOP;
+                sharedMemory->HighControlState = STATE_CONTROL_STOP;
                 sharedMemory->can1State = CAN_MOTOR_ON;
                 sharedMemory->can2State = CAN_MOTOR_ON;
                 break;
             }
             case MOTOR_OFF:
             {
-                sharedMemory->controlState = STATE_CONTROL_STOP;
+                sharedMemory->HighControlState = STATE_CONTROL_STOP;
                 sharedMemory->can1State = CAN_MOTOR_OFF;
                 sharedMemory->can2State = CAN_MOTOR_OFF;
                 break;
             }
             case HOME:
             {
-                sharedMemory->controlState = STATE_HOME_READY;
+                sharedMemory->HighControlState = STATE_HOME_STAND_UP_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
                 break;
             }
             case PD_CMD:
             {
-                sharedMemory->controlState = STATE_PD_READY;
+                sharedMemory->HighControlState = STATE_HOME_STAND_DOWN_READY;
                 sharedMemory->can1State = CAN_SET_TORQUE;
                 sharedMemory->can2State = CAN_SET_TORQUE;
-
                 break;
             }
             case CUSTOM_1:
             {
-                sharedMemory->controlState = STATE_READY;
-                sharedMemory->can1State = CAN_SET_TORQUE;
-                sharedMemory->can2State = CAN_SET_TORQUE;
+                sharedMemory->gaitState = TROT;
+                sharedMemory->gaitIteration = 0;
                 break;
             }
             case CUSTOM_2:

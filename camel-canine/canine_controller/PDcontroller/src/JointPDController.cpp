@@ -9,99 +9,73 @@ extern pUI_COMMAND sharedCommand;
 extern pSHM sharedMemory;
 
 JointPDController::JointPDController()
+    : mRefTime(0.0)
+    , mHomeState(HOME_NO_ACT)
 {
-    for(int motorIdx = 0; motorIdx < MOTOR_NUM ; motorIdx++)
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
     {
-        Kp[motorIdx] = 80.0;
-        Kd[motorIdx] = 1.5;
-        mTorqueLimit[motorIdx] = 11.0;
+        Kp[motorIdx] = 150.0;
+        Kd[motorIdx] = 4.5;
+        mTorqueLimit[motorIdx] = 15.0;
+    }
+}
+
+void JointPDController::SetPDgain(const double& kp, const double& kd)
+{
+    for (int motorIdx = 0; motorIdx < MOTOR_NUM; motorIdx++)
+    {
+        Kp[motorIdx] = kp;
+        Kd[motorIdx] = kd;
     }
 }
 
 void JointPDController::DoHomeControl()
 {
-    for (int index = 0; index < MOTOR_NUM; index++)
-    {
-        mTorque[index] =
-                Kp[index] * (mCubicTrajectoryGen[index].getPositionTrajectory(sharedMemory->localTime) - sharedMemory->motorPosition[index])
-                + Kd[index] * (mCubicTrajectoryGen[index].getVelocityTrajectory(sharedMemory->localTime) - sharedMemory->motorVelocity[index]);
-    }
-    SetControlInput();
-}
+    updateState();
+    updateHomeTrajectory();
+    setHomeTrajectory();
 
-void JointPDController::DoPDControl()
-{
-    setTrajectory();
     computeControlInput();
     SetControlInput();
 }
 
-void JointPDController::InitHomeTrajectory()
+void JointPDController::updateState()
 {
-    double timeDuration = 2.0;
-    double homeHip = 45;
-    double homeKnee = -80;
-
-    for (int idx=0; idx<4; idx++)
+    for (int idx=0; idx<3; idx++)
     {
-        mCubicTrajectoryGen[idx*3  ].updateTrajectory(sharedMemory->motorPosition[idx*3  ], 0.0, sharedMemory->localTime, timeDuration);
-        mCubicTrajectoryGen[idx*3+1].updateTrajectory(sharedMemory->motorPosition[idx*3+1], homeHip * D2R, sharedMemory->localTime, timeDuration);
-        mCubicTrajectoryGen[idx*3+2].updateTrajectory(sharedMemory->motorPosition[idx*3+2], homeKnee * D2R, sharedMemory->localTime, timeDuration);
-    }
-}
-
-void JointPDController::InitSwingTrajectory()
-{
-/*
-    mBezierTrajectoryGen.InitTrajectorySet(sharedMemory->localTime, 1);
-*/
-}
-
-void JointPDController::setTrajectory()
-{
-/*    double d = 0.0;
-    double phi = 0.0;
-    double psi = 0.0;
-
-    mBezierTrajectoryGen.SetCurrentTime(sharedMemory->localTime);
-    for (int idx=0; idx<4; idx++)
-    {
-        if (sharedMemory->gaitTable[idx] == 0)
-        {
-            mBezierTrajectoryGen.SwingTrajectory(mDesiredP);
-        }
-        else
-        {
-            mBezierTrajectoryGen.StandTrajectory(mDesiredP);
-        }
-
-        d = sqrt(pow(mDesiredP[0], 2) + pow(mDesiredP[1], 2));
-        phi = acos(abs(mDesiredP[0]) / d);
-        psi = acos(pow(d, 2) / (2 * 0.23 * d));
-
-        mDesiredPosition[idx*3+0] = 0.0;
-
-        if (mDesiredP[0] < 0)
-        {
-            mDesiredPosition[idx*3+1] = 1.57 - phi + psi;
-        }
-        else if (mDesiredP[0] == 0)
-        {
-            mDesiredPosition[idx*3+1] = psi;
-        }
-        else
-        {
-            mDesiredPosition[idx*3+1] = phi + psi - 1.57;
-        }
-
-        mDesiredPosition[idx*3+2] = -acos((pow(d, 2) - 2 * pow(0.23, 2)) / (2 * 0.23 * 0.23));
-
+        mBasePosition[idx] = sharedMemory->basePosition[idx];
+        mBaseVelocity[idx] = sharedMemory->baseVelocity[idx];
+        mBaseEulerPosition[idx] = sharedMemory->baseEulerPosition[idx];
+        mBaseEulerVelocity[idx] = sharedMemory->baseEulerVelocity[idx];
     }
 
-    for (int index = 0 ; index < MOTOR_NUM ; index++)
+    for (int leg=0; leg<4; leg++)
     {
-        mDesiredVelocity[index] = 0.0;
-    }*/
+        for (int mt=0; mt<3; mt++)
+        {
+            mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
+            mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
+            mMotorVelocity[leg][mt] = sharedMemory->motorVelocity[leg*3+mt];
+        }
+    }
+
+    mInitState << mBaseEulerPosition[0], mBaseEulerPosition[1], mBaseEulerPosition[2],
+        mBasePosition[0], mBasePosition[1], mBasePosition[2],
+        mBaseEulerVelocity[0], mBaseEulerVelocity[1], mBaseEulerVelocity[2],
+        mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2], -9.81;
+
+    mDesiredState.setZero();
+    mDesiredState[5] = 0.3;
+}
+
+void JointPDController::InitHomeStandUpTrajectory()
+{
+    mHomeState = HOME_STAND_UP_PHASE1;
+}
+
+void JointPDController::InitHomeStandDownTrajectory()
+{
+    mHomeState = HOME_STAND_DOWN_PHASE1;
 }
 
 void JointPDController::computeControlInput()
@@ -113,11 +87,95 @@ void JointPDController::computeControlInput()
     }
 }
 
+void JointPDController::updateHomeTrajectory()
+{
+    switch(mHomeState)
+    {
+    case HOME_NO_ACT:
+        break;
+    case HOME_STAND_UP_PHASE1:
+        for (int idx = 0; idx < 4; idx++)
+        {
+            double homeHip = 105;
+            double homeKnee = -157;
+            double timeDuration = 1.0;
+            mRefTime = sharedMemory->localTime + timeDuration;
+            mCubicTrajectoryGen[idx * 3].updateTrajectory(sharedMemory->motorPosition[idx * 3], 0.0, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 1].updateTrajectory(sharedMemory->motorPosition[idx * 3 + 1], homeHip * D2R, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 2].updateTrajectory(sharedMemory->motorPosition[idx * 3 + 2], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+        }
+        mHomeState = HOME_STAND_UP_PHASE2;
+        break;
+    case HOME_STAND_UP_PHASE2:
+        if(sharedMemory->localTime > mRefTime + 0.5)
+        {
+            mHomeState = HOME_STAND_UP_PHASE3;
+        }
+        break;
+    case HOME_STAND_UP_PHASE3:
+        for (int idx = 0; idx < 4; idx++)
+        {
+            double homeHip = 55.5;
+            double homeKnee = -98.0;
+            double timeDuration = 2.0;
+            mRefTime = sharedMemory->localTime + timeDuration;
+            mCubicTrajectoryGen[idx * 3].updateTrajectory(mDesiredPosition[idx * 3], 0.0, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 1].updateTrajectory(mDesiredPosition[idx * 3 + 1], homeHip * D2R, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 2].updateTrajectory(mDesiredPosition[idx * 3 + 2], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+        }
+        mHomeState = HOME_NO_ACT;
+        break;
+    case HOME_STAND_DOWN_PHASE1:
+        for (int idx = 0; idx < 4; idx++)
+        {
+            double homeHip = 88;
+            double homeKnee = -157;
+            double timeDuration = 2.0;
+            mRefTime = sharedMemory->localTime + timeDuration;
+            mCubicTrajectoryGen[idx * 3].updateTrajectory(mDesiredPosition[idx * 3], 0.0, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 1].updateTrajectory(mDesiredPosition[idx * 3 + 1], homeHip * D2R, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 2].updateTrajectory(mDesiredPosition[idx * 3 + 2], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+        }
+        mHomeState = HOME_STAND_DOWN_PHASE2;
+        break;
+    case HOME_STAND_DOWN_PHASE2:
+        if(sharedMemory->localTime > mRefTime + 0.5)
+        {
+            mHomeState = HOME_STAND_DOWN_PHASE3;
+        }
+        break;
+    case HOME_STAND_DOWN_PHASE3:
+        for (int idx = 0; idx < 4; idx++)
+        {
+            double homeHip = 126;
+            double homeKnee = -157;
+            double timeDuration = 1.5;
+            mRefTime = sharedMemory->localTime + timeDuration;
+            mCubicTrajectoryGen[idx * 3].updateTrajectory(mDesiredPosition[idx * 3], 0.0, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 1].updateTrajectory(mDesiredPosition[idx * 3 + 1], homeHip * D2R, sharedMemory->localTime, timeDuration);
+            mCubicTrajectoryGen[idx * 3 + 2].updateTrajectory(mDesiredPosition[idx * 3 + 2], homeKnee * D2R, sharedMemory->localTime, timeDuration);
+        }
+        mHomeState = HOME_NO_ACT;
+        break;
+    default:
+        break;
+    }
+}
+
+void JointPDController::setHomeTrajectory()
+{
+    for (int index = 0; index < MOTOR_NUM; index++)
+    {
+        mDesiredPosition[index] = mCubicTrajectoryGen[index].getPositionTrajectory(sharedMemory->localTime);
+        mDesiredVelocity[index] = mCubicTrajectoryGen[index].getVelocityTrajectory(sharedMemory->localTime);
+    }
+}
+
 void JointPDController::SetControlInput()
 {
     for (int index = 0; index < MOTOR_NUM; index++)
     {
-        if (sharedMemory->controlState == STATE_READY)
+        if (sharedMemory->HighControlState == STATE_READY)
         {
             mTorque[index] = 0;
         }

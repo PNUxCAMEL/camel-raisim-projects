@@ -20,13 +20,15 @@
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/StateEstimator.hpp>
 #include <canine_raisim//RobotVisualization.hpp>
+#include <convexMPC/MPCController.hpp>
 
 void StartFSM();
-void *RTControllerThread(void *arg);
-void *RTCANForward(void *arg);
-void *RTCANBackward(void *arg);
-void *NRTCommandThread(void *arg);
-void *NRTVisualThread(void *arg);
 void clearSharedMemory();
+void* RTControllerThreadHigh(void *arg);
+void* RTControllerThreadLow(void *arg);
+void* NRTCommandThread(void *arg);
+void* NRTVisualThread(void *arg);
+void* NRTCANForward(void* arg);
+void* NRTCANBackward(void* arg);
 
 #endif //RAISIM_MAINFSM_HPP

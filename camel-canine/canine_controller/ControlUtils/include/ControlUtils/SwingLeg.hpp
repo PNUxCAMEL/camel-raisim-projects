@@ -14,7 +14,7 @@ public:
     SwingLeg(double duration);
     void UpdateTrajectory(double currentTime);
     void GetPositionTrajectory(double currentTime, double* desiredPosition);
-    void SetControlPoints(const Vec3<double>& footPosition);
+    void SetControlPoints(const Vec3<double>& footPosition, const int& leg);
 
 private:
     double factorial(double value);

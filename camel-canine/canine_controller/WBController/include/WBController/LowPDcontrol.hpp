@@ -28,10 +28,7 @@ private:
 
 private:
     const int mTorqueLimit;
-    const double mSwingPgain[3];
-    const double mSwingDgain[3];
-    const double mStandPgain[3];
-    const double mStandDgain[3];
+
     bool mFirstRunTrot;
     SwingLeg SwingLegTrajectory;
     Vec3<double> mLegTorque[4];
@@ -39,6 +36,10 @@ private:
     Vec3<double> mSwingJointVel;
     Vec3<double> mStandJointPos;
     Vec3<double> mStandJointVel;
+    Vec3<double> mSwingPgain;
+    Vec3<double> mSwingDgain;
+    Vec3<double> mStandPgain;
+    Vec3<double> mStandDgain;
 
     Vec3<double> mTorque[4];
 

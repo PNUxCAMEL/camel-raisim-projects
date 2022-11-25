@@ -8,12 +8,16 @@
 extern pSHM sharedMemory;
 
 LowPDcontrol::LowPDcontrol()
-    : mTorqueLimit(30)
+    : mTorqueLimit(35)
     , SwingLegTrajectory(GAIT_PERIOD/2)
     , mFirstRunTrot(true)
-    , mSwingPgain{50,50,50}
-    , mSwingDgain{2,2,2}
-    , mStandPgain{5,5,5}
+//    , mSwingPgain{50,50,50}
+//    , mSwingDgain{2,2,2}
+//    , mStandPgain{5,5,5}
+//    , mStandDgain{1,1,1}
+    , mSwingPgain{30,30,30}
+    , mSwingDgain{1,1,1}
+    , mStandPgain{10,10,10}
     , mStandDgain{1,1,1}
 {
     mTorque->setZero();
@@ -76,7 +80,6 @@ void LowPDcontrol::setLegControl()
     {
         if (sharedMemory->gaitTable[leg] == 0)
         {
-            SwingLegTrajectory.SetControlPoints(mFootPosition[leg]);
             SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
             getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
             for(int mt=0; mt<3; mt++)
@@ -91,6 +94,10 @@ void LowPDcontrol::setLegControl()
             {
                 mLegTorque[leg][mt] = mStandPgain[mt] * (mStandJointPos[mt] - mMotorPosition[leg][mt])
                                    + mStandDgain[mt] * (mStandJointVel[mt] - mMotorVelocity[leg][mt]);
+            }
+            if (sharedMemory->gaitTable[leg+4] == 0)
+            {
+                SwingLegTrajectory.SetControlPoints(mFootPosition[leg], leg);
             }
         }
     }

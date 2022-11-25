@@ -88,7 +88,8 @@ sudo apt-get install libglfw3-dev libgl1-mesa-dev libglu1-mesa-dev
 git clone https://github.com/IntelRealSense/librealsense.git
 cd librealsense
 sudo cp config/99-realsense-libusb.rules /etc/udev/rules.d/
-sudo udevadm control --reload-rules && udevadm trigger./scripts/patch-realsense-ubuntu-lts.sh
+sudo udevadm control --reload-rules && udevadm trigger
+./scripts/patch-realsense-ubuntu-lts.sh
 mkdir build && cd build
 cmake ..
 sudo make uninstall && make clean && make && sudo make install

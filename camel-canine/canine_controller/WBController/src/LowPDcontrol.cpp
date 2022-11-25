@@ -48,6 +48,7 @@ void LowPDcontrol::updateState()
         {
             mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
             mMotorVelocity[leg][mt] = sharedMemory->motorVelocity[leg*3+mt];
+            mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
         }
     }
 }
@@ -69,26 +70,27 @@ void LowPDcontrol::getJointPos(const double& x, const double& z, Vec3<double>& p
 
 void LowPDcontrol::setLegControl()
 {
-    SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
-    getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
     getJointPos(0.0, sharedMemory->baseDesiredPosition[2], mStandJointPos);
 
-    for (int i = 0; i < 4; i++)
+    for (int leg = 0; leg < 4; leg++)
     {
-        if (sharedMemory->gaitTable[i] == 0)
+        if (sharedMemory->gaitTable[leg] == 0)
         {
-            for(int j=0; j<3; j++)
+            SwingLegTrajectory.SetControlPoints(mFootPosition[leg]);
+            SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
+            getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
+            for(int mt=0; mt<3; mt++)
             {
-                mLegTorque[i][j] = mSwingPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])
-                                   + mSwingDgain[j] * (mSwingJointVel[j] - mMotorVelocity[i][j]);
+                mLegTorque[leg][mt] = mSwingPgain[mt] * (mSwingJointPos[mt] - mMotorPosition[leg][mt])
+                                   + mSwingDgain[mt] * (mSwingJointVel[mt] - mMotorVelocity[leg][mt]);
             }
         }
         else
         {
-            for(int j=0; j<3; j++)
+            for(int mt=0; mt<3; mt++)
             {
-                mLegTorque[i][j] = mStandPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
-                                   + mStandDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
+                mLegTorque[leg][mt] = mStandPgain[mt] * (mStandJointPos[mt] - mMotorPosition[leg][mt])
+                                   + mStandDgain[mt] * (mStandJointVel[mt] - mMotorVelocity[leg][mt]);
             }
         }
     }
@@ -98,15 +100,11 @@ void LowPDcontrol::setLegControl()
         mTorque[idx][0] = mLegTorque[idx][0] + sharedMemory->mpcTorque[idx][0];
         mTorque[idx][1] = mLegTorque[idx][1] + sharedMemory->mpcTorque[idx][1];
         mTorque[idx][2] = mLegTorque[idx][2] + sharedMemory->mpcTorque[idx][2];
-//        mTorque[idx][0] = mLegTorque[idx][0];
-//        mTorque[idx][1] = mLegTorque[idx][1];
-//        mTorque[idx][2] = mLegTorque[idx][2];
     }
 }
 
 void LowPDcontrol::setControlInput()
 {
-//    std::cout << "=========Torque========" << std::endl;
     for (int leg = 0; leg < 4; leg++)
     {
         for (int motor = 0; motor < 3; motor++)
@@ -119,10 +117,7 @@ void LowPDcontrol::setControlInput()
             {
                 mTorque[leg][motor] = -mTorqueLimit;
             }
-//            std::cout << mTorque[leg][motor] << "\t";
             sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
         }
-//        std::cout << std::endl;
     }
-//    std::cout << std::endl;
 }

@@ -11,7 +11,7 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
     : mWorld(world)
     , mRobot(robot)
     , mIteration(0)
-    , mGaitLength(3)
+    , mGaitLength(MPC_HORIZON)
     , mSwT(GAIT_PERIOD*1000) //0.25s swing
     , stand(mGaitLength, Vec4<int>(mSwT,mSwT,mSwT,mSwT), Vec4<int>(mSwT,mSwT,mSwT,mSwT), mSwT)
     , trot(mGaitLength, Vec4<int>(0,mSwT/2,mSwT/2,0), Vec4<int>(mSwT/2,mSwT/2,mSwT/2,mSwT/2), mSwT)

@@ -44,6 +44,7 @@ private:
 
     Vec3<double> mMotorPosition[4];
     Vec3<double> mMotorVelocity[4];
+    Vec3<double> mFootPosition[4];
 
     Vec13<double> mInitState;
     Vec13<double> mDesiredState;

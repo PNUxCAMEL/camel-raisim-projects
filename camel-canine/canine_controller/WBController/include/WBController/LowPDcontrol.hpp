@@ -24,7 +24,7 @@ private:
     void updateState();
     void setControlInput();
     void setLegControl();
-    void getJointPos(const double& x, const double& z, Vec3<double>& pos);
+    void getJointPos(Vec3<double>& resultPos, Vec3<double> desiredPos, const int& leg, const bool stand);
 
 private:
     const int mTorqueLimit;
@@ -50,7 +50,7 @@ private:
     Vec13<double> mInitState;
     Vec13<double> mDesiredState;
 
-    double mDesiredPosition[2];
+    Vec3<double> mDesiredPosition;
 
 };
 #endif //RAISIM_LOWPDCONTROL_HPP

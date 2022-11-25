@@ -8,12 +8,13 @@
 
 #include <cmath>
 #include <canine_util/EigenTypes.hpp>
+#include <canine_util/RobotDescription.hpp>
 
 class SwingLeg{
 public:
     SwingLeg(double duration);
     void UpdateTrajectory(double currentTime);
-    void GetPositionTrajectory(double currentTime, double* desiredPosition);
+    void GetPositionTrajectory(double currentTime, Vec3<double>& desiredPosition);
     void SetControlPoints(const Vec3<double>& footPosition, const int& leg);
 
 private:

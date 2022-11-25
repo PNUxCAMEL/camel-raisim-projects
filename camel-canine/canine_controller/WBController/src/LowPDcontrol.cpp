@@ -57,31 +57,74 @@ void LowPDcontrol::updateState()
     }
 }
 
-void LowPDcontrol::getJointPos(const double& x, const double& z, Vec3<double>& pos)
+void LowPDcontrol::getJointPos(Vec3<double>& resultPos, Vec3<double> desiredPos, const int& leg, const bool stand)
 {
-    double d = sqrt(pow(x,2)+pow(z,2));
-    double phi = acos(abs(x)/ d);
+    double alpha;
+    double beta;
+
+    if (stand)
+    {
+        desiredPos[0] = 0.0;
+        desiredPos[1] = 0.0;
+    }
+
+    if(leg == 0 || leg == 2) //Right Leg
+    {
+        desiredPos[1] -= LEN_HIP;
+        alpha = acos(abs(desiredPos[1])/sqrt(pow(desiredPos[1],2)+pow(desiredPos[2],2)));
+        beta = acos(LEN_HIP/sqrt(pow(desiredPos[1],2)+pow(desiredPos[2],2)));
+        if (desiredPos[1] >= 0)
+        {
+            resultPos[0] = 3.14-beta-alpha;
+        }
+        else
+        {
+            resultPos[0] = alpha-beta;
+        }
+    }
+    else  //Left Leg
+    {
+        desiredPos[1] += LEN_HIP;
+        alpha = acos(abs(desiredPos[1])/sqrt(pow(desiredPos[1],2)+pow(desiredPos[2],2)));
+        beta = acos(LEN_HIP/sqrt(pow(desiredPos[1],2)+pow(desiredPos[2],2)));
+        if (desiredPos[1] >= 0)
+        {
+            resultPos[0] = beta - alpha;
+        }
+        else
+        {
+            resultPos[0] = alpha+beta-3.14;
+        }
+    }
+
+    double zdot = -sqrt(pow(desiredPos[1],2)+pow(desiredPos[2],2)-pow(0.107496,2));
+    double d = sqrt(pow(desiredPos[0],2)+pow(zdot,2));
+    double phi = acos(abs(desiredPos[0])/ d);
     double psi = acos(pow(d,2)/(2*LEN_THI*d));
 
-    if (x < 0)
-        pos[1] = 1.57 - phi + psi;
-    else if(x == 0)
-        pos[1] = psi;
+    if (desiredPos[0] < 0)
+    {
+        resultPos[1] = 1.57 - phi + psi;
+    }
+    else if(desiredPos[0] == 0)
+    {
+        resultPos[1] = psi;
+    }
     else
-        pos[1] = phi + psi - 1.57;
-    pos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
+    {
+        resultPos[1] = phi + psi - 1.57;
+    }
+    resultPos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
 }
 
 void LowPDcontrol::setLegControl()
 {
-    getJointPos(0.0, sharedMemory->baseDesiredPosition[2], mStandJointPos);
-
     for (int leg = 0; leg < 4; leg++)
     {
         if (sharedMemory->gaitTable[leg] == 0)
         {
             SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
-            getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
+            getJointPos(mSwingJointPos, mDesiredPosition, leg, false);
             for(int mt=0; mt<3; mt++)
             {
                 mLegTorque[leg][mt] = mSwingPgain[mt] * (mSwingJointPos[mt] - mMotorPosition[leg][mt])
@@ -90,15 +133,16 @@ void LowPDcontrol::setLegControl()
         }
         else
         {
+            getJointPos(mStandJointPos, mFootPosition[leg], leg, true);
             for(int mt=0; mt<3; mt++)
             {
                 mLegTorque[leg][mt] = mStandPgain[mt] * (mStandJointPos[mt] - mMotorPosition[leg][mt])
                                    + mStandDgain[mt] * (mStandJointVel[mt] - mMotorVelocity[leg][mt]);
             }
-            if (sharedMemory->gaitTable[leg+4] == 0)
-            {
-                SwingLegTrajectory.SetControlPoints(mFootPosition[leg], leg);
-            }
+//            if (sharedMemory->gaitTable[leg+4] == 0)
+//            {
+//                SwingLegTrajectory.SetControlPoints(mFootPosition[leg], leg);
+//            }
         }
     }
 

@@ -63,8 +63,8 @@ target_link_libraries(<PROJECT_NAME> camel-tools-trajectory)
 1. Build 'MSCL' to use Micro strain lord imu
 ```text
 cd Downloads/
-wget https://github.com/LORD-MicroStrain/MSCL/releases/latest/download/c++-mscl_64.3.0_amd64.deb
-sudo dpkg -i c++-mscl_64.3.0_amd64.deb    
+wget https://github.com/LORD-MicroStrain/MSCL/releases/latest/download/c++-mscl_65.0.0_amd64.deb
+sudo dpkg -i c++-mscl_65.0.0_amd64.deb    
 sudo apt install -f                 
 
 # Edit udev rule

@@ -53,7 +53,7 @@ void JointPDController::updateState()
     {
         for (int mt=0; mt<3; mt++)
         {
-            mFootPosition[leg][mt] = sharedMemory->footPosition[leg][mt];
+            mFootPosition[leg][mt] = sharedMemory->bodyFootPosition[leg][mt];
             mMotorPosition[leg][mt] = sharedMemory->motorPosition[leg*3+mt];
             mMotorVelocity[leg][mt] = sharedMemory->motorVelocity[leg*3+mt];
         }

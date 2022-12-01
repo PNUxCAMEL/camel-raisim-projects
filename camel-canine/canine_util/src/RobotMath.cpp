@@ -5,7 +5,29 @@
 #include <canine_util/RobotMath.hpp>
 #include <iostream>
 
-const Mat4<double> BaseRotationMat(const Vec4<double>& quat)
+#define PI 3.14159265359
+
+Mat3<double> GetBaseRotationMat(const Vec4<double>& quat)
+{
+    Mat3<double> BaseRot;
+    const double w = quat[0];
+    const double x = quat[1];
+    const double y = quat[2];
+    const double z = quat[3];
+
+    BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y,
+                                     2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x,
+                                     2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2);
+    return BaseRot;
+}
+Mat3<double> GetBaseRotationMatInverse(const Vec4<double>& quat)
+{
+    Mat3<double> BaseRot;
+    BaseRot = GetBaseRotationMat(quat).inverse();
+    return BaseRot;
+}
+
+Mat4<double> GetGlobal2BodyTransMat(const Vec4<double>& quat, const Vec3<double>& pos)
 {
     Mat4<double> BaseRot;
     const double w = quat[0];
@@ -13,14 +35,21 @@ const Mat4<double> BaseRotationMat(const Vec4<double>& quat)
     const double y = quat[2];
     const double z = quat[3];
 
-    BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y, 0,
-                                     2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x, 0,
-                                     2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2), 0,
+    BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y, pos[0],
+                                     2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x, pos[1],
+                                     2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2), pos[2],
                                                0,                                 0,                                 0, 1;
     return BaseRot;
 }
 
-void TransMatBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const Vec4<double>& quat, const double& hip,const double& thi,const double& cal)
+Mat4<double> GetBody2GlobalTransMat(const Vec4<double>& quat, const Vec3<double>& pos)
+{
+    Mat4<double> BaseRot;
+    BaseRot = GetGlobal2BodyTransMat(quat, pos).inverse();
+    return BaseRot;
+}
+
+void TransMatBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const double& hip,const double& thi,const double& cal)
 {
     Mat4<double> Bas2Hip;
     Mat4<double> Hip2Thi;
@@ -116,7 +145,7 @@ void TransMatBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const Vec4<d
             break;
         }
     }
-    *Base2Foot = BaseRotationMat(quat)*Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
+    *Base2Foot = Bas2Hip*Hip2Thi*Thi2Cal*Cal2Foo;
 }
 
 template <class T>
@@ -166,12 +195,12 @@ void GetJacobian(Eigen::Matrix<double,3,3>& J, const Eigen::Matrix<double,3,1>& 
             -LEN_CAL*c1*s32;
 }
 
-Eigen::Matrix<double,3,3> GetSkew(Vec3<double> r)
+Mat3<double> GetSkew(Vec3<double> r)
 {
     Eigen::Matrix3d cm;
-    cm << 0.f, -r(2), r(1),
-            r(2), 0.f, -r(0),
-            -r(1), r(0), 0.f;
+    cm << 0.0, -r(2), r(1),
+            r(2), 0.0, -r(0),
+            -r(1), r(0), 0.0;
     return cm;
 }
 
@@ -184,3 +213,57 @@ int8_t NearOne(float a)
 {
     return NearZero(a-1);
 }
+
+void GetLegInvKinematics(Vec3<double>& jointPos, Vec3<double> footPos, const int& leg)
+{
+    double alpha;
+    double beta;
+
+    if(leg == 0 || leg == 2) //Right Leg
+    {
+        alpha = acos(abs(footPos[1])/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        beta = acos(LEN_HIP/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        if (footPos[1] >= 0)
+        {
+            jointPos[0] = PI-beta-alpha;
+        }
+        else
+        {
+            jointPos[0] = alpha-beta;
+        }
+    }
+    else  //Left Leg
+    {
+        alpha = acos(abs(footPos[1])/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        beta = acos(LEN_HIP/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        if (footPos[1] >= 0)
+        {
+            jointPos[0] = beta - alpha;
+        }
+        else
+        {
+            jointPos[0] = alpha+beta-PI;
+        }
+    }
+
+    double zdot = -sqrt(pow(footPos[1],2)+pow(footPos[2],2)-pow(0.107496,2));
+    double d = sqrt(pow(footPos[0],2)+pow(zdot,2));
+    double phi = acos(abs(footPos[0])/ d);
+    double psi = acos(pow(d,2)/(2*LEN_THI*d));
+
+    if (footPos[0] < 0)
+    {
+        jointPos[1] = PI/2 - phi + psi;
+    }
+    else if(footPos[0] == 0)
+    {
+        jointPos[1] = psi;
+    }
+    else
+    {
+        jointPos[1] = phi + psi - PI/2;
+    }
+    jointPos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
+}
+
+

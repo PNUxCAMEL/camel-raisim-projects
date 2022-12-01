@@ -18,7 +18,6 @@
 #define ESTIMATOR_dT        0.001
 #define MAX_COMMAND_DATA    10
 #define MAX_CUSTOM_DATA     20
-#define PI                  3.141592
 #define R2D                 57.2957802
 #define D2R                 0.0174533
 #define MPC_HORIZON         5
@@ -50,16 +49,21 @@ typedef struct _SHM_
     int motorErrorStatus[MOTOR_NUM];
     int motorTemp[MOTOR_NUM];
     double localTime;
-    Vec3<double> basePosition; ///todo
-    Vec3<double> baseVelocity; ///todo
-    Vec3<double> baseDesiredPosition; ///todo
-    Vec3<double> baseDesiredVelocity; ///todo
+    Vec3<double> basePosition;
+    Vec3<double> baseVelocity;
+    Vec3<double> baseDesiredPosition;
+    Vec3<double> baseDesiredVelocity;
     Vec3<double> mpcTorque[4];
+    Vec3<double> bodyFootPosition[4];
+    Vec3<double> globalFootPosition[4];
+    Vec4<double> baseQuartPosition;
+    Vec3<double> desiredLinearVelocity;
+    Vec3<double> desiredAngularVelocity;
+
     double baseAcceleration[3];
     double baseEulerPosition[3];
-    double baseQuartPosition[4];
     double baseEulerVelocity[3];
-    double footPosition[4][3];  ///todo
+
     double motorPosition[MOTOR_NUM];
     double motorVelocity[MOTOR_NUM];
     double motorTorque[MOTOR_NUM];

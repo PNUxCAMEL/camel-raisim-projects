@@ -29,7 +29,8 @@ private:
 private:
     const int mTorqueLimit;
 
-    bool mFirstRunTrot;
+    bool bIsFirstRunTrot;
+    bool bIsFirstRunSwing[4];
     SwingLeg SwingLegTrajectory;
     Vec3<double> mLegTorque[4];
     Vec3<double> mSwingJointPos;
@@ -43,14 +44,22 @@ private:
 
     Vec3<double> mTorque[4];
 
+    Vec3<double> mBasePosition;
+    Vec3<double> mBaseVelocity;
     Vec3<double> mMotorPosition[4];
     Vec3<double> mMotorVelocity[4];
-    Vec3<double> mFootPosition[4];
+    Vec3<double> mBodyFootPosition[4];
+    Vec3<double> mGlobalFootPosition[4];
+    Vec3<double> mDesiredFootPosition[4];
+    Vec3<double> mSwingFootPosition;
+    Vec4<double> mBaseQuaternion;
+    Vec3<double> mShoulderPosition[4];
+    Vec3<double> mHipPosition[4];
 
     Vec13<double> mInitState;
     Vec13<double> mDesiredState;
 
-    Vec3<double> mDesiredPosition;
+    Mat3<double> Body2GlobalTransMat;
 
 };
 #endif //RAISIM_LOWPDCONTROL_HPP

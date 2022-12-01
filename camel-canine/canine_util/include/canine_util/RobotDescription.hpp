@@ -5,6 +5,8 @@
 #ifndef RAISIM_ROBOTDESCRIPTION_H
 #define RAISIM_ROBOTDESCRIPTION_H
 
+#include "EigenTypes.hpp"
+
 constexpr int MOTOR_NUM = 12;
 constexpr int MOTOR_NUM_PER_CAN = 6;
 
@@ -16,6 +18,8 @@ constexpr double LEN_THI = 0.23;
 constexpr double LEN_CAL = 0.23;
 constexpr double HIP_X_POS = 0.2455;
 constexpr double HIP_Y_POS = 0.055;
+constexpr double SHOULD_X_POS = HIP_X_POS;
+constexpr double SHOULD_Y_POS = HIP_Y_POS+0.030496+0.077;
 
 //TODO: change data structure of motor ID to keymap
 constexpr int MOTOR_RFHR_ID = 0x145;

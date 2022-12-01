@@ -14,8 +14,8 @@ class SwingLeg{
 public:
     SwingLeg(double duration);
     void UpdateTrajectory(double currentTime);
-    void GetPositionTrajectory(double currentTime, Vec3<double>& desiredPosition);
-    void SetControlPoints(const Vec3<double>& footPosition, const int& leg);
+    void GetPositionTrajectory(double currentTime, Vec3<double>& desiredPosition, const int& leg);
+    void SetControlPoints(const Vec3<double>& initPos, const Vec3<double>& desiredPos, const int& leg);
 
 private:
     double factorial(double value);
@@ -27,9 +27,9 @@ private:
     double sumY;
     double sumZ;
 
-    double px[PNUM];
-    double py[PNUM];
-    double pz[PNUM];
+    double px[4][PNUM];
+    double py[4][PNUM];
+    double pz[4][PNUM];
 
 };
 

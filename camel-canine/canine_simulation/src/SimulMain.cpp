@@ -21,7 +21,6 @@ SimulCommand userCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
-//SimulKalmanFilter StateEstimator(robot);
 MPCController MPControl(3);
 
 void* NRTCommandThread(void* arg)
@@ -180,6 +179,9 @@ void clearSharedMemory()
     sharedMemory->baseQuartPosition[3] = 0.0;
 
     sharedMemory->gaitIteration = 0;
+
+    sharedMemory->desiredLinearVelocity.setZero();
+    sharedMemory->desiredAngularVelocity.setZero();
 }
 
 void StartSimulation()

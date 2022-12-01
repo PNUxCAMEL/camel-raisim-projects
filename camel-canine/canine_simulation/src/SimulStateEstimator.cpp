@@ -58,30 +58,30 @@ void SimulStateEstimator::getRobotAngulerState()
 
 void SimulStateEstimator::getRobotFootPosition()
 {
-    TransMatBody2Foot(&mTransMat[0], R_FRON, mQuaternion,
+    TransMatBody2Foot(&mTransMat[0], R_FRON,
                       sharedMemory->motorPosition[0],
                       sharedMemory->motorPosition[1],
                       sharedMemory->motorPosition[2]);
-    TransMatBody2Foot(&mTransMat[1], L_FRON, mQuaternion,
+    TransMatBody2Foot(&mTransMat[1], L_FRON,
                       sharedMemory->motorPosition[3],
                       sharedMemory->motorPosition[4],
                       sharedMemory->motorPosition[5]);
-    TransMatBody2Foot(&mTransMat[2], R_BACK, mQuaternion,
+    TransMatBody2Foot(&mTransMat[2], R_BACK,
                       sharedMemory->motorPosition[6],
                       sharedMemory->motorPosition[7],
                       sharedMemory->motorPosition[8]);
-    TransMatBody2Foot(&mTransMat[3], L_BACK, mQuaternion,
+    TransMatBody2Foot(&mTransMat[3], L_BACK,
                       sharedMemory->motorPosition[9],
                       sharedMemory->motorPosition[10],
                       sharedMemory->motorPosition[11]);
 
+    Mat3<double> Rot = GetBaseRotationMatInverse(sharedMemory->baseQuartPosition);
     for (int leg=0; leg<4; leg++)
     {
-        for (int idx=0; idx<3; idx++)
-        {
-            sharedMemory->footPosition[leg][idx] = mTransMat[leg](idx,3);
-        }
+        sharedMemory->bodyFootPosition[leg] = mTransMat[leg].block(0,3,3,1);
+        sharedMemory->globalFootPosition[leg] = Rot*sharedMemory->bodyFootPosition[leg] + sharedMemory->basePosition;
     }
+
 }
 
 void SimulStateEstimator::getRobotLinearState()

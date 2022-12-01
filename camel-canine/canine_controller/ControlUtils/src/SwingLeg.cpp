@@ -2,13 +2,27 @@
 // Created by hs on 22. 10. 24.
 //
 #include <ControlUtils/SwingLeg.hpp>
+#include <iostream>
 
 SwingLeg::SwingLeg(double duration)
     : mTimeDuration(duration)
-    , px{0, 0, 0, 0}
-    , py{0, 0, 0, 0}
-    , pz{-0.35, -0.25, -0.25, -0.35}
 {
+    for (int leg=0; leg<4; leg++)
+    {
+        for (int pt=0; pt<PNUM; pt++)
+        {
+            px[leg][pt] = 0;
+            py[leg][pt] = 0;
+            if (pt==1 || pt==2)
+            {
+                pz[leg][pt] = 0.1;
+            }
+            else
+            {
+                pz[leg][pt] = 0;
+            }
+        }
+    }
 }
 
 void SwingLeg::UpdateTrajectory(double currentTime)
@@ -26,42 +40,26 @@ double SwingLeg::factorial(double value)
     return result;
 }
 
-void SwingLeg::SetControlPoints(const Vec3<double>& footPosition, const int& leg)
+void SwingLeg::SetControlPoints(const Vec3<double>& initPos, const Vec3<double>& desiredPos, const int& leg)
 {
-    px[0] = footPosition[0];
-    py[0] = footPosition[1];
-    pz[0] = footPosition[2];
+    px[leg][0] = initPos[0];
+    py[leg][0] = initPos[1];
+    pz[leg][0] = initPos[2];
 
-    switch (leg)
+    px[leg][3] = desiredPos[0];
+    py[leg][3] = desiredPos[1];
+    pz[leg][3] = 0;
+
+    pz[leg][1] = pz[leg][0] + 0.1;
+    pz[leg][2] = pz[leg][0] + 0.1;
+    for (int idx=1; idx<3; idx++)
     {
-        case 0:
-        {
-            px[0] -= HIP_X_POS;
-            py[0] += HIP_Y_POS;
-        }
-        case 1:
-        {
-            px[0] -= HIP_X_POS;
-            py[0] -= HIP_Y_POS;
-        }
-        case 2: {
-
-            px[0] += HIP_X_POS;
-            py[0] += HIP_Y_POS;
-        }
-        case 3:
-        {
-            px[0] += HIP_X_POS;
-            py[0] -= HIP_Y_POS;
-        }
-        default:
-        {
-            break;
-        }
+        px[leg][idx] = px[leg][0]+idx*(px[leg][3]-px[leg][0])/3;
+        py[leg][idx] = py[leg][0]+idx*(py[leg][3]-py[leg][0])/3;
     }
 }
 
-void SwingLeg::GetPositionTrajectory(double currentTime, Vec3<double>& desiredPosition)
+void SwingLeg::GetPositionTrajectory(double currentTime, Vec3<double>& desiredPosition, const int& leg)
 {
     double normalizedTime = (currentTime - mReferenceTime) / mTimeDuration;
     normalizedTime -= floor(normalizedTime);
@@ -74,9 +72,9 @@ void SwingLeg::GetPositionTrajectory(double currentTime, Vec3<double>& desiredPo
     {
         coeff = factorial(PNUM - 1) / (factorial(i) * factorial(PNUM - 1 - i))
                 * pow(normalizedTime, i) * pow((1 - normalizedTime), (PNUM - 1 - i));
-        sumX += coeff * px[i];
-        sumY += coeff * py[i];
-        sumZ += coeff * pz[i];
+        sumX += coeff * px[leg][i];
+        sumY += coeff * py[leg][i];
+        sumZ += coeff * pz[leg][i];
     }
 
     desiredPosition[0] = sumX;

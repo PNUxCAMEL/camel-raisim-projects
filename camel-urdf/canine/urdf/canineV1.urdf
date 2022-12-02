@@ -43,7 +43,7 @@
   </joint>
   <link name="trunk">
     <inertial>
-      <origin xyz="0.146 0.0 0.0555" rpy="0 0 -1.57079632679" />
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
       <mass value="14.2" />
       <inertia ixx="0.085609"
                ixy="0"
@@ -78,6 +78,7 @@
       </geometry>
     </collision>
   </link>
+
 
   <!--
     Right Front

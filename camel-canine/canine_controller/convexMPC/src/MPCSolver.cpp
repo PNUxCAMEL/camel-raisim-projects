@@ -13,7 +13,7 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(HIGH_CONTROL_dT)
     , mAlpha(1e-6)
     , mFmax(200)
-    , mMu(0.7)
+    , mMu(0.5)
     , mHorizon(horizon)
 {
 //    mWeightMat << 10, 10, 10, 5, 5, 30, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.0;

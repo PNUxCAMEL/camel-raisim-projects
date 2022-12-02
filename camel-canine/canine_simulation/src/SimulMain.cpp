@@ -21,7 +21,7 @@ SimulCommand userCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
-MPCController MPControl(3);
+MPCController MPControl(MPC_HORIZON);
 
 void* NRTCommandThread(void* arg)
 {

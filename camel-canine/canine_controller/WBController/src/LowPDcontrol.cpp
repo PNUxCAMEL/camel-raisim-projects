@@ -124,6 +124,37 @@ void LowPDcontrol::setLegControl()
 void LowPDcontrol::getJointPos(Vec3<double>& jointPos, Vec3<double> footPos, const int& leg, const bool stand)
 {
     footPos = GetBaseRotationMat(mBaseQuaternion)*(footPos-mBasePosition)-mHipPosition[leg];
+    if(stand)
+    {
+        footPos[0] = 0;
+        switch (leg) {
+            case 0:
+            {
+                footPos[1] = -0.107496;
+                break;
+            }
+            case 1:
+            {
+                footPos[1] = 0.107496;
+                break;
+            }
+            case 2:
+            {
+                footPos[1] = -0.107496;
+                break;
+            }
+            case 3:
+            {
+                footPos[1] = 0.107496;
+                break;
+            }
+            default:
+            {
+                break;
+            }
+        }
+        footPos[2] = 0.35;
+    }
     GetLegInvKinematics(jointPos, footPos, leg);
 }
 

@@ -120,7 +120,7 @@ void *RTControllerThreadLow(void *arg)
 
 void* RTStateEstimator(void* arg)
 {
-    std::cout << "entered #StateEsitimator_RT_thread" << std::endl;
+    std::cout << "entered #rt_State_Estimator_thread" << std::endl;
     struct timespec TIME_NEXT;
     struct timespec TIME_NOW;
     const long PERIOD_US = long(ESTIMATOR_dT * 1e6);
@@ -129,10 +129,7 @@ void* RTStateEstimator(void* arg)
         clock_gettime(CLOCK_REALTIME, &TIME_NOW);
         timespec_add_us(&TIME_NEXT, PERIOD_US);
 
-        if (sharedMemory->visualState != STATE_VISUAL_STOP)
-        {
-            StateEstimator.StateEstimatorFunction();
-        }
+        StateEstimator.StateEstimatorFunction();
 
         clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &TIME_NEXT, NULL);
         if (timespec_cmp(&TIME_NOW, &TIME_NEXT) > 0)

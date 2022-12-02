@@ -4,6 +4,9 @@
 
 #include "convexMPC/MPCSolver.hpp"
 
+char var_elim[2000];
+char con_elim[2000];
+
 extern pSHM sharedMemory;
 
 MPCSolver::MPCSolver(const uint8_t& horizon)

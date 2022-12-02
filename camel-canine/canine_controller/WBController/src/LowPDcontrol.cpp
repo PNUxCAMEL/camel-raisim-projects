@@ -153,7 +153,7 @@ void LowPDcontrol::getJointPos(Vec3<double>& jointPos, Vec3<double> footPos, con
                 break;
             }
         }
-        footPos[2] = 0.35;
+        footPos[2] = sharedMemory->baseDesiredPosition[2];
     }
     GetLegInvKinematics(jointPos, footPos, leg);
 }

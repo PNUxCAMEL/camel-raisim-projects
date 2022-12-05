@@ -28,7 +28,7 @@ raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_R
 RobotVisualization userVisual(&world, robot, &server);
 StateEstimator robotstate;
 ControllerState userController;
-MPCController MPControl(3);
+MPCController MPControl(MPC_HORIZON);
 
 const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);
@@ -68,10 +68,10 @@ void* NRTT265Thread(void* arg) {
     {
         /// 여기서 계속 돌다가 t265 에서 입력 스트림이 들어오면 출력 시작.
         std::this_thread::sleep_for(std::chrono::milliseconds(2));
-        sharedMemory->baseQuartPosition[0] = TrackingCam.GetT265quat().w;
-        sharedMemory->baseQuartPosition[1] = -TrackingCam.GetT265quat().x;
-        sharedMemory->baseQuartPosition[2] = TrackingCam.GetT265quat().z;
-        sharedMemory->baseQuartPosition[3] = TrackingCam.GetT265quat().y;
+//        sharedMemory->baseQuartPosition[0] = TrackingCam.GetT265quat().w;
+//        sharedMemory->baseQuartPosition[1] = -TrackingCam.GetT265quat().x;
+//        sharedMemory->baseQuartPosition[2] = TrackingCam.GetT265quat().z;
+//        sharedMemory->baseQuartPosition[3] = TrackingCam.GetT265quat().y;
 
         sharedMemory->baseVelocity[0] = -TrackingCam.GetT265vel().x;
         sharedMemory->baseVelocity[1] = TrackingCam.GetT265vel().z;
@@ -134,10 +134,10 @@ void* NRTImuThread(void* arg)
         double cr = cos(sharedMemory->baseEulerPosition[0] * 0.5);
         double sr = sin(sharedMemory->baseEulerPosition[0] * 0.5);
 
-//        sharedMemory->baseQuartPosition[0] = cr * cp * cy + sr * sp * sy;
-//        sharedMemory->baseQuartPosition[1] = sr * cp * cy - cr * sp * sy;
-//        sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
-//        sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
+        sharedMemory->baseQuartPosition[0] = cr * cp * cy + sr * sp * sy;
+        sharedMemory->baseQuartPosition[1] = sr * cp * cy - cr * sp * sy;
+        sharedMemory->baseQuartPosition[2] = cr * sp * cy + sr * cp * sy;
+        sharedMemory->baseQuartPosition[3] = cr * cp * sy - sr * sp * cy;
 
         usleep(IMU_dT * 1e6);
     }

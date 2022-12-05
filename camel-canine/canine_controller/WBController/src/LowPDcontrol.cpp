@@ -84,7 +84,7 @@ void LowPDcontrol::setLegControl()
             if (bIsFirstRunSwing[leg] == true)
             {
                 mDesiredFootPosition[leg] = mBasePosition + GetBaseRotationMatInverse(mBaseQuaternion)*mShoulderPosition[leg];
-                mDesiredFootPosition[leg] += mBaseVelocity*GAIT_PERIOD/4 + 0.1*(mBaseVelocity-sharedMemory->desiredLinearVelocity);
+                mDesiredFootPosition[leg] += mBaseVelocity*GAIT_PERIOD/4 + 0.03*(mBaseVelocity-sharedMemory->desiredLinearVelocity);
                 mDesiredFootPosition[leg] += (std::sqrt(-mBasePosition[2]/GRAVITY)/2)*GetSkew(mBaseVelocity)*sharedMemory->desiredAngularVelocity;
                 SwingLegTrajectory.SetControlPoints(mGlobalFootPosition[leg], mDesiredFootPosition[leg], leg);
                 bIsFirstRunSwing[leg] = false;
@@ -130,22 +130,22 @@ void LowPDcontrol::getJointPos(Vec3<double>& jointPos, Vec3<double> footPos, con
         switch (leg) {
             case 0:
             {
-                footPos[1] = -0.107496;
+                footPos[1] = -0.1075;
                 break;
             }
             case 1:
             {
-                footPos[1] = 0.107496;
+                footPos[1] = 0.1075;
                 break;
             }
             case 2:
             {
-                footPos[1] = -0.107496;
+                footPos[1] = -0.1075;
                 break;
             }
             case 3:
             {
-                footPos[1] = 0.107496;
+                footPos[1] = 0.1075;
                 break;
             }
             default:

@@ -28,7 +28,7 @@ raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_R
 RobotVisualization userVisual(&world, robot, &server);
 StateEstimator robotstate;
 ControllerState userController;
-MPCController MPControl(3);
+MPCController MPControl(MPC_HORIZON);
 
 const std::string mComPort = "/dev/ttyACM0";
 const mscl::Connection mConnection = mscl::Connection::Serial(mComPort);

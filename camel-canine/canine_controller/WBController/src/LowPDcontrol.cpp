@@ -98,9 +98,6 @@ void LowPDcontrol::setLegControl()
         mTorque[idx][0] = mLegTorque[idx][0] + sharedMemory->mpcTorque[idx][0];
         mTorque[idx][1] = mLegTorque[idx][1] + sharedMemory->mpcTorque[idx][1];
         mTorque[idx][2] = mLegTorque[idx][2] + sharedMemory->mpcTorque[idx][2];
-//        mTorque[idx][0] = mLegTorque[idx][0];
-//        mTorque[idx][1] = mLegTorque[idx][1];
-//        mTorque[idx][2] = mLegTorque[idx][2];
     }
 }
 

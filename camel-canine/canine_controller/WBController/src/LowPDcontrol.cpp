@@ -103,7 +103,6 @@ void LowPDcontrol::setLegControl()
 
 void LowPDcontrol::setControlInput()
 {
-//    std::cout << "=========Torque========" << std::endl;
     for (int leg = 0; leg < 4; leg++)
     {
         for (int motor = 0; motor < 3; motor++)
@@ -116,10 +115,7 @@ void LowPDcontrol::setControlInput()
             {
                 mTorque[leg][motor] = -mTorqueLimit;
             }
-//            std::cout << mTorque[leg][motor] << "\t";
             sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
         }
-//        std::cout << std::endl;
     }
-//    std::cout << std::endl;
 }

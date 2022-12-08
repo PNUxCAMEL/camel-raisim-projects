@@ -8,11 +8,15 @@
 extern pSHM sharedMemory;
 
 LowPDcontrol::LowPDcontrol()
-    : mTorqueLimit(30)
+    : mTorqueLimit(35)
     , SwingLegTrajectory(GAIT_PERIOD/2)
     , mFirstRunTrot(true)
-    , mSwingPgain{50,50,50}
-    , mSwingDgain{2,2,2}
+//    , mSwingPgain{50,50,50}
+//    , mSwingDgain{2,2,2}
+//    , mStandPgain{5,5,5}
+//    , mStandDgain{1,1,1}
+    , mSwingPgain{30,30,30}
+    , mSwingDgain{1,1,1}
     , mStandPgain{5,5,5}
     , mStandDgain{1,1,1}
 {

@@ -27,6 +27,7 @@
 
 void StartSimulation();
 void* NRTCommandThread(void* arg);
+void* NRTXboxCommandThread(void* arg);
 void *RTControllerThreadHigh(void *arg);
 void *RTControllerThreadLow(void *arg);
 void* RTStateEstimator(void* arg);

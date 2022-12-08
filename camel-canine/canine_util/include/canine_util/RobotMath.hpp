@@ -6,6 +6,7 @@
 #define RAISIM_ROBOTMATH_HPP
 
 #include <math.h>
+#include <iostream>
 
 #include "EigenTypes.hpp"
 #include "RobotDescription.hpp"
@@ -17,5 +18,6 @@ void GetJacobian(Eigen::Matrix<double,3,3>& J, const Eigen::Matrix<double,3,1>& 
 Eigen::Matrix<double,3,3> GetSkew(Vec3<double> r);
 int8_t NearZero(float a);
 int8_t NearOne(float a);
+void GetLegInvKinematics(Vec3<double>& jointPos, Vec3<double> footPos, const int& leg);
 
 #endif //RAISIM_ROBOTMATH_HPP

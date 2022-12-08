@@ -184,3 +184,56 @@ int8_t NearOne(float a)
 {
     return NearZero(a-1);
 }
+
+void GetLegInvKinematics(Vec3<double>& jointPos, Vec3<double> footPos, const int& leg)
+{
+    double pi = 3.14159265359;
+    double alpha;
+    double beta;
+
+    if(leg == 0 || leg == 2) //Right Leg
+    {
+        alpha = acos(abs(footPos[1])/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        beta = acos(LEN_HIP/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        if (footPos[1] >= 0)
+        {
+            jointPos[0] = pi-beta-alpha;
+        }
+        else
+        {
+            jointPos[0] = alpha-beta;
+        }
+    }
+    else  //Left Leg
+    {
+        alpha = acos(abs(footPos[1])/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        beta = acos(LEN_HIP/sqrt(pow(footPos[1],2)+pow(footPos[2],2)));
+        if (footPos[1] >= 0)
+        {
+            jointPos[0] = beta - alpha;
+        }
+        else
+        {
+            jointPos[0] = alpha+beta-pi;
+        }
+    }
+
+    double zdot = -sqrt(pow(footPos[1],2)+pow(footPos[2],2)-pow(0.107496,2));
+    double d = sqrt(pow(footPos[0],2)+pow(zdot,2));
+    double phi = acos(abs(footPos[0])/ d);
+    double psi = acos(pow(d,2)/(2*LEN_THI*d));
+
+    if (footPos[0] < 0)
+    {
+        jointPos[1] = pi/2 - phi + psi;
+    }
+    else if(footPos[0] == 0)
+    {
+        jointPos[1] = psi;
+    }
+    else
+    {
+        jointPos[1] = phi + psi - pi/2;
+    }
+    jointPos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
+}

@@ -42,13 +42,14 @@ private:
     const int mFmax;
     char var_elim[2000];
     char con_elim[2000];
+    bool bIsTrotFirstRun;
+    double mTrotInitPosition[2];
 
     Vec13<double> mWeightMat;
     const uint8_t mHorizon;
 
     Eigen::Matrix<double,3,3> mBodyInertia;
     Eigen::Matrix<double,3,3> mBodyInertiaInverse;
-
 
     Eigen::Matrix<double,13,13> Ac;
     Eigen::Matrix<double,13,12> Bc;

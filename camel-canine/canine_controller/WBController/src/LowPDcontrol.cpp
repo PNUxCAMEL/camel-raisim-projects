@@ -73,14 +73,15 @@ void LowPDcontrol::getJointPos(const double& x, const double& z, Vec3<double>& p
 
 void LowPDcontrol::setLegControl()
 {
-    SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition);
-    getJointPos(mDesiredPosition[0], mDesiredPosition[1], mSwingJointPos);
     getJointPos(0.0, sharedMemory->baseDesiredPosition[2], mStandJointPos);
 
     for (int i = 0; i < 4; i++)
     {
         if (sharedMemory->gaitTable[i] == 0)
         {
+            SwingLegTrajectory.GetPositionTrajectory(sharedMemory->localTime, mDesiredPosition, i);
+            GetLegInvKinematics(mSwingJointPos, mDesiredPosition, i);
+
             for(int j=0; j<3; j++)
             {
                 mLegTorque[i][j] = mSwingPgain[j] * (mSwingJointPos[j] - mMotorPosition[i][j])

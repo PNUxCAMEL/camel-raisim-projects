@@ -12,9 +12,10 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
     , mFmax(200)
     , mMu(0.6)
     , mHorizon(horizon)
+    , bIsTrotFirstRun(true)
 {
 //    mWeightMat << 5, 5, 5, 5, 5, 5, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.f;
-    mWeightMat << 20, 20, 20, 50, 50, 50, 0.01, 0.01, 1, 1, 1, 1, 0.0;
+    mWeightMat << 20, 20, 20, 50, 50, 100, 0.01, 0.01, 1, 1, 1, 1, 0.0;
     initMatrix();
     resizeMatrix();
 }
@@ -39,18 +40,29 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3])
 {
     for(int horizon = 0; horizon < mHorizon ; horizon++)
     {
-        xd[horizon*13+3] = Trajectory[0].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+4] = Trajectory[1].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+
+
+        if (sharedMemory->gaitState != STAND)
+        {
+            xd[horizon*13+9] = sharedMemory->baseDesiredVelocity[0];
+            xd[horizon*13+10] = sharedMemory->baseDesiredVelocity[1];
+
+            xd[horizon*13+3] += sharedMemory->baseDesiredVelocity[0]*mDt*horizon;
+            xd[horizon*13+4] += sharedMemory->baseDesiredVelocity[1]*mDt*horizon;
+            xd[horizon*13+5] = 0.32;
+        }
+        else
+        {
+            xd[horizon*13+3] = 0;
+            xd[horizon*13+4] = 0;
+            xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+        }
     }
-
-    sharedMemory->baseDesiredVelocity[0] = xd[0];
-    sharedMemory->baseDesiredVelocity[1] = xd[1];
-    sharedMemory->baseDesiredVelocity[2] = xd[2];
-
     sharedMemory->baseDesiredPosition[0] = xd[3];
     sharedMemory->baseDesiredPosition[1] = xd[4];
     sharedMemory->baseDesiredPosition[2] = xd[5];
+
+    sharedMemory->baseDesiredVelocity[2] = xd[11];
 }
 
 void MPCSolver::GetMetrices(const Vec13<double>&  x0, const double mFoot[4][3])

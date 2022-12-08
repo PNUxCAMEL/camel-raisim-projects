@@ -9,13 +9,13 @@ extern pSHM sharedMemory;
 MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(HIGH_CONTROL_dT)
     , mAlpha(1e-6)
-    , mFmax(200)
-    , mMu(0.6)
+    , mFmax(100)
+    , mMu(0.4)
     , mHorizon(horizon)
     , bIsTrotFirstRun(true)
 {
-//    mWeightMat << 5, 5, 5, 5, 5, 5, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.f;
-    mWeightMat << 20, 20, 20, 50, 50, 100, 0.01, 0.01, 1, 1, 1, 1, 0.0;
+    mWeightMat << 5, 5, 5, 2, 2, 10, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.f;
+//    mWeightMat << 20, 20, 20, 50, 50, 50, 0.01, 0.01, 1, 1, 1, 1, 0.0;
     initMatrix();
     resizeMatrix();
 }

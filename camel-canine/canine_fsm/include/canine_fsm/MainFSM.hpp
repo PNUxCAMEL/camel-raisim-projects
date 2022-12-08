@@ -19,6 +19,7 @@
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/StateEstimator.hpp>
+#include <canine_util/RobotMath.hpp>
 #include <canine_raisim//RobotVisualization.hpp>
 #include <convexMPC/MPCController.hpp>
 

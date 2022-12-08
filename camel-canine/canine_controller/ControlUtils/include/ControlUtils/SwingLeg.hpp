@@ -4,7 +4,7 @@
 
 #ifndef RAISIM_SWINGLEG_HPP
 #define RAISIM_SWINGLEG_HPP
-
+#define PNUM 4
 #include <cmath>
 #include <canine_util/EigenTypes.hpp>
 #include <canine_util/RobotDescription.hpp>

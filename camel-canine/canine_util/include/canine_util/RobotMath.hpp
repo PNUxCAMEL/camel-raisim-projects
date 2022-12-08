@@ -13,7 +13,7 @@
 
 const Mat4<double> BaseRotationMat(const Vec4<double>& quat);
 void TransMatBody2Foot(Mat4<double>* Base2Foot, LEG_INDEX legIndex, const Vec4<double>& quat, const double& hip,const double& thi,const double& cal);
-void TransformQuat2Euler(const Vec4<double>& quat, double* euler);
+void TransformQuat2Euler(const double* quat, double* euler);
 void GetJacobian(Eigen::Matrix<double,3,3>& J, const Eigen::Matrix<double,3,1>& pos, int side);
 Eigen::Matrix<double,3,3> GetSkew(Vec3<double> r);
 int8_t NearZero(float a);

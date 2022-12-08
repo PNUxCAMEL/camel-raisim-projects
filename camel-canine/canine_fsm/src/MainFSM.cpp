@@ -73,6 +73,8 @@ void* NRTT265Thread(void* arg) {
         sharedMemory->baseQuartPosition[2] = TrackingCam.GetT265quat().z;
         sharedMemory->baseQuartPosition[3] = TrackingCam.GetT265quat().y;
 
+        TransformQuat2Euler(sharedMemory->baseQuartPosition, sharedMemory->baseEulerPosition);
+
         sharedMemory->baseVelocity[0] = -TrackingCam.GetT265vel().x;
         sharedMemory->baseVelocity[1] = TrackingCam.GetT265vel().z;
         sharedMemory->baseVelocity[2] = TrackingCam.GetT265vel().y;
@@ -119,9 +121,9 @@ void* NRTImuThread(void* arg)
         sharedMemory->baseAcceleration[1] = baseAcceleration[1];
         sharedMemory->baseAcceleration[2] = baseAcceleration[2];
 
-        sharedMemory->baseEulerPosition[0] =   baseAngularPosition[0]-Offset[0];
-        sharedMemory->baseEulerPosition[1] = -(baseAngularPosition[1]-Offset[1]);
-        sharedMemory->baseEulerPosition[2] = -(baseAngularPosition[2]-Offset[2]);
+//        sharedMemory->baseEulerPosition[0] =   baseAngularPosition[0]-Offset[0];
+//        sharedMemory->baseEulerPosition[1] = -(baseAngularPosition[1]-Offset[1]);
+//        sharedMemory->baseEulerPosition[2] = -(baseAngularPosition[2]-Offset[2]);
 
         sharedMemory->baseEulerVelocity[0] = baseAngularVelocity[0];
         sharedMemory->baseEulerVelocity[1] = -baseAngularVelocity[1];

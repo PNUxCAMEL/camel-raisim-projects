@@ -7,7 +7,9 @@
 pthread_t RTThreadControllerHigh;
 pthread_t RTThreadControllerLow;
 pthread_t RTThreadStateEstimator;
+
 pthread_t NRTThreadCommand;
+pthread_t NRTThreadXboxCommand;
 pthread_t NRTThreadVisual;
 pthread_t NRTThreadIMU;
 pthread_t NRTThreadCANForward;
@@ -21,6 +23,7 @@ CANMotorForward canForward("can9");
 CanMotorBackward canBackward("can5");
 
 Command userCommand;
+XboxCommand userXboxCommand;
 
 raisim::World world;
 raisim::RaisimServer server(&world);
@@ -43,6 +46,16 @@ void* NRTCommandThread(void* arg)
     while (true)
     {
         userCommand.commandFunction();
+        usleep(CMD_dT * 1e6);
+    }
+}
+
+void* NRTXboxCommandThread(void* arg)
+{
+    std::cout << "entered #Xbox_Command_NRT_thread" << std::endl;
+    while (true)
+    {
+        userXboxCommand.commandFunction();
         usleep(CMD_dT * 1e6);
     }
 }
@@ -322,9 +335,10 @@ void StartFSM()
     int thread_id_rt3 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread3", 7, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
-    int thread_id_nrt2 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread2", 1, NULL);
-    int thread_id_nrt3 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread3", 2, NULL);
-    int thread_id_nrt4 = generate_nrt_thread(NRTThreadCANForward, NRTCANForward, "nrt_thread4", 3, NULL);
-    int thread_id_nrt5 = generate_nrt_thread(NRTThreadCANBackward, NRTCANBackward, "nrt_thread5", 4, NULL);
-    int thread_id_nrt6 = generate_nrt_thread(NRTThreadT265, NRTT265Thread,"nrt_thread6",5,NULL);
+    int thread_id_nrt2 = generate_nrt_thread(NRTThreadXboxCommand, NRTXboxCommandThread, "nrt_thread2", 1, NULL);
+    int thread_id_nrt3 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread3", 1, NULL);
+    int thread_id_nrt4 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread4", 2, NULL);
+    int thread_id_nrt5 = generate_nrt_thread(NRTThreadCANForward, NRTCANForward, "nrt_thread5", 3, NULL);
+    int thread_id_nrt6 = generate_nrt_thread(NRTThreadCANBackward, NRTCANBackward, "nrt_thread6", 4, NULL);
+    int thread_id_nrt7 = generate_nrt_thread(NRTThreadT265, NRTT265Thread,"nrt_thread7",5,NULL);
 }

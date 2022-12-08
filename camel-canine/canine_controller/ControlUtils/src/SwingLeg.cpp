@@ -13,11 +13,11 @@ SwingLeg::SwingLeg(double duration)
             px[leg][pt] = 0;
             if (leg==0 || leg==2)
             {
-                py[leg][pt] = -0.077;
+                py[leg][pt] = -0.1075;
             }
             else
             {
-                py[leg][pt] = 0.077;
+                py[leg][pt] = 0.1075;
             }
 
             if (pt==1 || pt==2)

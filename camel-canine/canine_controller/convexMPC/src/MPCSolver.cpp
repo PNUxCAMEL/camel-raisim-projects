@@ -10,11 +10,11 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
     : mDt(HIGH_CONTROL_dT)
     , mAlpha(1e-6)
     , mFmax(100)
-    , mMu(0.4)
+    , mMu(0.5)
     , mHorizon(horizon)
     , bIsTrotFirstRun(true)
 {
-    mWeightMat << 5, 5, 5, 2, 2, 10, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.f;
+    mWeightMat << 2, 2, 2, 2, 2, 10, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.f;
 //    mWeightMat << 20, 20, 20, 50, 50, 50, 0.01, 0.01, 1, 1, 1, 1, 0.0;
     initMatrix();
     resizeMatrix();
@@ -49,7 +49,7 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3])
 
             xd[horizon*13+3] += sharedMemory->baseDesiredVelocity[0]*mDt*horizon;
             xd[horizon*13+4] += sharedMemory->baseDesiredVelocity[1]*mDt*horizon;
-            xd[horizon*13+5] = 0.32;
+            xd[horizon*13+5] = 0.3;
         }
         else
         {
@@ -58,9 +58,9 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3])
             xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
         }
     }
-    sharedMemory->baseDesiredPosition[0] = xd[3];
-    sharedMemory->baseDesiredPosition[1] = xd[4];
-    sharedMemory->baseDesiredPosition[2] = xd[5];
+    sharedMemory->baseDesiredPosition[0] = xd[16];
+    sharedMemory->baseDesiredPosition[1] = xd[17];
+    sharedMemory->baseDesiredPosition[2] = xd[18];
 
     sharedMemory->baseDesiredVelocity[2] = xd[11];
 }

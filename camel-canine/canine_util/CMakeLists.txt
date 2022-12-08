@@ -16,7 +16,8 @@ add_library(canine_util
         src/StateEstimator.cpp
         src/RobotMath.cpp
         src/Filter.cpp
-        src/XboxController.cpp)
+        src/XboxController.cpp
+        src/XboxCommand.cpp)
 target_link_libraries(canine_util
         PUBLIC
         raisim::raisim

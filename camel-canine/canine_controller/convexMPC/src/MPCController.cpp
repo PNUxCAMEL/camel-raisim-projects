@@ -37,11 +37,10 @@ void MPCController::InitDownTrajectory()
                                         sharedMemory->localTime, timeDuration);
 }
 
-
 void MPCController::DoControl()
 {
     updateState();
-    ConvexMPCSolver.SetTrajectory(mBaseTrajectory);
+    ConvexMPCSolver.SetTrajectory(mBaseTrajectory, mBasePosition);
     ConvexMPCSolver.GetMetrices(mInitState, mFootPosition);
     ConvexMPCSolver.SolveQP();
     ConvexMPCSolver.GetGRF(mGRF);

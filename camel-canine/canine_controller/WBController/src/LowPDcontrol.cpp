@@ -11,9 +11,9 @@ LowPDcontrol::LowPDcontrol()
     : mTorqueLimit(30)
     , SwingLegTrajectory(GAIT_PERIOD/2)
     , mFirstRunTrot(true)
-    , mSwingPgain{50,50,50}
+    , mSwingPgain{30,30,30}
     , mSwingDgain{2,2,2}
-    , mStandPgain{5,5,5}
+    , mStandPgain{30,5,5}
     , mStandDgain{1,1,1}
 //    , mSwingPgain{30,30,30}
 //    , mSwingDgain{1,1,1}

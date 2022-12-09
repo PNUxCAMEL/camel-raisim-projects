@@ -196,7 +196,10 @@ void *RTControllerThreadHigh(void *arg)
                 case STATE_HOME_CONTROL:
                 {
                     MPControl.DoControl();
-                    sharedMemory->LowControlState = STATE_LOW_CONTROL_START;
+                    if (sharedMemory->LowControlState != STATE_LOW_CONTROL_START)
+                    {
+                        sharedMemory->LowControlState = STATE_LOW_CONTROL_START;
+                    }
                     break;
                 }
                 default:

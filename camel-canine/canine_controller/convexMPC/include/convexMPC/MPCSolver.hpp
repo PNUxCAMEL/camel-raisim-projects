@@ -22,7 +22,7 @@ public:
     MPCSolver(const uint8_t& horizon);
     ~MPCSolver();
 
-    void SetTrajectory(CubicTrajectoryGenerator Trajectory[3]);
+    void SetTrajectory(CubicTrajectoryGenerator Trajectory[3], const double* basePosition);
     void GetMetrices(const Vec13<double>&  x0, const double mFoot[4][3]);
     void SolveQP();
     void GetGRF(Vec3<double> f[4]);

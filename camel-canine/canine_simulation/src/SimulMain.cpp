@@ -13,8 +13,6 @@ pthread_t NRTThreadXboxCommand;
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
-std::string robotURDF = std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1_1.urdf";
-
 raisim::World world;
 raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(robotURDF);
@@ -85,7 +83,7 @@ void *RTControllerThreadHigh(void *arg)
                 }
                 case STATE_HOME_CONTROL:
                 {
-                    MPControl.DoControl();
+//                    MPControl.DoControl();
                     sharedMemory->LowControlState = STATE_LOW_CONTROL_START;
                     break;
                 }

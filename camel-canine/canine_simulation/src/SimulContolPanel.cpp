@@ -58,7 +58,7 @@ void SimulControlPanel::ControllerFunction()
         }
         case STATE_LOW_CONTROL_START:
         {
-            LowController.DoControl();
+            WBController.DoControl();
             break;
         }
         default:

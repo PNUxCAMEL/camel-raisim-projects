@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.5)
 project(PDcontroller LANGUAGES CXX)
 
 find_package(camel-tools-trajectory REQUIRED)
-
 find_package(camel-tools-thread REQUIRED)
 
 include_directories(

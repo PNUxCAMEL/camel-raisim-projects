@@ -7,10 +7,6 @@
 
 #include <math.h>
 
-#include <rbdl/rbdl.h>
-#include <rbdl/rbdl_utils.h>
-#include <rbdl/addons/urdfreader/urdfreader.h>
-
 #include "EigenTypes.hpp"
 #include "RobotDescription.hpp"
 

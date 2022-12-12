@@ -14,6 +14,7 @@
 #include <canine_util/EigenTypes.hpp>
 
 #include <LowController/LowPDcontrol.hpp>
+#include <WBController/Controller.hpp>
 #include <ControlUtils/Gait.hpp>
 
 class SimulControlPanel{
@@ -34,6 +35,7 @@ private:
     raisim::VecDyn mTorque = raisim::VecDyn(18);
 
     LowPDcontrol LowController;
+    WholeBodyController WBController;
     OffsetGait stand, trot, test;
 };
 

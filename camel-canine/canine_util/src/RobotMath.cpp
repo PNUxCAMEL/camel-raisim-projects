@@ -265,5 +265,3 @@ void GetLegInvKinematics(Vec3<double>& jointPos, Vec3<double> footPos, const int
     }
     jointPos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
 }
-
-

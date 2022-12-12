@@ -1,4 +1,4 @@
-#include "Controller.hpp"
+#include "WBController/Controller.hpp"
 
 Controller::Controller(Robot* robot)
     : mRobot(robot)

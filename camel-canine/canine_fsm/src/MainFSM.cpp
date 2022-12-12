@@ -22,9 +22,11 @@ CanMotorBackward canBackward("can5");
 
 Command userCommand;
 
+std::string robotURDF = std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf";
+
 raisim::World world;
 raisim::RaisimServer server(&world);
-raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
+raisim::ArticulatedSystem* robot = world.addArticulatedSystem(robotURDF);
 RobotVisualization userVisual(&world, robot, &server);
 StateEstimator robotstate;
 ControllerState userController;

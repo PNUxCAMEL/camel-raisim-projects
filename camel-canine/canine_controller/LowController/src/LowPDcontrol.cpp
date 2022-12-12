@@ -2,7 +2,7 @@
 // Created by hs on 22. 10. 27.
 //
 
-#include <WBController/LowPDcontrol.hpp>
+#include <LowController/LowPDcontrol.hpp>
 #include <iostream>
 
 extern pSHM sharedMemory;
@@ -124,37 +124,37 @@ void LowPDcontrol::setLegControl()
 void LowPDcontrol::getJointPos(Vec3<double>& jointPos, Vec3<double> footPos, const int& leg, const bool stand)
 {
     footPos = GetBaseRotationMat(mBaseQuaternion)*(footPos-mBasePosition)-mHipPosition[leg];
-    if(stand)
-    {
-        footPos[0] = 0;
-        switch (leg) {
-            case 0:
-            {
-                footPos[1] = -0.1075;
-                break;
-            }
-            case 1:
-            {
-                footPos[1] = 0.1075;
-                break;
-            }
-            case 2:
-            {
-                footPos[1] = -0.1075;
-                break;
-            }
-            case 3:
-            {
-                footPos[1] = 0.1075;
-                break;
-            }
-            default:
-            {
-                break;
-            }
-        }
-        footPos[2] = sharedMemory->baseDesiredPosition[2];
-    }
+//    if(stand)
+//    {
+//        footPos[0] = 0;
+//        switch (leg) {
+//            case 0:
+//            {
+//                footPos[1] = -0.1075;
+//                break;
+//            }
+//            case 1:
+//            {
+//                footPos[1] = 0.1075;
+//                break;
+//            }
+//            case 2:
+//            {
+//                footPos[1] = -0.1075;
+//                break;
+//            }
+//            case 3:
+//            {
+//                footPos[1] = 0.1075;
+//                break;
+//            }
+//            default:
+//            {
+//                break;
+//            }
+//        }
+//        footPos[2] = sharedMemory->baseDesiredPosition[2];
+//    }
     GetLegInvKinematics(jointPos, footPos, leg);
 }
 

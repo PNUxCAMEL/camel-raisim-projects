@@ -1,7 +1,7 @@
 #ifndef RAISIM_SINGLELEGGEDIDCONTROLLER_H
 #define RAISIM_SINGLELEGGEDIDCONTROLLER_H
 
-#include "Controller.hpp"
+#include "WBController/Controller.hpp"
 #include "camel-tools/trajectory.hpp"
 #include "SingleLeggedSharedMemory.hpp"
 

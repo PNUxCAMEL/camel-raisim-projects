@@ -16,6 +16,7 @@
 #include <canine_util/Command.hpp>
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/SharedMemory.hpp>
+#include <canine_util/RobotMath.hpp>
 
 #include <canine_simulation/SimulStateEstimator.hpp>
 #include <canine_simulation/SimulControlPanel.hpp>

@@ -8,16 +8,19 @@ pthread_t RTThreadControllerHigh;
 pthread_t RTThreadControllerLow;
 pthread_t RTThreadStateEstimator;
 pthread_t NRTThreadCommand;
+pthread_t NRTThreadXboxCommand;
 
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
+std::string robotURDF = std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1_1.urdf";
+
 raisim::World world;
 raisim::RaisimServer server(&world);
-raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
+raisim::ArticulatedSystem* robot = world.addArticulatedSystem(robotURDF);
 
 SimulCommand userCommand;
-//SimulXboxCommand userXboxCommand;
+SimulXboxCommand userXboxCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
@@ -29,6 +32,16 @@ void* NRTCommandThread(void* arg)
     while (true)
     {
         userCommand.commandFunction();
+        usleep(CMD_dT * 1e6);
+    }
+}
+
+void* NRTXboxCommandThread(void* arg)
+{
+    std::cout << "entered #Xbox_Command_NRT_thread" << std::endl;
+    while (true)
+    {
+        userXboxCommand.commandFunction();
         usleep(CMD_dT * 1e6);
     }
 }

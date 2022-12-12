@@ -13,7 +13,7 @@
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/EigenTypes.hpp>
 
-#include <WBController/LowPDcontrol.hpp>
+#include <LowController/LowPDcontrol.hpp>
 #include <ControlUtils/Gait.hpp>
 
 class SimulControlPanel{

@@ -16,7 +16,7 @@ include_directories(
         ${ControlUtils_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${convexMPC_SOURCE_DIR}/include
-        ${WBController_SOURCE_DIR}/include
+        ${LowController_SOURCE_DIR}/include
         /usr/share/c++-mscl/source /usr/share/c++-mscl/Boost/include
 )
 link_directories(
@@ -44,7 +44,7 @@ target_link_libraries(${PROJECT_NAME}
         canine_visualizer::canine_gui
         canine_controller::ControlUtils
         canine_controller::PDcontroller
-        canine_controller::WBController
+        canine_controller::LowController
         canine_controller::convexMPC
         canine_util
 )

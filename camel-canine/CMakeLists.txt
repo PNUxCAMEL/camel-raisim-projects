@@ -9,6 +9,7 @@ find_package(camel-tools-sensor REQUIRED)
 
 add_subdirectory(canine_controller/convexMPC)
 add_subdirectory(canine_controller/PDcontroller)
+add_subdirectory(canine_controller/LowController)
 add_subdirectory(canine_controller/WBController)
 add_subdirectory(canine_controller/ControlUtils)
 add_subdirectory(canine_controller/ControlMain)
@@ -28,6 +29,7 @@ include_directories(
         ${convexMPC_SOURCE_DIR}/include
         ${PDcontroller_SOURCE_DIR}/include
         ${WBController_SOURCE_DIR}/include
+        ${LowController_SOURCE_DIR}/include
         ${ControlUtils_SOURCE_DIR}/include
         ${ControlMain_SOURCE_DIR}/include
         ${PDQPcontrol_SOURCE_DIR}/include

@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot name="canine">
+  <material name="black">
+    <color rgba="0.0 0.0 0.0 1.0"/>
+  </material>
+
+  <material name="light_gray">
+    <color rgba="0.75 0.75 0.75 1.0"/>
+  </material>
+
+  <material name="black1">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+
+  <material name="black2">
+    <color rgba="0.7 0.7 0.7 1.0"/>
+  </material>
+
+  <material name="blue">
+    <color rgba="0.0 0.0 0.8 1.0"/>
+  </material>
+
+  <!--
+    Base
+  -->
+
+  <link name="base">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="floating_base" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base"/>
+    <child link="trunk"/>
+  </joint>
+  <link name="trunk">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0 0 0" />
+      <mass value="14.2" />
+      <inertia ixx="0.085609"
+               ixy="0"
+               ixz="0"
+               iyy="0.11548"
+               iyz="0"
+               izz="0.17193" />
+    </inertial>
+    <visual>
+      <origin xyz="0.146 0 0.0555" rpy="0 0 -1.57079632679" />
+      <geometry>
+        <mesh filename="package://canine/meshes/base.STL" />
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0.3 0 -0.015" rpy="0 0.5236 0" />
+      <geometry>
+        <box size="0.035 0.05 0.09"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0.22 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.15 0.04 0.111"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <box size="0.292 0.245 0.111"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!--
+    Right Front
+  -->
+
+  <joint name="RF_HIP" type="revolute">
+    <origin xyz="0.175 -0.055 0" rpy="0 0 0" />
+    <parent link="trunk" />
+    <child link="RF_hip" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RF_hip">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.32" />
+      <inertia ixx="0.000215"
+               ixy="0"
+               ixz="0"
+               iyy="0.000215"
+               iyz="0"
+               izz="0.000384" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="-3.1254 0 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_U_hip.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0145 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder length="0.029" radius="0.049"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RF_THIGH" type="revolute">
+    <origin xyz="0.0705 -0.030496 0" rpy="0 0 0" />
+    <parent link="RF_hip" />
+    <child link="RF_thigh" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RF_thigh">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.66" />
+      <inertia ixx="0.002977"
+               ixy="0"
+               ixz="0"
+               iyy="0.002977"
+               iyz="0"
+               izz="0.000135" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.445 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_U_thigh.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.032 0." rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.124996" radius="0.049"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 -0.077 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.035 0.035 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RF_KNEE" type="revolute">
+    <origin xyz="0 -0.077 -0.23" rpy="0 0 0" />
+    <parent link="RF_thigh" />
+    <child link="RF_calf" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RF_calf">
+    <inertial>
+      <origin xyz="0 0.0135 0" rpy="0 0 0" />
+      <mass value="0.08" />
+      <inertia ixx="0.002930"
+               ixy="0"
+               ixz="0"
+               iyy="0.002930"
+               iyz="0"
+               izz="0.000040" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0.0135 0" rpy="0 0.805 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_U_calf.STL" />
+      </geometry>
+      <material name="black2"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.019 0.019 0.23" />
+      </geometry>
+    </collision>-
+  </link>
+
+  <joint name="RF_FOOT" type="fixed">
+    <origin xyz="0 0 -0.23" rpy="0 0 0" />
+    <parent link="RF_calf" />
+    <child link="RF_foot" />
+  </joint>
+  <link name="RF_foot">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.019" radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!--
+    Left Front
+  -->
+
+  <joint name="LF_HIP" type="revolute">
+    <origin xyz="0.175 0.055 0" rpy="0 0 0" />
+    <parent link="trunk" />
+    <child link="LF_hip" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="LF_hip">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.32" />
+      <inertia ixx="0.000215"
+               ixy="0"
+               ixz="0"
+               iyy="0.000215"
+               iyz="0"
+               izz="0.000384" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="-3.1416 0 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/L_U_hip.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0145 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder length="0.029" radius="0.049"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="LF_THIGH" type="revolute">
+    <origin xyz="0.0705 0.030496 0" rpy="0 0 0" />
+    <parent link="LF_hip" />
+    <child link="LF_thigh" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="LF_thigh">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.66" />
+      <inertia ixx="0.002977"
+               ixy="0"
+               ixz="0"
+               iyy="0.002977"
+               iyz="0"
+               izz="0.000135" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.67 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/L_U_thigh.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0.032 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.124996" radius="0.049"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0.077 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.035 0.035 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="LF_KNEE" type="revolute">
+    <origin xyz="0 0.077 -0.23" rpy="0 0 0" />
+    <parent link="LF_thigh" />
+    <child link="LF_calf" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="LF_calf">
+    <inertial>
+      <origin xyz="0 -0.0135 0" rpy="0 0 0" />
+      <mass value="0.08" />
+      <inertia ixx="0.002930"
+               ixy="0"
+               ixz="0"
+               iyy="0.002930"
+               iyz="0"
+               izz="0.000040" />
+    </inertial>
+    <visual>
+      <origin xyz="0 -0.0135 0" rpy="0 0.755 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/L_U_calf.STL" />
+      </geometry>
+      <material name="black2"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.019 0.019 0.23" />
+      </geometry>
+    </collision>-
+  </link>
+
+  <joint name="LF_FOOT" type="fixed">
+    <origin xyz="0 0 -0.23" rpy="0 0 0" />
+    <parent link="LF_calf" />
+    <child link="LF_foot" />
+  </joint>
+  <link name="LF_foot">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.019" radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!--
+    Right HIND
+  -->
+
+  <joint name="RH_HIP" type="revolute">
+    <origin xyz="-0.175 -0.055 0" rpy="0 0 0" />
+    <parent link="trunk" />
+    <child link="RH_hip" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RH_hip">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.32" />
+      <inertia ixx="0.000215"
+               ixy="0"
+               ixz="0"
+               iyy="0.000215"
+               iyz="0"
+               izz="0.000384" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 3.1416 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_L_hip.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0145 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder length="0.029" radius="0.049"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RH_THIGH" type="revolute">
+    <origin xyz="-0.0705 -0.030496 0" rpy="0 0 0" />
+    <parent link="RH_hip" />
+    <child link="RH_thigh" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RH_thigh">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.66" />
+      <inertia ixx="0.002977"
+               ixy="0"
+               ixz="0"
+               iyy="0.002977"
+               iyz="0"
+               izz="0.000135" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.445 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_L_thigh.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="0 -0.032 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.124996" radius="0.049"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 -0.077 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.035 0.035 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RH_KNEE" type="revolute">
+    <origin xyz="0 -0.077 -0.23" rpy="0 0 0" />
+    <parent link="RH_thigh" />
+    <child link="RH_calf" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="RH_calf">
+    <inertial>
+      <origin xyz="0 0.0135 0" rpy="0 0 0" />
+      <mass value="0.08" />
+      <inertia ixx="0.002930"
+               ixy="0"
+               ixz="0"
+               iyy="0.002930"
+               iyz="0"
+               izz="0.000040" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0.0135 0" rpy="0 0.805 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/R_L_calf.STL" />
+      </geometry>
+      <material name="black2"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.019 0.019 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="RH_FOOT" type="fixed">
+    <origin xyz="0 0 -0.23" rpy="0 0 0" />
+    <parent link="RH_calf" />
+    <child link="RH_foot" />
+  </joint>
+  <link name="RH_foot">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.019" radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!--
+    LEFT HIND
+  -->
+
+  <joint name="LH_HIP" type="revolute">
+    <origin xyz="-0.175 0.055 0" rpy="0 0 0" />
+    <parent link="trunk" />
+    <child link="LH_hip" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="LH_hip">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.32" />
+      <inertia ixx="0.000215"
+               ixy="0"
+               ixz="0"
+               iyy="0.000215"
+               iyz="0"
+               izz="0.000384" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 3.1254" />
+      <geometry>
+        <mesh filename="package://canine/meshes/L_L_hip.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0145 0 0" rpy="0 1.57079632679 0" />
+      <geometry>
+        <cylinder length="0.029" radius="0.049"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="LH_THIGH" type="revolute">
+    <origin xyz="-0.0705 0.030496 0" rpy="0 0 0" />
+    <parent link="LH_hip" />
+    <child link="LH_thigh" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="LH_thigh">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.66" />
+      <inertia ixx="0.002977"
+               ixy="0"
+               ixz="0"
+               iyy="0.002977"
+               iyz="0"
+               izz="0.000135" />
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 -0.67 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/L_L_thigh.STL" />
+      </geometry>
+      <material name="black1"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0.032 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.124996" radius="0.049"/>
+      </geometry>
+    </collision>
+    <collision>
+      <origin xyz="0 0.077 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.035 0.035 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="LH_KNEE" type="revolute">
+    <origin xyz="0 0.077 -0.23" rpy="0 0 0" />
+    <parent link="LH_thigh" />
+    <child link="LH_calf" />
+    <axis xyz="0 1 0" />
+    <limit lower="0" upper="0" effort="0" velocity="0" />
+  </joint>
+  <link name="LH_calf">
+    <inertial>
+      <origin xyz="0 -0.0135 0" rpy="0 0 0" />
+      <mass value="0.08" />
+      <inertia ixx="0.002930"
+               ixy="0"
+               ixz="0"
+               iyy="0.002930"
+               iyz="0"
+               izz="0.000040" />
+    </inertial>
+    <visual>
+      <origin xyz="0 -0.0135 0" rpy="0 0.755 0" />
+      <geometry>
+        <mesh filename="package://canine/meshes/L_L_calf.STL" />
+      </geometry>
+      <material name="black2"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 -0.115" rpy="0 0 0" />
+      <geometry>
+        <box size="0.019 0.019 0.23" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="LH_FOOT" type="fixed">
+    <origin xyz="0 0 -0.23" rpy="0 0 0" />
+    <parent link="LH_calf" />
+    <child link="LH_foot" />
+  </joint>
+  <link name="LH_foot">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <mass value="0.1"/>
+      <inertia ixx="0" ixy="0" ixz="0" iyy="0" iyz="0" izz="0"/>
+    </inertial>
+    <collision>
+      <origin xyz="0 0 0" rpy="1.57079632679 0 0" />
+      <geometry>
+        <cylinder length="0.019" radius="0.015"/>
+      </geometry>
+    </collision>
+  </link>
+
+</robot>

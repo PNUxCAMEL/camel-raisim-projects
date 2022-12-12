@@ -54,9 +54,9 @@ typedef struct _SHM_
     Vec3<double> baseDesiredPosition; ///todo
     Vec3<double> baseDesiredVelocity; ///todo
     Vec3<double> mpcTorque[4];
+    Vec4<double> baseQuartPosition;
     double baseAcceleration[3];
     double baseEulerPosition[3];
-    double baseQuartPosition[4];
     double baseEulerVelocity[3];
     double footPosition[4][3];  ///todo
     double motorPosition[MOTOR_NUM];

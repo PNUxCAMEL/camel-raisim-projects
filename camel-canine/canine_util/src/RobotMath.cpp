@@ -132,7 +132,7 @@ T sq(T a)
     return a*a;
 }
 
-void TransformQuat2Euler(const double* quat, double* euler)
+void TransformQuat2Euler(const Vec4<double>& quat, double* euler)
 {
     //edge case!
     float as = t_min(-2.*(quat[1]*quat[3]-quat[0]*quat[2]),.99999);

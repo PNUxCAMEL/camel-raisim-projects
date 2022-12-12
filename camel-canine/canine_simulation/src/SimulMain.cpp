@@ -18,7 +18,7 @@ raisim::RaisimServer server(&world);
 raisim::ArticulatedSystem* robot = world.addArticulatedSystem(std::string(URDF_RSC_DIR)+"/canine/urdf/canineV1.urdf");
 
 SimulCommand userCommand;
-SimulXboxCommand userXboxCommand;
+//SimulXboxCommand userXboxCommand;
 SimulVisualizer Visualizer(&world, robot, &server);
 SimulControlPanel ControlPanel(&world, robot);
 SimulStateEstimator StateEstimator(robot);
@@ -35,15 +35,15 @@ void* NRTCommandThread(void* arg)
     }
 }
 
-void* NRTXboxCommandThread(void* arg)
-{
-    std::cout << "entered #Xbox_Command_NRT_thread" << std::endl;
-    while (true)
-    {
-        userXboxCommand.commandFunction();
-        usleep(CMD_dT * 1e6);
-    }
-}
+//void* NRTXboxCommandThread(void* arg)
+//{
+//    std::cout << "entered #Xbox_Command_NRT_thread" << std::endl;
+//    while (true)
+//    {
+//        userXboxCommand.commandFunction();
+//        usleep(CMD_dT * 1e6);
+//    }
+//}
 
 void *RTControllerThreadHigh(void *arg)
 {
@@ -206,5 +206,5 @@ void StartSimulation()
     int thread_id_rt3 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread3", 8, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
-    int thread_id_nrt2 = generate_nrt_thread(NRTThreadXboxCommand, NRTXboxCommandThread, "nrt_thread2", 1, NULL);
+//    int thread_id_nrt2 = generate_nrt_thread(NRTThreadXboxCommand, NRTXboxCommandThread, "nrt_thread2", 1, NULL);
 }

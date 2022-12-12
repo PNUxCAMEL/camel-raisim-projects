@@ -16,6 +16,7 @@ MPCSolver::MPCSolver(const uint8_t& horizon)
 {
     mWeightMat << 20, 20, 20, 20, 20, 50, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.f;
 //    mWeightMat << 20, 20, 20, 50, 50, 50, 0.01, 0.01, 1, 1, 1, 1, 0.0;
+//    mWeightMat << 2, 2, 10, 5, 5, 50, 1, 1, 1, 1, 1, 1, 0.0;
     initMatrix();
     resizeMatrix();
 }
@@ -81,7 +82,7 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3], const doub
 
             xd[horizon*13+3] = 0;
             xd[horizon*13+4] = 0;
-            xd[horizon*13+5] = 0.3;
+            xd[horizon*13+5] = 0.35;
         }
         else
         {

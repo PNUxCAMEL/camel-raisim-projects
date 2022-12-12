@@ -92,8 +92,9 @@ void LowPDcontrol::setLegControl()
         {
             for(int j=0; j<3; j++)
             {
-                mLegTorque[i][j] = mStandPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
-                                   + mStandDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
+//                mLegTorque[i][j] = mStandPgain[j] * (mStandJointPos[j] - mMotorPosition[i][j])
+//                                   + mStandDgain[j] * (mStandJointVel[j] - mMotorVelocity[i][j]);
+                mLegTorque[i][j] = 0;
             }
         }
     }

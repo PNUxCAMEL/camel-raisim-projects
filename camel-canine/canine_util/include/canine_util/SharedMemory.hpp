@@ -53,6 +53,10 @@ typedef struct _SHM_
     Vec3<double> baseVelocity;
     Vec3<double> baseDesiredPosition;
     Vec3<double> baseDesiredVelocity;
+    Vec3<double> baseDesiredAcceleration;
+    Vec3<double> legDesiredPosition;
+    Vec3<double> legDesiredVelocity;
+    Vec3<double> legDesiredAcceleration;
     Vec3<double> mpcTorque[4];
     Vec3<double> bodyFootPosition[4];
     Vec3<double> globalFootPosition[4];

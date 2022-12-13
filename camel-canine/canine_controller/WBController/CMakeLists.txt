@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(WBController LANGUAGES CXX)
 
+find_package(camel-tools-trajectory REQUIRED)
 find_package(RBDL COMPONENTS URDFREADER REQUIRED)
 
 include_directories(
@@ -18,6 +19,7 @@ add_library(${PROJECT_NAME}
 add_library(canine_controller::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME}
         canine_util
+        camel-tools-trajectory
         ${RBDL_LIBRARY}
         ${RBDL_URDFREADER_LIBRARY}
         )

@@ -5,6 +5,8 @@
 #ifndef RAISIM_CONTROLLER_HPP
 #define RAISIM_CONTROLLER_HPP
 
+#include <vector>
+
 #include <rbdl/rbdl.h>
 #include <rbdl/rbdl_utils.h>
 #include <rbdl/addons/urdfreader/urdfreader.h>
@@ -22,6 +24,7 @@ private:
     void updateState();
     void setControlInput();
     void setLegControl();
+    void getJointPos(const double& x, const double& z, Vec3<double>& pos);
 private:
     const int mTorqueLimit;
     const std::string mUrdfPath;
@@ -40,9 +43,15 @@ private:
     Vec3<double> mDesiredFootPosition[4];
     Vec3<double> mSwingFootPosition;
     Vec4<double> mBaseQuaternion;
+    Vec3<double> mBaseEulerVelocity;
 
     Vec3<double> mTorque[4];
 
+    Vec3<double> mStandJointPos;
+    Vec3<double> mStandJointVel;
+    const double mTranslationGain[2];
+    const double mRotationGain[2];
+    const double mLegGain[2];
 };
 
 

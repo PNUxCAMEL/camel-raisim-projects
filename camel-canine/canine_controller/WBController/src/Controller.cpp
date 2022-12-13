@@ -5,16 +5,15 @@ extern pSHM sharedMemory;
 WholeBodyController::WholeBodyController()
     : mUrdfPath(robotURDF)
     , mTorqueLimit(35)
-    , mTranslationGain{100, 2}
-    , mRotationGain{100, 2}
-    , mLegGain{30,1}
+    , mTranslationGain{500, 100}
+    , mRotationGain{200, 100}
+    , mLegGain{500, 200}
 {
     mModel = new RigidBodyDynamics::Model();
     bool modelLoaded = RigidBodyDynamics::Addons::URDFReadFromFile(mUrdfPath.c_str(), mModel, true);
     if (modelLoaded)
     {
         std::cout << RigidBodyDynamics::Utils::GetModelDOFOverview(*mModel);
-        std::cout << RigidBodyDynamics::Utils::GetModelHierarchy(*mModel);
         mQ = RigidBodyDynamics::Math::VectorNd::Zero(mModel->q_size);
         mQdot = RigidBodyDynamics::Math::VectorNd::Zero(mModel->q_size);
         mQddot = RigidBodyDynamics::Math::VectorNd::Zero(mModel->q_size);
@@ -35,7 +34,7 @@ void WholeBodyController::DoControl()
 {
     updateState();
     setLegControl();
-//    setControlInput();
+    setControlInput();
 }
 
 void WholeBodyController::updateState()
@@ -44,7 +43,8 @@ void WholeBodyController::updateState()
     {
         mBasePosition[idx] = sharedMemory->basePosition[idx];
         mBaseVelocity[idx] = sharedMemory->baseVelocity[idx];
-        mBaseEulerVelocity[idx] = sharedMemory->baseEulerVelocity[idx];
+        mBaseEulerVelocity[idx] = sharedMemory->baseEulerPosition[idx];
+        mBaseEulerPosition[idx] = sharedMemory->baseEulerVelocity[idx];
     }
 
     for (int idx=0; idx<4; idx++)
@@ -65,7 +65,7 @@ void WholeBodyController::updateState()
           mMotorPosition[3][0], mMotorPosition[3][1], mMotorPosition[3][2],
           mMotorPosition[0][0], mMotorPosition[0][1], mMotorPosition[0][2],
           mMotorPosition[2][0], mMotorPosition[2][1], mMotorPosition[2][2],
-          mBaseQuaternion[2];
+          mBaseQuaternion[0];
     mQdot << mBaseVelocity[0], mBaseVelocity[1], mBaseVelocity[2],
              mBaseEulerVelocity[0], mBaseEulerVelocity[1], mBaseEulerVelocity[2],
              mMotorVelocity[1][0], mMotorVelocity[1][1], mMotorVelocity[1][2],
@@ -94,18 +94,17 @@ void WholeBodyController::setLegControl()
 {
     for (int i=0; i<3; i++)
     {
-        mQddot[i] = sharedMemory->baseDesiredAcceleration[i]
-                  + mTranslationGain[0] * (sharedMemory->baseDesiredPosition[i] - mQ[i])
-                  + mTranslationGain[1] * (sharedMemory->baseDesiredVelocity[i] - mQdot[i]);
-        mQddot[i+3] = mRotationGain[0] * (0 - mQ[i+3])
-                      + mRotationGain[1] * (0 - mQdot[i+3]);
+        mQddot[i] = sharedMemory->baseDesiredAcceleration[i];
+        mQddot[i] += mTranslationGain[0] * (sharedMemory->baseDesiredPosition[i] - mQ[i]);
+        mQddot[i] += mTranslationGain[1] * (sharedMemory->baseDesiredVelocity[i] - mQdot[i]);
+        mQddot[i+3] = mRotationGain[0] * (0 - mBaseEulerPosition[i]);
+        mQddot[i+3] +=mRotationGain[1] * (0 - mBaseEulerVelocity[i]);
     }
     for (int i=0; i<4; i++)
     {
         for(int j=0; j<3; j++)
         {
-            mQddot[i*3+6+j] = sharedMemory->legDesiredAcceleration[j]
-                          + mLegGain[0] * (sharedMemory->legDesiredPosition[j] - mQ[i*3+6+j])
+            mQddot[i*3+6+j] = mLegGain[0] * (sharedMemory->legDesiredPosition[j] - mQ[i*3+6+j])
                           + mLegGain[1] * (sharedMemory->legDesiredVelocity[j] - mQdot[i*3+6+j]);
         }
     }
@@ -118,16 +117,25 @@ void WholeBodyController::setLegControl()
     RigidBodyDynamics::InverseDynamics(*mModel, mQ, mQdot, mQddot, mTau);
 
     std::cout << mTau.transpose() << std::endl;
-    for (int i=0; i<4; i++)
-    {
-        mTorque[i][0] = mQddot[i*3+6];
-        mTorque[i][1] = mQddot[i*3+7];
-        mTorque[i][2] = mQddot[i*3+8];
-    }
+
+    mTorque[1][0] = mTau[6];
+    mTorque[1][1] = mTau[7];
+    mTorque[1][2] = mTau[8];
+    mTorque[3][0] = mTau[9];
+    mTorque[3][1] = mTau[10];
+    mTorque[3][2] = mTau[11];
+    mTorque[0][0] = mTau[12];
+    mTorque[0][1] = mTau[13];
+    mTorque[0][2] = mTau[14];
+    mTorque[2][0] = mTau[15];
+    mTorque[2][1] = mTau[16];
+    mTorque[2][2] = mTau[17];
+
 }
 
 void WholeBodyController::setControlInput()
 {
+    std::cout << "==========torque=========" << std::endl;
     for (int leg = 0; leg < 4; leg++)
     {
         for (int motor = 0; motor < 3; motor++)
@@ -141,6 +149,9 @@ void WholeBodyController::setControlInput()
                 mTorque[leg][motor] = -mTorqueLimit;
             }
             sharedMemory->motorDesiredTorque[leg*3+motor] = mTorque[leg][motor];
+            std::cout << sharedMemory->motorDesiredTorque[leg*3+motor] << "\t";
         }
+        std::cout << std::endl;
     }
+    std::cout << std::endl;
 }

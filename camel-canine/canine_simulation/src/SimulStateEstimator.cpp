@@ -52,6 +52,7 @@ void SimulStateEstimator::getRobotAngulerState()
     for(int idx=0; idx<4; idx++)
     {
         mQuaternion[idx] = mPosition[idx+3];
+        sharedMemory->baseQuartPosition[idx] = mQuaternion[idx];
     }
     TransformQuat2Euler(mQuaternion, sharedMemory->baseEulerPosition);
 }

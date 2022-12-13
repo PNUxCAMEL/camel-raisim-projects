@@ -14,6 +14,7 @@
 #include <canine_util/RobotDescription.hpp>
 #include <canine_util/SharedMemory.hpp>
 #include <canine_util/EigenTypes.hpp>
+#include <canine_util/RobotMath.hpp>
 
 class WholeBodyController{
 public:
@@ -44,6 +45,7 @@ private:
     Vec3<double> mSwingFootPosition;
     Vec4<double> mBaseQuaternion;
     Vec3<double> mBaseEulerVelocity;
+    Vec3<double> mBaseEulerPosition;
 
     Vec3<double> mTorque[4];
 

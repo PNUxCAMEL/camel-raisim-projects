@@ -53,7 +53,7 @@ private:
     Vec3<double> mStandJointVel;
     const double mTranslationGain[2];
     const double mRotationGain[2];
-    const double mLegGain[2];
+    const double mLegGain[6];
 };
 
 

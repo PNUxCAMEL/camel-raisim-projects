@@ -37,23 +37,23 @@ MPCSolver::~MPCSolver() {
 
 void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3], CubicTrajectoryGenerator LegTrajectory[3])
 {
-    for(int horizon = 0; horizon < mHorizon ; horizon++)
-    {
-        xd[horizon*13+3] = Trajectory[0].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+4] = Trajectory[1].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+//    for(int horizon = 0; horizon < mHorizon ; horizon++)
+//    {
+//        xd[horizon*13+3] = Trajectory[0].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+//        xd[horizon*13+4] = Trajectory[1].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+//        xd[horizon*13+5] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime + horizon*mDt);
+//
+//        xd[horizon*13+9] = Trajectory[0].getVelocityTrajectory(sharedMemory->localTime + horizon*mDt);
+//        xd[horizon*13+10] = Trajectory[1].getVelocityTrajectory(sharedMemory->localTime + horizon*mDt);
+//        xd[horizon*13+11] = Trajectory[2].getVelocityTrajectory(sharedMemory->localTime + horizon*mDt);
+//    }
+    sharedMemory->baseDesiredPosition[0] = Trajectory[0].getPositionTrajectory(sharedMemory->localTime);
+    sharedMemory->baseDesiredPosition[1] = Trajectory[1].getPositionTrajectory(sharedMemory->localTime);
+    sharedMemory->baseDesiredPosition[2] = Trajectory[2].getPositionTrajectory(sharedMemory->localTime);
 
-        xd[horizon*13+9] = Trajectory[0].getVelocityTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+10] = Trajectory[1].getVelocityTrajectory(sharedMemory->localTime + horizon*mDt);
-        xd[horizon*13+11] = Trajectory[2].getVelocityTrajectory(sharedMemory->localTime + horizon*mDt);
-    }
-    sharedMemory->baseDesiredPosition[0] = xd[3];
-    sharedMemory->baseDesiredPosition[1] = xd[4];
-    sharedMemory->baseDesiredPosition[2] = xd[5];
-
-    sharedMemory->baseDesiredVelocity[0] = xd[9];
-    sharedMemory->baseDesiredVelocity[1] = xd[10];
-    sharedMemory->baseDesiredVelocity[2] = xd[11];
+    sharedMemory->baseDesiredVelocity[0] = Trajectory[0].getVelocityTrajectory(sharedMemory->localTime);
+    sharedMemory->baseDesiredVelocity[1] = Trajectory[1].getVelocityTrajectory(sharedMemory->localTime);
+    sharedMemory->baseDesiredVelocity[2] = Trajectory[2].getVelocityTrajectory(sharedMemory->localTime);
 
     sharedMemory->baseDesiredAcceleration[0] = Trajectory[0].getAccelerationTrajectory(sharedMemory->localTime);
     sharedMemory->baseDesiredAcceleration[1] = Trajectory[1].getAccelerationTrajectory(sharedMemory->localTime);

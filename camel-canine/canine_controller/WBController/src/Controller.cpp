@@ -5,9 +5,9 @@ extern pSHM sharedMemory;
 WholeBodyController::WholeBodyController()
     : mUrdfPath(robotURDF)
     , mTorqueLimit(35)
-    , mTranslationGain{500, 100}
-    , mRotationGain{200, 100}
-    , mLegGain{500, 200}
+    , mTranslationGain{100, 10}
+    , mRotationGain{100, 10}
+    , mLegGain{20000, 200, 20000, 200, 20000, 200}
 {
     mModel = new RigidBodyDynamics::Model();
     bool modelLoaded = RigidBodyDynamics::Addons::URDFReadFromFile(mUrdfPath.c_str(), mModel, true);
@@ -100,13 +100,16 @@ void WholeBodyController::setLegControl()
         mQddot[i+3] = mRotationGain[0] * (0 - mBaseEulerPosition[i]);
         mQddot[i+3] +=mRotationGain[1] * (0 - mBaseEulerVelocity[i]);
     }
+
     for (int i=0; i<4; i++)
     {
         for(int j=0; j<3; j++)
         {
-            mQddot[i*3+6+j] = mLegGain[0] * (sharedMemory->legDesiredPosition[j] - mQ[i*3+6+j])
-                          + mLegGain[1] * (sharedMemory->legDesiredVelocity[j] - mQdot[i*3+6+j]);
+            mQddot[i*3+6+j] = sharedMemory->legDesiredAcceleration[j]
+                            + mLegGain[j*2] * (sharedMemory->legDesiredPosition[j] - mQ[i*3+6+j])
+                            + mLegGain[j*2+1] * (sharedMemory->legDesiredVelocity[j] - mQdot[i*3+6+j]);
         }
+        std::cout << std::endl;
     }
 
     std::cout << "========================================================================" << std::endl;

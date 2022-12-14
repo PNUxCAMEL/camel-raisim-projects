@@ -24,10 +24,6 @@ void MPCController::InitUpTrajectory()
                                         sharedMemory->localTime, timeDuration);
     mBaseTrajectory[2].updateTrajectory(sharedMemory->basePosition[2], 0.32,
                                         sharedMemory->localTime, timeDuration);
-
-    mLegTrajectory[0].updateTrajectory(0.0,0.0,sharedMemory->localTime, timeDuration);
-    mLegTrajectory[1].updateTrajectory(2.1,0.9,sharedMemory->localTime, timeDuration);
-    mLegTrajectory[2].updateTrajectory(-2.9,-1.6,sharedMemory->localTime, timeDuration);
 }
 
 void MPCController::InitDownTrajectory()
@@ -45,7 +41,7 @@ void MPCController::InitDownTrajectory()
 void MPCController::DoControl()
 {
 //    updateState();
-    ConvexMPCSolver.SetTrajectory(mBaseTrajectory, mLegTrajectory);
+    ConvexMPCSolver.SetTrajectory(mBaseTrajectory);
 //    ConvexMPCSolver.GetMetrices(mInitState, mFootPosition);
 //    ConvexMPCSolver.SolveQP();
 //    ConvexMPCSolver.GetGRF(mGRF);

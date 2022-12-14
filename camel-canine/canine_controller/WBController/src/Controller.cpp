@@ -109,17 +109,8 @@ void WholeBodyController::setLegControl()
                             + mLegGain[j*2] * (sharedMemory->legDesiredPosition[j] - mQ[i*3+6+j])
                             + mLegGain[j*2+1] * (sharedMemory->legDesiredVelocity[j] - mQdot[i*3+6+j]);
         }
-        std::cout << std::endl;
     }
-
-    std::cout << "========================================================================" << std::endl;
-    std::cout << "========================================================================" << std::endl;
-    std::cout << mQ.transpose() << std::endl;
-    std::cout << mQdot.transpose() << std::endl;
-    std::cout << mQddot.transpose() << std::endl;
     RigidBodyDynamics::InverseDynamics(*mModel, mQ, mQdot, mQddot, mTau);
-
-    std::cout << mTau.transpose() << std::endl;
 
     mTorque[1][0] = mTau[6];
     mTorque[1][1] = mTau[7];

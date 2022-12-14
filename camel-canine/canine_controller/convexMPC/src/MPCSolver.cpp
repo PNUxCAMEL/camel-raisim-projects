@@ -35,7 +35,7 @@ MPCSolver::~MPCSolver() {
     free(q_red);
 }
 
-void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3], CubicTrajectoryGenerator LegTrajectory[3])
+void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3])
 {
 //    for(int horizon = 0; horizon < mHorizon ; horizon++)
 //    {
@@ -58,18 +58,6 @@ void MPCSolver::SetTrajectory(CubicTrajectoryGenerator Trajectory[3], CubicTraje
     sharedMemory->baseDesiredAcceleration[0] = Trajectory[0].getAccelerationTrajectory(sharedMemory->localTime);
     sharedMemory->baseDesiredAcceleration[1] = Trajectory[1].getAccelerationTrajectory(sharedMemory->localTime);
     sharedMemory->baseDesiredAcceleration[2] = Trajectory[2].getAccelerationTrajectory(sharedMemory->localTime);
-
-    sharedMemory->legDesiredPosition[0] = LegTrajectory[0].getPositionTrajectory(sharedMemory->localTime);
-    sharedMemory->legDesiredPosition[1] = LegTrajectory[1].getPositionTrajectory(sharedMemory->localTime);
-    sharedMemory->legDesiredPosition[2] = LegTrajectory[2].getPositionTrajectory(sharedMemory->localTime);
-
-    sharedMemory->legDesiredVelocity[0] = LegTrajectory[0].getVelocityTrajectory(sharedMemory->localTime);
-    sharedMemory->legDesiredVelocity[1] = LegTrajectory[1].getVelocityTrajectory(sharedMemory->localTime);
-    sharedMemory->legDesiredVelocity[2] = LegTrajectory[2].getVelocityTrajectory(sharedMemory->localTime);
-
-    sharedMemory->legDesiredAcceleration[0] = LegTrajectory[0].getAccelerationTrajectory(sharedMemory->localTime);
-    sharedMemory->legDesiredAcceleration[1] = LegTrajectory[1].getAccelerationTrajectory(sharedMemory->localTime);
-    sharedMemory->legDesiredAcceleration[2] = LegTrajectory[2].getAccelerationTrajectory(sharedMemory->localTime);
 }
 
 void MPCSolver::GetMetrices(const Vec13<double>&  x0, const double mFoot[4][3])

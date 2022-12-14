@@ -26,7 +26,6 @@ private:
     const uint8_t mHorizon;
     MPCSolver ConvexMPCSolver;
     CubicTrajectoryGenerator mBaseTrajectory[3];
-    CubicTrajectoryGenerator mLegTrajectory[3];
 
     double mBasePosition[3];
     double mBaseVelocity[3];

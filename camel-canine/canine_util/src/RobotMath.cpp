@@ -7,19 +7,6 @@
 
 #define PI 3.14159265359
 
-Mat3<double> GetBaseRotationMat(const Vec4<double>& quat)
-{
-    Mat3<double> BaseRot;
-    const double w = quat[0];
-    const double x = quat[1];
-    const double y = quat[2];
-    const double z = quat[3];
-
-    BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y,
-                                     2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x,
-                                     2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2);
-    return BaseRot;
-}
 Mat3<double> GetBaseRotationMatInverse(const Vec4<double>& quat)
 {
     Mat3<double> BaseRot;
@@ -170,29 +157,46 @@ void TransformQuat2Euler(const Vec4<double>& quat, double* euler)
     euler[2] = atan2(2.f*(quat[1]*quat[2]+quat[0]*quat[3]),sq(quat[0]) + sq(quat[1]) - sq(quat[2]) - sq(quat[3]));
 }
 
-void GetJacobian(Eigen::Matrix<double,3,3>& J, const Eigen::Matrix<double,3,1>& pos, int side)
+void GetJacobian(Mat3<double>& jacobian, const Vec3<double>& jointPos, const int& leg)
 {
-    double s1 = std::sin(pos[0]);
-    double s2 = std::sin(pos[1]);
+    double s1 = std::sin(jointPos[0]);
+    double s2 = std::sin(jointPos[1]);
 
-    double c1 = std::cos(pos[0]);
-    double c2 = std::cos(pos[1]);
+    double c1 = std::cos(jointPos[0]);
+    double c2 = std::cos(jointPos[1]);
 
-    double s32 = std::sin(pos[1]+pos[2]);
-    double c32 = std::cos(pos[1]+pos[2]);
+    double s32 = std::sin(jointPos[1]+jointPos[2]);
+    double c32 = std::cos(jointPos[1]+jointPos[2]);
 
-    //right leg side = 1 / left leg side = -1
-    J << 0,
-            LEN_THI*c2+LEN_CAL*c32,
-            LEN_CAL*c32,
+    if (leg == 0 || leg == 2)
+    {
+        jacobian(0,0) = 0;
+        jacobian(0,1) = LEN_THI*c2+LEN_CAL*c32;
+        jacobian(0,2) = LEN_CAL*c32;
 
-            (-1)*side*LEN_HIP*s1-LEN_THI*c1*c2-LEN_CAL*c1*c32,
-            LEN_THI*s1*s2+LEN_CAL*s1*s32,
-            LEN_CAL*s1*s32,
+        jacobian(1,0) = (-1)*LEN_HIP*s1-LEN_THI*c1*c2-LEN_CAL*c1*c32;
+        jacobian(1,1) = LEN_THI*s1*s2+LEN_CAL*s1*s32;
+        jacobian(1,2) = LEN_CAL*s1*s32;
 
-            side*LEN_HIP*c1-LEN_THI*s1*c2-LEN_CAL*s1*c32,
-            -LEN_THI*c1*s2-LEN_CAL*c1*s32,
-            -LEN_CAL*c1*s32;
+        jacobian(2,0) = LEN_HIP*c1-LEN_THI*s1*c2-LEN_CAL*s1*c32;
+        jacobian(2,1) = -LEN_THI*c1*s2-LEN_CAL*c1*s32;
+        jacobian(2,2) = -LEN_CAL*c1*s32;
+    }
+    else
+    {
+        jacobian(0,0) = 0;
+        jacobian(0,1) = LEN_THI*c2+LEN_CAL*c32;
+        jacobian(0,2) = LEN_CAL*c32;
+
+        jacobian(1,0) = LEN_HIP*s1-LEN_THI*c1*c2-LEN_CAL*c1*c32;
+        jacobian(1,1) = LEN_THI*s1*s2+LEN_CAL*s1*s32;
+        jacobian(1,2) = LEN_CAL*s1*s32;
+
+        jacobian(2,0) = (-1)*LEN_HIP*c1-LEN_THI*s1*c2-LEN_CAL*s1*c32;
+        jacobian(2,1) = -LEN_THI*c1*s2-LEN_CAL*c1*s32;
+        jacobian(2,2) = -LEN_CAL*c1*s32;
+    }
+
 }
 
 Mat3<double> GetSkew(Vec3<double> r)
@@ -214,6 +218,12 @@ int8_t NearOne(float a)
     return NearZero(a-1);
 }
 
+/**
+ * This function aims to do Inverse Kinematics in Leg frame and to get Joint position
+ * @param jointPos : Output joint position
+ * @param footPos : Input Foot position (Same with End effector position)
+ * @param leg : Input leg number (Quadruped : 0 ~ 3)
+ */
 void GetLegInvKinematics(Vec3<double>& jointPos, Vec3<double> footPos, const int& leg)
 {
     double alpha;
@@ -264,4 +274,80 @@ void GetLegInvKinematics(Vec3<double>& jointPos, Vec3<double> footPos, const int
         jointPos[1] = phi + psi - PI/2;
     }
     jointPos[2] = -acos((pow(d,2)-2*pow(LEN_CAL,2)) / (2*LEN_CAL*LEN_CAL));
+}
+/**
+ * This function aims to get robot base ration matrix from global coordinate to body coordinate
+ * @param quat : Input robot body rotation in quaternion
+ * @return : Rotation matrix from global coordinate to robot body coordinate
+ */
+Mat3<double> GetBaseRotationMat(const Vec4<double>& quat)
+{
+    Mat3<double> BaseRot;
+    const double w = quat[0];
+    const double x = quat[1];
+    const double y = quat[2];
+    const double z = quat[3];
+
+    BaseRot << 1-2*std::pow(y,2)-2*std::pow(z,2),                       2*x*y-2*w*z,                       2*x*z+2*w*y,
+            2*x*y+2*w*z, 1-2*std::pow(x,2)-2*std::pow(z,2),                       2*y*z-2*w*x,
+            2*x*z-2*w*y,                       2*y*z+2*w*x, 1-2*std::pow(x,2)-2*std::pow(y,2);
+    return BaseRot;
+}
+
+
+/**
+ * This function aims to do Inverse Kinematics and to get Position, Velocity, Acceleration of each joints
+ * @param pos : Output joint position
+ * @param vel : Output Joint velocity
+ * @param foot : Input global foot positions
+ * @param bodyPos : Input global body position
+ * @param bodyRot : Input global body rotation in quaternion
+ */
+void GetBaseInverseKinematics(Vec3<double> pos[4], Vec3<double> vel[4],
+                              const Vec3<double> foot[4],
+                              const Vec3<double>& bodyPos,
+                              const Vec4<double>& bodyRot)
+{
+    Mat4<double> Global2Body;
+    Mat4<double> Base2Shoulder[4];
+    Mat3<double> jacobian[4];
+    Vec4<double> tempFoot[4];
+    Vec4<double> footInHip[4];
+    Global2Body.block(0,0,3,3) = GetBaseRotationMat(bodyRot);
+    Global2Body(0,3) = bodyPos[0];
+    Global2Body(1,3) = bodyPos[1];
+    Global2Body(2,3) = bodyPos[2];
+
+    for (int leg=0; leg<4; leg++) {
+        Base2Shoulder[leg].setIdentity();
+        switch (leg) {
+            case 0: {
+                Base2Shoulder[leg](0, 3) = HIP_X_POS;
+                Base2Shoulder[leg](1, 3) = -HIP_Y_POS;
+                break;
+            }
+            case 1: {
+                Base2Shoulder[leg](0, 3) = HIP_X_POS;
+                Base2Shoulder[leg](1, 3) = HIP_Y_POS;
+                break;
+            }
+            case 2: {
+                Base2Shoulder[leg](0, 3) = -HIP_X_POS;
+                Base2Shoulder[leg](1, 3) = -HIP_Y_POS;
+                break;
+            }
+            case 3: {
+                Base2Shoulder[leg](0, 3) = -HIP_X_POS;
+                Base2Shoulder[leg](1, 3) = HIP_Y_POS;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+        tempFoot[leg].block(0, 0, 3, 1) = foot[leg];
+        tempFoot[leg](3, 0) = 1;
+        footInHip[leg] = Base2Shoulder[leg] * Global2Body * tempFoot[leg];
+
+    }
 }

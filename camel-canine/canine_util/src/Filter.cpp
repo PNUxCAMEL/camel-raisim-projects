@@ -69,3 +69,7 @@ void CanineFilter::LPF::doFiltering()
     mFilteredData = mAlpha * mInputData + (1 - mAlpha) * mPreviousData;
     mPreviousData = mFilteredData;
 }
+
+CanineFilter::EKF::EKF()
+{
+}

@@ -42,6 +42,17 @@ namespace CanineFilter
         double mFilteredData;
     };
 
+    class EKF{
+    public:
+        EKF();
+    private:
+        void doFiltering();
+    private:
+        bool mbIsFirstRun;
+        double mDT;
+
+    };
+
 }
 
 

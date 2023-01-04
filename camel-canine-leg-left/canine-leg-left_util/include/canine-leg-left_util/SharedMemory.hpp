@@ -68,6 +68,7 @@ typedef struct _SHM_
     float estimatedGRFETO;
     float measuredGRF;
     float desiredGRF;
+    float inputForce;
 
     double positionTrackingData[2][10000];
     double GRFEstimatorData[4][10000];

@@ -78,6 +78,7 @@ void clearSharedMemory()
     sharedMemory->estimatedGRFETO = 0;
     sharedMemory->measuredGRF = 0;
     sharedMemory->desiredGRF = 0;
+    sharedMemory->inputForce = 0;
     for (int index = 0; index < MOTOR_NUM; index++)
     {
         sharedMemory->motorErrorStatus[index] = 0;

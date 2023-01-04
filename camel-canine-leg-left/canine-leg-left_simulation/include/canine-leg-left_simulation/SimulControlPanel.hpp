@@ -51,6 +51,9 @@ private:
 
     double sumedSquaredPositionError;
     double sumedSquaredVelocityError;
+    double sumedSquaredMLPError;
+    double sumedSquaredSMOError;
+    double sumedSquaredMOError;
     double positionRMSE;
     double velocityRMSE;
 };

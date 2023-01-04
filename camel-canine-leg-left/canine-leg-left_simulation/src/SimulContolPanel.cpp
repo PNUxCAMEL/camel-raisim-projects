@@ -13,6 +13,9 @@ SimulControlPanel::SimulControlPanel(raisim::World* world, raisim::ArticulatedSy
     , mIteration(0)
     , sumedSquaredPositionError(0)
     , sumedSquaredVelocityError(0)
+    , sumedSquaredMLPError(0)
+    , sumedSquaredSMOError(0)
+    , sumedSquaredMOError(0)
 {
     mTorque.setZero();
 }
@@ -94,10 +97,19 @@ void SimulControlPanel::ControllerFunction()
 
         sumedSquaredPositionError += pow(sharedMemory->desiredHipVerticalPosition - sharedMemory->hipVerticalPosition, 2);
         sumedSquaredVelocityError += pow(sharedMemory->desiredHipVerticalVelocity - sharedMemory->hipVerticalVelocity, 2);
+        sumedSquaredMLPError += pow(sharedMemory->measuredGRF - sharedMemory->estimatedGRFMLP, 2);
+        sumedSquaredSMOError += pow(sharedMemory->measuredGRF - sharedMemory->estimatedGRFSMO, 2);
+        sumedSquaredMOError += pow(sharedMemory->measuredGRF - sharedMemory->estimatedGRFETO, 2);
         positionRMSE = pow(sumedSquaredPositionError / (mIteration - mRefMPCIteration), 0.5);
         velocityRMSE = pow(sumedSquaredVelocityError / (mIteration - mRefMPCIteration), 0.5);
         std::cout << "RMSE position : " << positionRMSE << std::endl;
         std::cout << "RMSE velocity : " << velocityRMSE << std::endl;
+//        std::cout << "RMSE MLP : " << pow(sumedSquaredMLPError / (mIteration - mRefMPCIteration), 0.5) << std::endl;
+//        std::cout << "RMSE SMO : " << pow(sumedSquaredSMOError / (mIteration - mRefMPCIteration), 0.5) << std::endl;
+//        std::cout << "RMSE MO : " << pow(sumedSquaredMOError / (mIteration - mRefMPCIteration), 0.5) << std::endl;
+
+
+
         if((mIteration - mRefMPCIteration - 1) >= 10000)
         {
 
@@ -113,13 +125,13 @@ void SimulControlPanel::ControllerFunction()
             std::cout<<mIteration - mRefMPCIteration - 1<<std::endl;
         }
 
-        if(((mIteration - mRefMPCIteration - 1) >= 1000) && ((mIteration - mRefMPCIteration - 1) <= 1500))
-        {
-            int bodyIdx = 2;
-            const raisim::Vec<3> pos{0, 0, 0};
-            const raisim::Vec<3> force{0, 0, 10};
-            mRobot->setExternalForce(bodyIdx, pos, force);
-        }
+//        if(((mIteration - mRefMPCIteration - 1) >= 1000) && ((mIteration - mRefMPCIteration - 1) <= 1500))
+//        {
+//            int bodyIdx = 2;
+//            const raisim::Vec<3> pos{0, 0, 0};
+//            const raisim::Vec<3> force{0, 0, 10};
+//            mRobot->setExternalForce(bodyIdx, pos, force);
+//        }
 
         break;
     }
@@ -143,8 +155,12 @@ void SimulControlPanel::ControllerFunction()
     {
         integrateSimul();
         GRFNet.Estimate();
-        GRFSMO.Estimate();
+//        GRFSMO.Estimate();
 //        GRFETO.Estimate();
+        if (sharedMemory->measuredGRF < 0.1)
+        {
+            sharedMemory->estimatedGRFMLP = 0.0;
+        }
     }
 }
 

@@ -353,6 +353,9 @@ void MainWindow::GraphInitialize(){
     myPen.setColor(Qt::red);
     ui->PLOT_CUSTOM_6->addGraph();
     ui->PLOT_CUSTOM_6->graph(1)->setPen(myPen);
+    myPen.setColor(Qt::green);
+    ui->PLOT_CUSTOM_6->addGraph();
+    ui->PLOT_CUSTOM_6->graph(2)->setPen(myPen);
 
     ui->PLOT_CUSTOM_1->legend->setVisible(true);
     ui->PLOT_CUSTOM_1->legend->setFont(QFont("Helvetica", 9));
@@ -378,6 +381,8 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_6->legend->setFont(QFont("Helvetica", 9));
     ui->PLOT_CUSTOM_6->graph(0)->setName("GRF-true");
     ui->PLOT_CUSTOM_6->graph(1)->setName("GRF-desired");
+    ui->PLOT_CUSTOM_6->graph(2)->setName("GRF-input");
+
 
     ui->PLOT_POS_BASE_X->xAxis->setTicker(timeTicker);
     ui->PLOT_POS_BASE_Y->xAxis->setTicker(timeTicker);
@@ -419,7 +424,7 @@ void MainWindow::GraphInitialize(){
     ui->PLOT_CUSTOM_3->yAxis->setRange(-1, 1);
     ui->PLOT_CUSTOM_4->yAxis->setRange(-1, 1);
     ui->PLOT_CUSTOM_5->yAxis->setRange(-1, 1);
-    ui->PLOT_CUSTOM_6->yAxis->setRange(-1, 1);
+    ui->PLOT_CUSTOM_6->yAxis->setRange(16, 22);
 
 
 //    ui->plot_custom->xAxis->setTicker(timeTicker);
@@ -486,6 +491,8 @@ void MainWindow::GraphUpdate()
     ui->PLOT_CUSTOM_5->graph(3)->addData(sharedMemory->localTime, sharedMemory->estimatedGRFETO);
     ui->PLOT_CUSTOM_6->graph(0)->addData(sharedMemory->localTime, sharedMemory->measuredGRF);
     ui->PLOT_CUSTOM_6->graph(1)->addData(sharedMemory->localTime, sharedMemory->desiredGRF);
+    ui->PLOT_CUSTOM_6->graph(2)->addData(sharedMemory->localTime, sharedMemory->inputForce);
+
 
 
     ui->PLOT_POS_BASE_X->xAxis->setRange(sharedMemory->localTime - graphOffset, sharedMemory->localTime + graphOffset);

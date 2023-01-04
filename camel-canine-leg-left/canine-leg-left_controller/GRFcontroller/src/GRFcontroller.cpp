@@ -38,10 +38,11 @@ void GRFcontroller::computeControlInput()
 //    errorGRF = sharedMemory->desiredGRF - sharedMemory->measuredGRF;
     errorGRF = sharedMemory->desiredGRF - sharedMemory->estimatedGRFMLP;
 //    errorGRF = sharedMemory->desiredGRF - sharedMemory->estimatedGRFSMO;
-    mIntegratedError += errorGRF * MPC_dT;
-    calculatedGRF = sharedMemory->desiredGRF + 0.5*errorGRF + 2.0*mIntegratedError;
+    mIntegratedError += errorGRF * CONTROL_dT;
+    calculatedGRF = sharedMemory->desiredGRF + 0.5*errorGRF + 20.0*mIntegratedError;
     calculatedForce << 0.0, calculatedGRF;
     mTorque = mJacobian.transpose() * calculatedForce;
+    sharedMemory->inputForce = calculatedGRF;
 }
 
 void GRFcontroller::setControlInput()

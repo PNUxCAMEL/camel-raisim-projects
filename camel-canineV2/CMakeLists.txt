@@ -53,6 +53,7 @@ target_link_libraries(camel-canineV2
         Qt5::Widgets
         PRIVATE
         canineV2_fsm
+        canineV2_util
         mscl
 )
 
@@ -62,5 +63,6 @@ target_link_libraries(camel-canineV2-simul
         Qt5::Widgets
         PRIVATE
         canineV2_simulation
+        canineV2_util
         mscl
 )

@@ -228,8 +228,8 @@ void CanMotorFL::setTorque()
     double desiredTorque[MOTOR_NUM_PER_CAN];
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
-//        desiredTorque[motorIndex] = sharedMemory->motorDesiredTorque[motorIndex + 3];
-        desiredTorque[motorIndex] = 0.0;
+        desiredTorque[motorIndex] = sharedMemory->motorDesiredTorque[motorIndex + 3];
+//        desiredTorque[motorIndex] = 0.0;
     }
 
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)

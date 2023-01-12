@@ -4,11 +4,16 @@ PROJECT(camel-raisim-projects)
 ADD_COMPILE_DEFINITIONS (URDF_RSC_DIR="${CMAKE_CURRENT_SOURCE_DIR}/camel-urdf/")
 
 set(CAMEL_CANINE FALSE)
+set(CAMEL_CANINEV2 FALSE)
 set(CAMEL_CANINE_LEG_LEFT FALSE)
 set(CAMEL_THIRDPARTY_QPOASES FALSE)
 
 if(${CAMEL_CANINE})
     add_subdirectory(camel-canine)
+endif()
+
+if(${CAMEL_CANINEV2})
+    add_subdirectory(camel-canineV2)
 endif()
 
 if(${CAMEL_CANINE_LEG_LEFT})

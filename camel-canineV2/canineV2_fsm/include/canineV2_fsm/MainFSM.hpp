@@ -12,8 +12,10 @@
 #include <camel-tools/sensor.hpp>
 
 #include <ControlMain/ControllerState.hpp>
-#include <canineV2_util/CanMotorForward.hpp>
-#include <canineV2_util/CanMotorBackward.hpp>
+#include <canineV2_util/CanMotorFL.hpp>
+#include <canineV2_util/CanMotorFR.hpp>
+#include <canineV2_util/CanMotorRL.hpp>
+#include <canineV2_util/CanMotorRR.hpp>
 #include <canineV2_util/Command.hpp>
 #include <canineV2_util/XboxCommand.hpp>
 //#include <canineV2_util/ImuBase.hpp>
@@ -30,7 +32,10 @@ void* RTControllerThreadHigh(void *arg);
 void* RTControllerThreadLow(void *arg);
 void* NRTCommandThread(void *arg);
 void* NRTVisualThread(void *arg);
-void* NRTCANForward(void* arg);
-void* NRTCANBackward(void* arg);
+void* NRTCANFL(void* arg);
+void* NRTCANFR(void* arg);
+void* NRTCANRL(void* arg);
+void* NRTCANRR(void* arg);
+
 
 #endif //RAISIM_MAINFSM_HPP

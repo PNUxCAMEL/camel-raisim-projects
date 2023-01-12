@@ -6,7 +6,7 @@
 #define RAISIM_ROBOTDESCRIPTION_H
 
 constexpr int MOTOR_NUM = 12;
-constexpr int MOTOR_NUM_PER_CAN = 6;
+constexpr int MOTOR_NUM_PER_CAN = 3;
 
 constexpr double GRAVITY = -9.81;
 constexpr double BODYMASS = 14.2;
@@ -16,15 +16,15 @@ constexpr double LEN_THI = 0.23;
 constexpr double LEN_CAL = 0.23;
 
 //TODO: change data structure of motor ID to keymap
-constexpr int MOTOR_RFHR_ID = 0x145;
-constexpr int MOTOR_RFHP_ID = 0x146;
-constexpr int MOTOR_RFKP_ID = 0x147;
+constexpr int MOTOR_RFHR_ID = 0x141;
+constexpr int MOTOR_RFHP_ID = 0x142;
+constexpr int MOTOR_RFKP_ID = 0x143;
 constexpr int MOTOR_LFHR_ID = 0x141;
 constexpr int MOTOR_LFHP_ID = 0x142;
 constexpr int MOTOR_LFKP_ID = 0x143;
-constexpr int MOTOR_RBHR_ID = 0x145;
-constexpr int MOTOR_RBHP_ID = 0x146;
-constexpr int MOTOR_RBKP_ID = 0x147;
+constexpr int MOTOR_RBHR_ID = 0x141;
+constexpr int MOTOR_RBHP_ID = 0x142;
+constexpr int MOTOR_RBKP_ID = 0x143;
 constexpr int MOTOR_LBHR_ID = 0x141;
 constexpr int MOTOR_LBHP_ID = 0x142;
 constexpr int MOTOR_LBKP_ID = 0x143;

@@ -12,15 +12,20 @@ pthread_t NRTThreadCommand;
 pthread_t NRTThreadXboxCommand;
 pthread_t NRTThreadVisual;
 pthread_t NRTThreadIMU;
-pthread_t NRTThreadCANForward;
-pthread_t NRTThreadCANBackward;
+pthread_t NRTThreadCANFL;
+pthread_t NRTThreadCANFR;
+pthread_t NRTThreadCANRL;
+pthread_t NRTThreadCANRR;
 pthread_t NRTThreadT265;
 
 pUI_COMMAND sharedCommand;
 pSHM sharedMemory;
 
-CANMotorForward canForward("can9");
-CanMotorBackward canBackward("can5");
+CanMotorFL canFL("can11");
+CanMotorFR canFR("can12");
+CanMotorRL canRL("can13");
+CanMotorRR canRR("can14");
+
 
 Command userCommand;
 XboxCommand userXboxCommand;
@@ -266,22 +271,43 @@ void* RTStateEstimator(void* arg)
 }
 
 
-void* NRTCANForward(void* arg)
+void* NRTCANFL(void* arg)
 {
     std::cout << "entered #nrt_can_forward_thread" << std::endl;
 
     while (true)
     {
-        canForward.CanFunction();
+        canFL.CanFunction();
     }
 }
 
-void* NRTCANBackward(void* arg)
+void* NRTCANFR(void* arg)
 {
-    std::cout << "entered #nrt_can_backward_thread" << std::endl;
+    std::cout << "entered #nrt_can_forward_thread" << std::endl;
+
     while (true)
     {
-        canBackward.CanFunction();
+        canFR.CanFunction();
+    }
+}
+
+void* NRTCANRL(void* arg)
+{
+    std::cout << "entered #nrt_can_forward_thread" << std::endl;
+
+    while (true)
+    {
+        canRL.CanFunction();
+    }
+}
+
+void* NRTCANRR(void* arg)
+{
+    std::cout << "entered #nrt_can_forward_thread" << std::endl;
+
+    while (true)
+    {
+        canRR.CanFunction();
     }
 }
 
@@ -289,14 +315,18 @@ void* NRTCANBackward(void* arg)
 void clearSharedMemory()
 {
     sharedMemory->newCommand = false;
-    sharedMemory->can1Status = false;
-    sharedMemory->can2Status = false;
+    sharedMemory->canFLStatus = false;
+    sharedMemory->canFRStatus = false;
+    sharedMemory->canRLStatus = false;
+    sharedMemory->canRRStatus = false;
     sharedMemory->motorStatus = false;
     sharedMemory->HighControlState = STATE_CONTROL_STOP;
     sharedMemory->LowControlState = STATE_LOW_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
-    sharedMemory->can1State = CAN_NO_ACT;
-    sharedMemory->can2State = CAN_NO_ACT;
+    sharedMemory->canFLState = CAN_NO_ACT;
+    sharedMemory->canFRState = CAN_NO_ACT;
+    sharedMemory->canRLState = CAN_NO_ACT;
+    sharedMemory->canRRState = CAN_NO_ACT;
     sharedMemory->localTime = 0;
     for (int index = 0; index < MOTOR_NUM; index++)
     {
@@ -323,8 +353,10 @@ void clearSharedMemory()
 
     sharedMemory->gaitState = STAND;
     sharedMemory->gaitIteration = 0;
-    sharedMemory->motorForeState = false;
-    sharedMemory->motorBackState = false;
+    sharedMemory->motorFLState = false;
+    sharedMemory->motorFRState = false;
+    sharedMemory->motorRLState = false;
+    sharedMemory->motorRRState = false;
 }
 
 void StartFSM()
@@ -338,10 +370,12 @@ void StartFSM()
     int thread_id_rt3 = generate_rt_thread(RTThreadStateEstimator, RTStateEstimator, "rt_thread3", 7, 99,NULL);
 
     int thread_id_nrt1 = generate_nrt_thread(NRTThreadCommand, NRTCommandThread, "nrt_thread1", 1, NULL);
-    int thread_id_nrt2 = generate_nrt_thread(NRTThreadXboxCommand, NRTXboxCommandThread, "nrt_thread2", 1, NULL);
+//    int thread_id_nrt2 = generate_nrt_thread(NRTThreadXboxCommand, NRTXboxCommandThread, "nrt_thread2", 1, NULL);
     int thread_id_nrt3 = generate_nrt_thread(NRTThreadVisual, NRTVisualThread, "nrt_thread3", 1, NULL);
     int thread_id_nrt4 = generate_nrt_thread(NRTThreadIMU, NRTImuThread, "nrt_thread4", 2, NULL);
-    int thread_id_nrt5 = generate_nrt_thread(NRTThreadCANForward, NRTCANForward, "nrt_thread5", 3, NULL);
-    int thread_id_nrt6 = generate_nrt_thread(NRTThreadCANBackward, NRTCANBackward, "nrt_thread6", 4, NULL);
-    int thread_id_nrt7 = generate_nrt_thread(NRTThreadT265, NRTT265Thread,"nrt_thread7",5,NULL);
+    int thread_id_nrt5 = generate_nrt_thread(NRTThreadCANFL, NRTCANFL, "nrt_thread5", 3, NULL);
+    int thread_id_nrt6 = generate_nrt_thread(NRTThreadCANFR, NRTCANFR, "nrt_thread6", 3, NULL);
+    int thread_id_nrt7 = generate_nrt_thread(NRTThreadCANRL, NRTCANRL, "nrt_thread7", 4, NULL);
+    int thread_id_nrt8 = generate_nrt_thread(NRTThreadCANRR, NRTCANRR, "nrt_thread8", 4, NULL);
+//    int thread_id_nrt9 = generate_nrt_thread(NRTThreadT265, NRTT265Thread,"nrt_thread9",1,NULL);
 }

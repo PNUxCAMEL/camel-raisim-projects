@@ -560,7 +560,7 @@ void MainWindow::GraphUpdate()
 
 void MainWindow::DisplayUpdate()
 {
-    if((sharedMemory->can1Status) && (sharedMemory->can2Status))
+    if((sharedMemory->canFLStatus) && (sharedMemory->canFRStatus) && (sharedMemory->canRLStatus) && (sharedMemory->canRRStatus))
     {
         ui->LE_CAN_STATUS->setStyleSheet("background-color:lightgreen");
     }

@@ -157,15 +157,19 @@ void* RTStateEstimator(void* arg)
 void clearSharedMemory()
 {
     sharedMemory->newCommand = false;
-    sharedMemory->can1Status = false;
-    sharedMemory->can2Status = false;
+    sharedMemory->canFLStatus = false;
+    sharedMemory->canFRStatus = false;
+    sharedMemory->canRLStatus = false;
+    sharedMemory->canRRStatus = false;
     sharedMemory->motorStatus = false;
     sharedMemory->HighControlState = STATE_CONTROL_STOP;
     sharedMemory->LowControlState = STATE_LOW_CONTROL_STOP;
     sharedMemory->visualState = STATE_VISUAL_STOP;
     sharedMemory->gaitState = STAND;
-    sharedMemory->can1State = CAN_NO_ACT;
-    sharedMemory->can2State = CAN_NO_ACT;
+    sharedMemory->canFLState = CAN_NO_ACT;
+    sharedMemory->canFRState = CAN_NO_ACT;
+    sharedMemory->canRLState = CAN_NO_ACT;
+    sharedMemory->canRRState = CAN_NO_ACT;
     sharedMemory->localTime = 0;
     for (int index = 0; index < MOTOR_NUM; index++)
     {

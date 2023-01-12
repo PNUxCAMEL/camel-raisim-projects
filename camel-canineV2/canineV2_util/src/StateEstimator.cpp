@@ -13,7 +13,7 @@ StateEstimator::StateEstimator()
 
 void StateEstimator::StateEstimatorFunction()
 {
-    if (sharedMemory->motorForeState && sharedMemory->motorBackState)
+    if (sharedMemory->motorFLState && sharedMemory->motorFRState && sharedMemory->motorRLState && sharedMemory->motorRRState)
     {
         updateState();
         getRobotFootPosition();

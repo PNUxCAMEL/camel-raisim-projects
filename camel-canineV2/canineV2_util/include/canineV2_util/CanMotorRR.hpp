@@ -1,6 +1,6 @@
 
-#ifndef RAISIM_CANMOTORBACKWARD_HPP
-#define RAISIM_CANMOTORBACKWARD_HPP
+#ifndef RAISIM_CANMOTORRR_HPP
+#define RAISIM_CANMOTORRR_HPP
 
 #include <iostream>
 #include <unistd.h>
@@ -15,10 +15,10 @@
 #include "SharedMemory.hpp"
 #include "RobotDescription.hpp"
 
-class CanMotorBackward
+class CanMotorRR
 {
 public:
-    CanMotorBackward(std::string canName);
+    CanMotorRR(std::string canName);
     void CanFunction();
 
 private:
@@ -57,4 +57,4 @@ private:
 };
 
 
-#endif //RAISIM_CANMOTORBACKWARD_HPP
+#endif //RAISIM_CANMOTORRR_HPP

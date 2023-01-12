@@ -1,43 +1,30 @@
 
-#include <canineV2_util/CanMotorBackward.hpp>
+#include <canineV2_util/CanMotorRL.hpp>
 #include "camel-tools/ThreadGenerator.hpp"
 
 extern pSHM sharedMemory;
 
-CanMotorBackward::CanMotorBackward(std::string canName)
+CanMotorRL::CanMotorRL(std::string canName)
     : mCanName(canName)
 {
     enc2rad = 2.0 * 3.141592 / 65535;
     mSock = 0;
     mGearRatio = 9;
+    torque2int[LBHR_IDX - 9] = 29.9043;
+    torque2int[LBHP_IDX - 9] = 29.9043;
+    torque2int[LBKP_IDX - 9] = 24.0385;
 
-    torque2int[LBHR_IDX - MOTOR_NUM_PER_CAN] = 29.9043;
-    torque2int[LBHP_IDX - MOTOR_NUM_PER_CAN] = 29.9043;
-    torque2int[LBKP_IDX - MOTOR_NUM_PER_CAN] = 24.0385;
-    torque2int[RBHR_IDX - MOTOR_NUM_PER_CAN] = 29.9043;
-    torque2int[RBHP_IDX - MOTOR_NUM_PER_CAN] = 29.9043;
-    torque2int[RBKP_IDX - MOTOR_NUM_PER_CAN] = 24.0385;
+    mMotorId[LBHR_IDX - 9] = MOTOR_LBHR_ID;
+    mMotorId[LBHP_IDX - 9] = MOTOR_LBHP_ID;
+    mMotorId[LBKP_IDX - 9] = MOTOR_LBKP_ID;
 
-    mMotorId[LBHR_IDX - MOTOR_NUM_PER_CAN] = MOTOR_LBHR_ID;
-    mMotorId[LBHP_IDX - MOTOR_NUM_PER_CAN] = MOTOR_LBHP_ID;
-    mMotorId[LBKP_IDX - MOTOR_NUM_PER_CAN] = MOTOR_LBKP_ID;
-    mMotorId[RBHR_IDX - MOTOR_NUM_PER_CAN] = MOTOR_RBHR_ID;
-    mMotorId[RBHP_IDX - MOTOR_NUM_PER_CAN] = MOTOR_RBHP_ID;
-    mMotorId[RBKP_IDX - MOTOR_NUM_PER_CAN] = MOTOR_RBKP_ID;
+    mAxis[LBHR_IDX - 9] = -1.0;
+    mAxis[LBHP_IDX - 9] = 1.0;
+    mAxis[LBKP_IDX - 9] = 1.0;
 
-    mAxis[LBHR_IDX - MOTOR_NUM_PER_CAN] = -1.0;
-    mAxis[LBHP_IDX - MOTOR_NUM_PER_CAN] = 1.0;
-    mAxis[LBKP_IDX - MOTOR_NUM_PER_CAN] = 1.0;
-    mAxis[RBHR_IDX - MOTOR_NUM_PER_CAN] = -1.0;
-    mAxis[RBHP_IDX - MOTOR_NUM_PER_CAN] = -1.0;
-    mAxis[RBKP_IDX - MOTOR_NUM_PER_CAN] = -1.0;
-
-    mAngularPositionOffset[LBHR_IDX - MOTOR_NUM_PER_CAN] = LBHR_POS_OFFSET;
-    mAngularPositionOffset[LBHP_IDX - MOTOR_NUM_PER_CAN] = LBHP_POS_OFFSET;
-    mAngularPositionOffset[LBKP_IDX - MOTOR_NUM_PER_CAN] = LBKP_POS_OFFSET;
-    mAngularPositionOffset[RBHR_IDX - MOTOR_NUM_PER_CAN] = RBHR_POS_OFFSET;
-    mAngularPositionOffset[RBHP_IDX - MOTOR_NUM_PER_CAN] = RBHP_POS_OFFSET;
-    mAngularPositionOffset[RBKP_IDX - MOTOR_NUM_PER_CAN] = RBKP_POS_OFFSET;
+    mAngularPositionOffset[LBHR_IDX - 9] = LBHR_POS_OFFSET;
+    mAngularPositionOffset[LBHP_IDX - 9] = LBHP_POS_OFFSET;
+    mAngularPositionOffset[LBKP_IDX - 9] = LBKP_POS_OFFSET;
 
     for (int index = 0; index < MOTOR_NUM_PER_CAN; index++)
     {
@@ -56,9 +43,9 @@ CanMotorBackward::CanMotorBackward(std::string canName)
     }
 }
 
-void CanMotorBackward::CanFunction()
+void CanMotorRL::CanFunction()
 {
-    switch (sharedMemory->can2State)
+    switch (sharedMemory->canRLState)
     {
     case CAN_NO_ACT:
     {
@@ -67,21 +54,21 @@ void CanMotorBackward::CanFunction()
     case CAN_MOTOR_ON:
     {
         turnOnMotor();
-        sharedMemory->can2State = CAN_NO_ACT;
+        sharedMemory->canRLState = CAN_NO_ACT;
         readEncoder();
-        sharedMemory->motorBackState = true;
+        sharedMemory->motorRLState = true;
         break;
     }
     case CAN_INIT:
     {
         canInit();
-        sharedMemory->can2State = CAN_READ_ERROR;
+        sharedMemory->canRLState = CAN_READ_ERROR;
         break;
     }
     case CAN_MOTOR_OFF:
     {
         turnOffMotor();
-        sharedMemory->can2State = CAN_NO_ACT;
+        sharedMemory->canRLState = CAN_NO_ACT;
         break;
     }
     case CAN_SET_TORQUE:
@@ -99,7 +86,7 @@ void CanMotorBackward::CanFunction()
     }
 }
 
-void CanMotorBackward::canInit()
+void CanMotorRL::canInit()
 {
     std::string command3 =
         "sudo ip link set " + mCanName + " up type can bitrate 1000000";
@@ -135,10 +122,10 @@ void CanMotorBackward::canInit()
         return;
     }
     std::cout << "Success to bind can socket" << std::endl;
-    sharedMemory->can2Status = true;
+    sharedMemory->canRLStatus = true;
 }
 
-void CanMotorBackward::canSend(int motorIndex, const u_int8_t* data)
+void CanMotorRL::canSend(int motorIndex, const u_int8_t* data)
 {
     u_int32_t tempid = mMotorId[motorIndex] & 0x1fffffff;
     mFrame.can_id = tempid;
@@ -152,12 +139,12 @@ void CanMotorBackward::canSend(int motorIndex, const u_int8_t* data)
     }
 }
 
-void CanMotorBackward::canRead()
+void CanMotorRL::canRead()
 {
     read(mSock, &mFrame, sizeof(mFrame));
 }
 
-void CanMotorBackward::readEncoder()
+void CanMotorRL::readEncoder()
 {
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
@@ -180,13 +167,14 @@ void CanMotorBackward::readEncoder()
         mEncoder[motorIndex] = mEncoderTemp[motorIndex] + 65535 * mEncoderMultiturnNum[motorIndex];
         mAngularPosition[motorIndex] = mEncoder[motorIndex] * enc2rad / mGearRatio;
     }
+
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
-        sharedMemory->motorPosition[motorIndex + MOTOR_NUM_PER_CAN] = mAxis[motorIndex] * (mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
+        sharedMemory->motorPosition[motorIndex + 9] = mAxis[motorIndex] * (mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
     }
 }
 
-void CanMotorBackward::readMotorErrorStatus()
+void CanMotorRL::readMotorErrorStatus()
 {
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
@@ -196,13 +184,13 @@ void CanMotorBackward::readMotorErrorStatus()
         mMotorTemperature[motorIndex] = mFrame.data[1];
         mMotorVoltage[motorIndex] = (mFrame.data[3] + mFrame.data[4] * 256) * 0.1;
         mMotorErrorCode[motorIndex] = mFrame.data[7];
-        sharedMemory->motorTemp[motorIndex + MOTOR_NUM_PER_CAN] = mMotorTemperature[motorIndex];
-        sharedMemory->motorVoltage[motorIndex + MOTOR_NUM_PER_CAN] = mMotorVoltage[motorIndex];
-        sharedMemory->motorErrorStatus[motorIndex + MOTOR_NUM_PER_CAN] = mMotorErrorCode[motorIndex];
+        sharedMemory->motorTemp[motorIndex + 9] = mMotorTemperature[motorIndex];
+        sharedMemory->motorVoltage[motorIndex + 9] = mMotorVoltage[motorIndex];
+        sharedMemory->motorErrorStatus[motorIndex + 9] = mMotorErrorCode[motorIndex];
     }
 }
 
-void CanMotorBackward::turnOffMotor()
+void CanMotorRL::turnOffMotor()
 {
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
@@ -213,7 +201,7 @@ void CanMotorBackward::turnOffMotor()
     sharedMemory->motorStatus = false;
 }
 
-void CanMotorBackward::stopMotor()
+void CanMotorRL::stopMotor()
 {
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
@@ -223,7 +211,7 @@ void CanMotorBackward::stopMotor()
     }
 }
 
-void CanMotorBackward::turnOnMotor()
+void CanMotorRL::turnOnMotor()
 {
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
@@ -235,12 +223,13 @@ void CanMotorBackward::turnOnMotor()
     sharedMemory->motorStatus = true;
 }
 
-void CanMotorBackward::setTorque()
+void CanMotorRL::setTorque()
 {
     double desiredTorque[MOTOR_NUM_PER_CAN];
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
-        desiredTorque[motorIndex] = sharedMemory->motorDesiredTorque[motorIndex + MOTOR_NUM_PER_CAN];
+        desiredTorque[motorIndex] = sharedMemory->motorDesiredTorque[motorIndex + 9];
+//        desiredTorque[motorIndex] = 0.0;
     }
 
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
@@ -256,6 +245,7 @@ void CanMotorBackward::setTorque()
 
         canSend(motorIndex, data);
         canRead();
+
 
         int16_t currentTorque;
         int16_t angularVelocity;
@@ -282,9 +272,9 @@ void CanMotorBackward::setTorque()
 
     for (int motorIndex = 0; motorIndex < MOTOR_NUM_PER_CAN; motorIndex++)
     {
-        sharedMemory->motorTemp[motorIndex + MOTOR_NUM_PER_CAN] = mMotorTemperature[motorIndex];
-        sharedMemory->motorTorque[motorIndex + MOTOR_NUM_PER_CAN] = mAxis[motorIndex] * mCurrentTorque[motorIndex];
-        sharedMemory->motorVelocity[motorIndex + MOTOR_NUM_PER_CAN] = mAxis[motorIndex] * mAngularVelocity[motorIndex];
-        sharedMemory->motorPosition[motorIndex + MOTOR_NUM_PER_CAN] = mAxis[motorIndex] * (mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
+        sharedMemory->motorTemp[motorIndex + 9] = mMotorTemperature[motorIndex];
+        sharedMemory->motorTorque[motorIndex + 9] = mAxis[motorIndex] * mCurrentTorque[motorIndex];
+        sharedMemory->motorVelocity[motorIndex + 9] = mAxis[motorIndex] * mAngularVelocity[motorIndex];
+        sharedMemory->motorPosition[motorIndex + 9] = mAxis[motorIndex] * (mAngularPosition[motorIndex] + mAngularPositionOffset[motorIndex]);
     }
 }

@@ -10,8 +10,10 @@ include_directories(
 
 add_library(canineV2_util
         SHARED
-        src/CanMotorBackward.cpp
-        src/CanMotorForward.cpp
+        src/CanMotorFL.cpp
+        src/CanMotorFR.cpp
+        src/CanMotorRL.cpp
+        src/CanMotorRR.cpp
         src/Command.cpp
         src/StateEstimator.cpp
         src/RobotMath.cpp

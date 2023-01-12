@@ -29,18 +29,18 @@ constexpr int MOTOR_LBHR_ID = 0x141;
 constexpr int MOTOR_LBHP_ID = 0x142;
 constexpr int MOTOR_LBKP_ID = 0x143;
 
-constexpr double RFHR_POS_OFFSET = -0.4673;
-constexpr double RFHP_POS_OFFSET = -2.5707;
-constexpr double RFKP_POS_OFFSET = 2.6501;
-constexpr double LFHR_POS_OFFSET = -0.2307;
-constexpr double LFHP_POS_OFFSET = 2.0436;
-constexpr double LFKP_POS_OFFSET = -3.3460;
-constexpr double RBHR_POS_OFFSET = -0.2249;
-constexpr double RBHP_POS_OFFSET = -2.5697;
-constexpr double RBKP_POS_OFFSET = 2.5906;
-constexpr double LBHR_POS_OFFSET = -0.4596;
-constexpr double LBHP_POS_OFFSET = 1.9225;
-constexpr double LBKP_POS_OFFSET = -3.3375;
+constexpr double LFHR_POS_OFFSET = -0.213;
+constexpr double LFHP_POS_OFFSET = 2.072;
+constexpr double LFKP_POS_OFFSET = -3.181;
+constexpr double RFHR_POS_OFFSET = -0.405;
+constexpr double RFHP_POS_OFFSET = -2.662;
+constexpr double RFKP_POS_OFFSET = 2.212;
+constexpr double LBHR_POS_OFFSET = -0.477;
+constexpr double LBHP_POS_OFFSET = 2.002;
+constexpr double LBKP_POS_OFFSET = -3.179;
+constexpr double RBHR_POS_OFFSET = -0.106;
+constexpr double RBHP_POS_OFFSET = -2.658;
+constexpr double RBKP_POS_OFFSET = 2.273;
 
 //constexpr double LUMPED_MASS = 0.0;
 
